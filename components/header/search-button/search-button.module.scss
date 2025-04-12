@@ -1,0 +1,15 @@
+@use '@/styles/base/variables' as vars;
+@use '@/styles/mixins/mixins' as mixins;
+
+.button {
+  @include mixins.flexbox;
+  width: 3.2rem;
+  height: 3.2rem;
+
+  border: 0.1rem solid vars.$color-secondary;
+  border-radius: 50%;
+
+  background-color: transparent;
+
+  cursor: pointer;
+}

@@ -2,6 +2,7 @@ import { Inter, Roboto } from 'next/font/google';
 import '@/styles/global.scss';
 import React, { JSX } from 'react';
 import { BottomNav } from '@/components/bottom-nav/bottom-nav';
+import { Header } from '@/components/header/header';
 
 const inter = Inter({
   variable: '--font-inter',
@@ -21,6 +22,7 @@ export default function RootLayout({
   return (
     <html lang="ru">
       <body className={`${inter.variable} ${roboto.variable}`}>
+        <Header />
         {children}
         <BottomNav />
       </body>

@@ -1,0 +1,21 @@
+@use '@/styles/base/variables' as vars;
+@use '@/styles/mixins/mixins' as mixins;
+
+.header {
+  @include mixins.flexbox($justify: space-between);
+
+  height: 8.7rem;
+  padding: 2rem 2.3rem 1.5rem;
+
+  background-color: vars.$color-white;
+
+  box-shadow: 0 0.4rem 1.4rem 0 #0000000a;
+}
+
+.container {
+  @include mixins.flexbox($gap: 1rem);
+}
+
+.logo {
+  cursor: pointer;
+}
