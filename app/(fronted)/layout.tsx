@@ -1,6 +1,7 @@
 import { Inter, Roboto } from 'next/font/google';
 import '@/styles/global.scss';
 import React, { JSX } from 'react';
+import { BottomNav } from '@/components/bottom-nav/bottom-nav';
 
 const inter = Inter({
   variable: '--font-inter',
@@ -19,7 +20,10 @@ export default function RootLayout({
 }>): JSX.Element {
   return (
     <html lang="ru">
-      <body className={`${inter.variable} ${roboto.variable}`}>{children}</body>
+      <body className={`${inter.variable} ${roboto.variable}`}>
+        {children}
+        <BottomNav />
+      </body>
     </html>
   );
 }

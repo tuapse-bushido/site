@@ -1,0 +1,10 @@
+@use '@/styles/base/variables' as vars;
+.bottomNav {
+  display: flex;
+  justify-content: space-evenly;
+
+  height: 85px;
+  padding-top: 14px;
+
+  background-color: vars.$bg-color-secondary;
+}
