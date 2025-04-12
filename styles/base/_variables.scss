@@ -11,9 +11,14 @@ $bg-color-secondary: #ffffff;
 
 // Button
 $btn-color-primary: $color-primary;
-$btn-color-secondary: $color-white;
+$btn-color-primary-hover: #e10000;
 $btn-color-primary-active: #c00000;
+
+$btn-color-secondary: $color-white;
+$btn-color-secondary-active: #ffe6e6;
+
 $btn-color-waiting: #262626;
 
 // Text
+$text-color-secondary: #8f8f8f;
 $text-color-cart-free: #3e9937;
