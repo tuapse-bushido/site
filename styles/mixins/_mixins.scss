@@ -1,0 +1,23 @@
+/// Flex center mixin
+///
+/// Creates a flex container with customizable alignment and spacing.
+/// By default, aligns and centers items both horizontally and vertically.
+///
+/// @param {String} $align [center] - align-items value
+/// @param {String} $justify [center] - justify-content value
+/// @param {Length} $gap [0] - spacing between flex items
+///
+/// ---
+///
+/// Миксин для центрирования элементов через flex.
+/// По умолчанию располагает элементы по центру по обеим осям.
+///
+/// @param {String} $align [center] — значение align-items
+/// @param {String} $justify [center] — значение justify-content
+/// @param {Length} $gap [0] — расстояние между элементами (gap)
+@mixin flexbox($align: center, $justify: center, $gap: 0) {
+  display: flex;
+  align-items: $align;
+  justify-content: $justify;
+  gap: $gap;
+}
