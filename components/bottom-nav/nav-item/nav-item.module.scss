@@ -24,12 +24,14 @@
     }
   }
 
-  &:hover {
-    color: vars.$btn-color-primary-hover;
-    text-decoration: underline;
-
-    .navItemLabel {
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
       color: vars.$btn-color-primary-hover;
+      text-decoration: underline;
+
+      .navItemLabel {
+        color: vars.$btn-color-primary-hover;
+      }
     }
   }
 }
