@@ -3,6 +3,7 @@ import '@/styles/global.scss';
 import React, { JSX } from 'react';
 import { BottomNav } from '@/components/bottom-nav/bottom-nav';
 import { Header } from '@/components/header/header';
+import { Carousel } from '@/components/carousel/carousel';
 
 const inter = Inter({
   variable: '--font-inter',
@@ -23,6 +24,7 @@ export default function RootLayout({
     <html lang="ru">
       <body className={`${inter.variable} ${roboto.variable}`}>
         <Header />
+        <Carousel />
         {children}
         <BottomNav />
       </body>
