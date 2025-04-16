@@ -4,6 +4,7 @@ import React, { JSX } from 'react';
 import { BottomNav } from '@/components/bottom-nav/bottom-nav';
 import { Header } from '@/components/header/header';
 import { Carousel } from '@/components/carousel/carousel';
+import { TopNav } from '@/components/top-nav/top-nav';
 
 const inter = Inter({
   variable: '--font-inter',
@@ -25,6 +26,7 @@ export default function RootLayout({
       <body className={`${inter.variable} ${roboto.variable}`}>
         <Header />
         <Carousel />
+        <TopNav />
         {children}
         <BottomNav />
       </body>
