@@ -14,14 +14,15 @@ import styles from './button.module.scss';
  * Отображает кнопку с текстом и стилем в зависимости от типа (`type`).
  * Блокирует взаимодействие при типах `waiting` или `inActive`.
  */
-export const Button = ({ label, type }: ButtonComponentProps): JSX.Element => {
+export const Button = ({ label, type, className, ...props }: ButtonComponentProps): JSX.Element => {
   const isDisabled = type === 'waiting' || type === 'inActive';
 
   return (
     <button
-      className={clsx(styles.button, type && styles[type])}
+      className={clsx(styles.button, className, styles[type])}
       disabled={isDisabled}
       aria-disabled={isDisabled}
+      {...props}
     >
       {label}
     </button>
