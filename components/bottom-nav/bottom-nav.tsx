@@ -2,6 +2,8 @@ import { JSX } from 'react';
 import styles from './bottom-nav.module.scss';
 import { NavItem } from '@/components/bottom-nav/nav-item/nav-item';
 import { bottomNav } from '@/utils/navigation';
+import { BottomNavProps } from '@/components/bottom-nav/bottom-nav.props';
+import clsx from 'clsx';
 
 /**
  * Bottom navigation bar component.
@@ -18,9 +20,9 @@ import { bottomNav } from '@/utils/navigation';
  * Использует массив `bottomNav` для генерации пунктов меню.
  * Адаптивное поведение пока не реализовано — будет добавлено при необходимости.
  */
-export const BottomNav = (): JSX.Element => {
+export const BottomNav = ({ className }: BottomNavProps): JSX.Element => {
   return (
-    <nav className={styles.bottomNav} aria-label="Основная навигация">
+    <nav className={clsx(styles.bottomNav, className)} aria-label="Основная навигация">
       {bottomNav.map(
         (item): JSX.Element => (
           <NavItem key={item.label} navItem={item} />
