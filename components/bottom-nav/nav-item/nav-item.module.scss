@@ -1,10 +1,13 @@
 @use '@/styles/base/variables' as vars;
+@use '@/styles/mixins/mixins' as mixins;
 
 .navItemLink {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.2rem;
+  @include mixins.flexbox(
+    $align: center,
+    $justify: space-between,
+    $direction: column,
+    $gap: 0.2rem
+  );
 
   transition: color 0.2s ease;
 

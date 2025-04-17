@@ -1,8 +1,8 @@
 'use client';
 
 import { JSX } from 'react';
-import { Button } from '@/ui/button/button';
-import { ButtonComponentProps } from '@/ui/button/button.props';
+import { Button } from '@/components/ui/button/button';
+import { ButtonComponentProps } from '@/components/ui/button/button.props';
 
 /**
  * NavItem component.

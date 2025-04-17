@@ -53,7 +53,7 @@ export const NavItem = ({ navItem }: NavItemProps): JSX.Element => {
       aria-label={navItem.label}
       aria-current={isActive ? 'page' : undefined}
     >
-      <Icon className={clsx(styles.navItemIcon)} aria-hidden="true" focusable="false" />
+      <Icon aria-hidden="true" focusable="false" />
       <span className={clsx(styles.navItemLabel)}>{navItem.label}</span>
     </Link>
   );
