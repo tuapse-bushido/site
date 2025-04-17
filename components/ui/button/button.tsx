@@ -1,6 +1,6 @@
 import { JSX } from 'react';
 import clsx from 'clsx';
-import { ButtonComponentProps } from '@/ui/button/button.props';
+import { ButtonComponentProps } from '@/components/ui/button/button.props';
 import styles from './button.module.scss';
 
 /**
