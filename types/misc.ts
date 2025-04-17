@@ -37,3 +37,9 @@ export type BottomNavItem = {
   label: string;
   href: string;
 };
+
+export type MenuPageItem = {
+  title: string;
+  icon: string;
+  href: string;
+};

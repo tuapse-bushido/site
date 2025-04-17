@@ -1,4 +1,4 @@
-import { BottomNavItem } from '@/types';
+import { BottomNavItem, MenuPageItem } from '@/types';
 
 /**
  * Configuration array for bottom navigation items.
@@ -24,4 +24,16 @@ export const bottomNav: BottomNavItem[] = [
   { iconId: 'profile', label: 'Профиль', href: '/profile' },
   { iconId: 'promo', label: 'Акции', href: '/promo' },
   { iconId: 'cart', label: 'Корзина', href: '/cart' },
+];
+
+export const menuPage: MenuPageItem[] = [
+  { title: 'Новинки', icon: 'new', href: '/menu/new' },
+  { title: 'Горячее', icon: 'hot', href: '/menu/hot' },
+  { title: 'Онигири', icon: 'onigiri', href: '/menu/onigiri' },
+  { title: 'Пицца', icon: 'pizza', href: '/menu/pizza' },
+  { title: 'Роллы', icon: 'rolls', href: '/menu/rolls' },
+  { title: 'Салаты', icon: 'salads', href: '/menu/salads' },
+  { title: 'Сеты', icon: 'sets', href: '/menu/sets' },
+  { title: 'Суши', icon: 'sushi', href: '/menu/sushi' },
+  { title: 'Wok', icon: 'wok', href: '/menu/wok' },
 ];

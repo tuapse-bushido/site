@@ -1,0 +1,9 @@
+export { default as Hot } from './hot.svg';
+export { default as New } from './new.svg';
+export { default as Onigiri } from './onigiri.svg';
+export { default as Pizza } from './pizza.svg';
+export { default as Rolls } from './rolls.svg';
+export { default as Salads } from './salads.svg';
+export { default as Sets } from './sets.svg';
+export { default as Sushi } from './sushi.svg';
+export { default as Wok } from './wok.svg';
