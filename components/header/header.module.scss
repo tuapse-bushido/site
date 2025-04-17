@@ -5,6 +5,7 @@
   @include mixins.flexbox($justify: space-between);
 
   height: 8.7rem;
+  margin-bottom: 2rem;
   padding: 2rem 2.3rem 1.5rem;
 
   background-color: vars.$color-white;

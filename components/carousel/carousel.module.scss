@@ -2,8 +2,7 @@
 @use '@/styles/mixins/mixins' as mixins;
 
 .sliderWrapper {
-  height: 18rem;
-  margin-top: 1.8rem;
+  height: auto;
 
   :global(.swiper) {
     display: flex;

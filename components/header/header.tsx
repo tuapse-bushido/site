@@ -1,5 +1,5 @@
 import { JSX } from 'react';
-import { Button } from '@/ui/button/button';
+import { Button } from '@/components/ui/button/button';
 import styles from './header.module.scss';
 import { SearchButton } from '@/components/header/search-button/search-button';
 import { Logo } from '@/components/header/logo/logo';
