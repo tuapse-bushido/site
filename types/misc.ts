@@ -1,4 +1,6 @@
 import React from 'react';
+import { Category } from '@/types/db/category';
+import { Product } from '@/types/db/product';
 
 /**
  * Union type of all available bottom navigation icon IDs.
@@ -43,3 +45,10 @@ export type MenuPageItem = {
   icon: string;
   href: string;
 };
+
+export type GroupedItem = {
+  category: Category;
+  products: Product[];
+};
+
+export type Grouped = GroupedItem[];

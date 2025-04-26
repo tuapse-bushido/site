@@ -32,7 +32,7 @@
     }
   },
   "include": [
-    "svgr.d.ts",
+    "types/svg/svgr.d.ts",
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
