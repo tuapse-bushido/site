@@ -1,0 +1,89 @@
+@use '@/styles/base/variables' as vars;
+@use '@/styles/mixins/mixins' as mixins;
+
+.productCard {
+  @include mixins.flexbox($align: stretch, $justify: flex-start, $direction: column, $gap: 0.6rem);
+
+  padding: 1rem;
+  border-radius: 0.8rem;
+
+  background-color: vars.$bg-color-secondary;
+}
+
+.productCardCart {
+  @include mixins.flexbox($align: stretch, $justify: space-between, $gap: 1rem);
+}
+
+.productImageWrapper {
+  position: relative;
+  width: 100%;
+}
+
+.productImageWrapperCart {
+  flex-shrink: 0;
+  width: 29vw;
+}
+
+.productImage {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+}
+
+.productContent {
+  @include mixins.flexbox(
+    $align: stretch,
+    $justify: space-between,
+    $direction: column,
+    $gap: 1.2rem
+  );
+  flex: 1;
+  padding-left: 0.6rem;
+}
+
+.productContentCart {
+  flex: 1;
+}
+
+.productContentHeader {
+  @include mixins.flexbox($align: flex-start, $direction: column, $gap: 0.3rem);
+}
+
+.productHeaderTitle {
+  font-size: 1.6rem;
+  font-weight: 400;
+  line-height: 100%;
+}
+
+.productHeaderDescription {
+  color: vars.$text-color-secondary;
+  font-size: 1rem;
+  line-height: 100%;
+  letter-spacing: -0.04rem;
+}
+
+.productContentFooter {
+  @include mixins.flexbox($justify: space-between);
+}
+
+.productFooterPrice {
+  @include mixins.flexbox($align: flex-start, $direction: column);
+  font-size: clamp(1.3rem, calc(1.3rem + ((100vw - 360px) * 0.0125)), 1.4rem);
+  font-weight: 700;
+  line-height: 100%;
+}
+
+.productFooterPriceCart {
+  font-size: 1.4rem;
+}
+
+.priceOld {
+  color: vars.$text-color-secondary;
+  font-size: 1rem;
+  text-decoration: line-through;
+}
+
+.priceDiscount {
+  color: vars.$color-primary;
+}
