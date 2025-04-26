@@ -1,0 +1,43 @@
+@use '@/styles/base/variables' as vars;
+@use '@/styles/mixins/mixins' as mixins;
+
+.button {
+  @include mixins.flexbox($justify: space-between, $gap: 0.5rem);
+
+  height: 3.2rem;
+
+  padding: 0 clamp(0.5rem, 0.5rem + (calc(100vw - 344px) * 0.09375), 1.4rem);
+  border: 1px solid #d9d9d9;
+  border-radius: 0.6rem;
+  background-color: vars.$bg-color-primary;
+
+  user-select: none;
+
+  transition: all 0.2s ease;
+}
+
+.icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 1.7rem;
+  height: 100%;
+
+  cursor: pointer;
+
+  & svg {
+    cursor: pointer;
+  }
+}
+
+.quantity {
+  min-width: 2ch;
+  text-align: center;
+}
+
+.quantityMulti {
+  border-color: vars.$btn-color-border-multi-quantity;
+  background-color: vars.$btn-color-multi-quantity;
+  color: vars.$color-primary;
+}
