@@ -4,7 +4,7 @@
 .bottomNav {
   @include mixins.flexbox($align: flex-start, $justify: space-evenly);
 
-  height: 85px;
+  height: 7.5rem;
   padding-top: 1.4rem;
   background-color: vars.$bg-color-secondary;
 }

@@ -9,7 +9,7 @@ export const MenuList = async (): Promise<JSX.Element> => {
     return new Promise((resolve): void => {
       setTimeout((): void => {
         resolve(menuPage);
-      }, 1000);
+      }, 500);
     });
   };
 
