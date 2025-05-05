@@ -1,5 +1,5 @@
 import { pool } from '@/libs/db/db';
-import { Category, categoryArraySchema } from '@/types/db/category';
+import { Category, categoryArraySchema } from '@/types/db/tables/category';
 
 /**
  * Fetches all **active** product categories from the database.
