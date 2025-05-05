@@ -33,8 +33,6 @@ export const categorySchema = z.object({
   slug: z.string(),
   image_link: z.string().nullable(),
   sort_number: z.number(),
-  created_at: z.string().optional(),
-  updated_at: z.string().optional(),
 });
 
 /**

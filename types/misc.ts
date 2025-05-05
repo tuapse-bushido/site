@@ -1,6 +1,6 @@
 import React from 'react';
-import { Category } from '@/types/db/category';
-import { Product } from '@/types/db/product';
+import { Category } from '@/types/db/tables/category';
+import { ProductCard } from '@/types/db/composite/product-card';
 
 /**
  * Union type of all available bottom navigation icon IDs.
@@ -48,7 +48,7 @@ export type MenuPageItem = {
 
 export type GroupedItem = {
   category: Category;
-  products: Product[];
+  products: ProductCard[];
 };
 
 export type Grouped = GroupedItem[];
