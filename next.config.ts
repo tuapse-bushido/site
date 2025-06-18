@@ -26,6 +26,7 @@ const nextConfig: NextConfig = {
 
     return config;
   },
+  devIndicators: false,
   images: {
     remotePatterns: [new URL('https://955a99af-74d7-4b91-a36a-20819b829e85.selstorage.ru/**')],
   },
