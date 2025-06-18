@@ -40,11 +40,13 @@ export const productSchema = z.object({
   is_set: z.boolean(),
   slug: z.string(),
   image_link: z.string(),
-  price: z.number().nonnegative(),
+  price: z.preprocess((val: unknown): number | unknown => (val !== null ? Number(val) : val), z.number().nonnegative()),
   weight: z.number().nonnegative(),
   count_portion: z.number().nonnegative(),
   quantity: z.number().nonnegative(),
 });
+
+export const productArraySchema = z.array(productSchema);
 
 /**
  * Inferred TypeScript type for a product.

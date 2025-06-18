@@ -1,5 +1,6 @@
-import { Product } from '@/types';
+import { Product, productSchema } from '@/types';
 import { AddonRule } from '@/types/db/tables/addon-rule';
+import { z } from 'zod';
 
 /**
  * Extended product type used for the product card view.
@@ -49,3 +50,37 @@ type AddonRuleWithProduct = Omit<AddonRule, 'id' | 'addon_group_id' | 'is_active
 type SetItemWithIngredients = {
   ingredients: string[];
 };
+
+/**
+ * Basic ID and title schema used for referencing related entities.
+ *
+ * ---
+ * Базовая схема сущностей, содержащих только ID и название.
+ */
+const idTitleSchema = z.object({
+  id: z.number(),
+  title: z.string(),
+});
+
+/**
+ * Extended product schema with related details.
+ *
+ * ---
+ * Расширенная схема товара, включающая связанные сущности:
+ * - категории
+ * - ингредиенты
+ * - состав сета
+ */
+export const productWithDetailsSchema = productSchema.extend({
+  categories: z.array(idTitleSchema),
+  ingredients: z.array(idTitleSchema),
+  set_items: z.array(idTitleSchema),
+});
+
+/**
+ * Inferred TypeScript type of product with details.
+ *
+ * ---
+ * Тип товара с категориями, ингредиентами и составом сета.
+ */
+export type ProductWithDetails = z.infer<typeof productWithDetailsSchema>;
