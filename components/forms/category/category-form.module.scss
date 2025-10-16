@@ -1,0 +1,22 @@
+.form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  align-items: flex-start;
+
+  width: 60rem;
+
+  & input {
+    border: 1px solid black;
+  }
+}
+
+.h1 {
+  grid-column: 1 / 3;
+  grid-row: 1 / 2;
+}
+
+.image {
+  grid-column: 2 / 3;
+  grid-row: 2 / 3;
+}

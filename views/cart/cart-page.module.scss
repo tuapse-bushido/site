@@ -1,0 +1,16 @@
+@use '@/styles/mixins/mixins' as mixins;
+.page {
+  @include mixins.flexbox($align: stretch, $direction: column, $gap: 2rem);
+}
+
+.pageDeliveryImageWrapper {
+  position: relative;
+  width: 100%;
+  height: auto;
+}
+
+.deliveryImage {
+  display: block;
+  width: 100%;
+  height: auto;
+}

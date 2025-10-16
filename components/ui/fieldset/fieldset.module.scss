@@ -1,0 +1,12 @@
+@use '@/styles/mixins/mixins' as mixins;
+
+.fieldset {
+  @include mixins.flexbox($align: stretch, $direction: column, $gap: 1.5rem);
+  border: none;
+}
+
+.legend {
+  margin-bottom: 1rem;
+  font-size: 2rem;
+  font-weight: bold;
+}

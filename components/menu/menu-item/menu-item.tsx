@@ -1,22 +1,12 @@
 import { JSX } from 'react';
 import { IconLabelItem } from '@/components/ui/icon-label-item/icon-label-item';
 import { MenuItemProps } from '@/components/menu/menu-item/menu-item.props';
-import {
-  Hot,
-  New,
-  Onigiri,
-  Pizza,
-  Rolls,
-  Salads,
-  Sets,
-  Sushi,
-  Wok,
-} from '@/assets/menu-page/index';
+import { Hot, New, Onigiri, Pizza, Rolls, Salads, Sets, Sushi, Wok } from '@/assets/menu-page/index';
 
 import styles from './menu-item.module.scss';
-import { IconMap } from '@/types';
+import { IconKey, IconMapMenu } from '@/types';
 
-const iconMap: IconMap = {
+const iconMap: IconMapMenu = {
   new: New,
   hot: Hot,
   onigiri: Onigiri,
@@ -31,7 +21,7 @@ const iconMap: IconMap = {
 export const MenuItem = ({ item }: MenuItemProps): JSX.Element => {
   return (
     <IconLabelItem
-      icon={iconMap[item.icon]}
+      icon={iconMap[item.icon as IconKey]}
       label={item.title}
       href={item.href}
       rootClassName={styles.root}

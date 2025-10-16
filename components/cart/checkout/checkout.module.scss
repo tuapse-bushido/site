@@ -1,0 +1,14 @@
+@use '@/styles/base/variables' as vars;
+@use '@/styles/mixins/mixins' as mixins;
+
+.form {
+  @include mixins.flexbox($align: stretch, $direction: column, $gap: 2rem);
+}
+
+.section {
+  @include mixins.flexbox;
+}
+
+.btnOrderType {
+  width: 100%;
+}

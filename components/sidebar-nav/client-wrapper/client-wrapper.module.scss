@@ -1,0 +1,52 @@
+@use '@/styles/base/variables' as vars;
+@use 'sass:map';
+
+//.wrapper {
+//  grid-column: 2;
+//  width: 0;
+//  height: 100%;
+//  overflow: hidden;
+//  background-color: vars.$bg-color-secondary;
+//
+//  transform: translateY(-100%);
+//  opacity: 0;
+//  transition: width 0.5s ease, transform 0.5s ease, opacity 0.5s ease;
+//}
+//
+//.isOpen {
+//  @media (min-width: map.get(vars.$breakpoints, md)) {
+//    width: 8.8rem;
+//    transform: translateY(0);
+//    opacity: 1;
+//  }
+//
+//  @media (min-width: map.get(vars.$breakpoints, lg)) {
+//    width: 13.5rem;
+//  }
+//}
+
+.wrapper {
+  grid-column: 2;
+  transform: scaleY(0);
+  transform-origin: top;
+  opacity: 0;
+  width: 0;
+  height: auto;
+  transition:
+    transform 0.4s ease,
+    opacity 0.4s ease,
+    width 0.4s ease;
+  overflow: hidden;
+}
+
+.isOpen {
+  @media (min-width: map.get(vars.$breakpoints, md)) {
+    transform: scaleY(1);
+    opacity: 1;
+    width: 8.8rem;
+  }
+
+  @media (min-width: map.get(vars.$breakpoints, lg)) {
+    width: 13.5rem;
+  }
+}

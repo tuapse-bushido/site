@@ -1,0 +1,19 @@
+@use '@/styles/base/variables' as vars;
+
+.tr {
+  cursor: pointer;
+}
+
+.td {
+  position: relative;
+  padding: 1rem;
+  font-weight: 500;
+  font-size: 1.7rem;
+  text-align: left;
+  border-top: 0.2rem solid vars.$border-color-table;
+}
+
+.image {
+  width: 100%;
+  height: auto;
+}

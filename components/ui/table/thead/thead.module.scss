@@ -1,0 +1,11 @@
+@use '@/styles/base/variables' as vars;
+
+.th {
+  padding: 1rem;
+  font-weight: 500;
+  font-size: 2rem;
+  line-height: 2.5rem;
+  text-align: left;
+  border-top: 0.2rem solid vars.$border-color-table;
+  border-bottom: 0.2rem solid vars.$border-color-table;
+}

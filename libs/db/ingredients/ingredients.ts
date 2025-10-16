@@ -1,3 +1,4 @@
+'use server';
 import { pool } from '@/libs/db/db';
 import { Ingredient, ingredientArraySchema, ingredientSchema } from '@/types/db/tables/ingredient';
 

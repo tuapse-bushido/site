@@ -1,9 +1,16 @@
 $color-primary: #fe0000;
 $color-secondary: #000000;
 $color-white: #ffffff;
+$color-gray: #ededed;
 
 // Font
 $font: var(--font-inter), var(--font-roboto), 'Segoe UI', 'Helvetica Neue', 'Arial', sans-serif;
+
+$breakpoints: (
+  sm: null,
+  md: 768px,
+  lg: 1200px,
+);
 
 // Background
 $bg-color-primary: #f4f4f4;
@@ -16,6 +23,9 @@ $btn-color-primary-hover: #e10000;
 $btn-color-primary-active: #c00000;
 
 $btn-color-secondary: $color-white;
+
+$btn-color-gray: $color-gray;
+
 $btn-color-multi-quantity: #ffe6e6;
 $btn-color-border-multi-quantity: #ffbaba;
 
@@ -25,5 +35,13 @@ $btn-color-waiting: #262626;
 $btn-color-dots-primary: #dedede;
 
 // Text
+$text-color-primary: $color-secondary;
 $text-color-secondary: #8f8f8f;
 $text-color-cart-free: #3e9937;
+
+// Divider
+$bg-color-divider: #ababab;
+
+// Admin SideBar
+$bg-color-sidebar: #4ba1a5;
+$border-color-table: #716561;

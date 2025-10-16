@@ -13,6 +13,19 @@ import { ProductCard } from '@/types/db/composite/product-card';
  */
 export type IconId = 'home' | 'menu' | 'promo' | 'cart' | 'profile';
 
+export type IconMapMenu = {
+  new: React.FC<React.SVGProps<SVGSVGElement>>;
+  hot: React.FC<React.SVGProps<SVGSVGElement>>;
+  onigiri: React.FC<React.SVGProps<SVGSVGElement>>;
+  pizza: React.FC<React.SVGProps<SVGSVGElement>>;
+  rolls: React.FC<React.SVGProps<SVGSVGElement>>;
+  sushi: React.FC<React.SVGProps<SVGSVGElement>>;
+  salads: React.FC<React.SVGProps<SVGSVGElement>>;
+  sets: React.FC<React.SVGProps<SVGSVGElement>>;
+  wok: React.FC<React.SVGProps<SVGSVGElement>>;
+};
+export type IconKey = keyof IconMapMenu;
+
 /**
  * Maps each `iconId` to its corresponding React SVG component.
  *

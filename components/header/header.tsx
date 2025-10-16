@@ -1,9 +1,10 @@
 import { JSX } from 'react';
-import { Button } from '@/components/ui/button/button';
 import styles from './header.module.scss';
-import { SearchButton } from '@/components/header/search-button/search-button';
 import { Logo } from '@/components/header/logo/logo';
-import clsx from 'clsx';
+import { Button } from '@/components/ui/button/button';
+import { MenuButton } from '@/components/header/menu-button/menu-button';
+import { SearchButton } from '@/components/header/search-button/search-button';
+import { ActionButton } from './action-button/action-button';
 
 /**
  * Header component.
@@ -19,11 +20,16 @@ import clsx from 'clsx';
 export const Header = (): JSX.Element => {
   return (
     <header className={styles.header}>
-      <Logo className={clsx(styles.container, styles.logo)} />
+      <MenuButton />
 
-      <div className={styles.container}>
-        <Button label={'Войти'} type={'login'} />
-        <SearchButton />
+      <div className={styles.content}>
+        <Logo className={styles.logo} />
+
+        <div className={styles.actions}>
+          <Button label="Войти" type="login" />
+          <ActionButton action={'cart'} className={styles.cart} />
+          <SearchButton />
+        </div>
       </div>
     </header>
   );

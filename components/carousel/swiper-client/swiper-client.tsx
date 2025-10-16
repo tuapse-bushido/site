@@ -38,15 +38,7 @@ export const SwiperClient = ({ items }: SwiperClientProps): JSX.Element => {
       {items.map(
         (item, index): JSX.Element => (
           <SwiperSlide key={index}>
-            {
-              <Image
-                src={item}
-                alt={item}
-                fill
-                sizes="(max-width: 440px) 100vw"
-                priority={index === 0}
-              />
-            }
+            {<Image src={item} alt={item} fill sizes="(max-width: 440px) 100vw" priority={index === 0} />}
           </SwiperSlide>
         ),
       )}

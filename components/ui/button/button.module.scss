@@ -4,11 +4,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: auto;
-  height: auto;
 
   padding: 0.8rem clamp(1rem, calc(1rem + (calc(100vw - 360px) * 0.05)), 1.4rem);
-  border-radius: 1rem;
+  border-radius: 0.6rem;
 
   font-weight: 700;
   font-size: 1.6rem;
@@ -20,6 +18,32 @@
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+}
+
+.rule {
+  height: auto;
+
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 0.5rem;
+
+  font-family: vars.$font;
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 2.5rem;
+  text-transform: uppercase;
+  white-space: wrap;
+
+  background-color: vars.$btn-color-primary;
+  color: vars.$color-white;
+
+  &:hover {
+    background-color: vars.$btn-color-primary-hover;
+  }
+
+  &:active {
+    background-color: vars.$btn-color-primary-active;
+  }
 }
 
 .login,
@@ -50,18 +74,41 @@
   color: vars.$btn-color-primary;
 }
 
-.primary {
+.primary,
+.primaryCheckout {
   height: 5.4rem;
-
+  border: none;
   background-color: vars.$btn-color-primary;
+  color: vars.$color-white;
+}
+
+.secondary,
+.secondaryCheckout {
+  height: 5.4rem;
+  border: none;
+  background-color: vars.$btn-color-gray;
+  color: vars.$color-secondary;
+}
+
+.primaryCheckout,
+.secondaryCheckout {
+  height: 3.2rem;
+  font-size: 1.4rem;
+  font-weight: 400;
 }
 
 .inActive {
+  height: 5.4rem;
   background-color: vars.$btn-color-primary-30;
+  border: none;
+  color: vars.$color-white;
 }
 
 .waiting {
+  height: 5.4rem;
+  border: none;
   background-color: vars.$color-secondary;
+  color: vars.$color-white;
 }
 
 .cancel {

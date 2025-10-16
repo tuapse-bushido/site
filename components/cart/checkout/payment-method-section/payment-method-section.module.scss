@@ -1,0 +1,11 @@
+@use '@/styles/mixins/mixins' as mixins;
+
+.wrapper {
+  @include mixins.flexbox($justify: flex-start, $direction: row-reverse, $gap: 0.5rem);
+  width: fit-content;
+}
+
+.input {
+  width: 2.5rem;
+  height: 2.5rem;
+}

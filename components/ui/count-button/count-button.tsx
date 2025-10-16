@@ -45,10 +45,7 @@ export const CountButton = ({
   ...props
 }: CountButtonProps): JSX.Element => {
   return (
-    <div
-      className={clsx(styles.button, className, quantity > 1 && styles.quantityMulti)}
-      {...props}
-    >
+    <div className={clsx(styles.button, className, quantity > 1 && styles.quantityMulti)} {...props}>
       <span className={clsx(styles.icon)} onClick={onDecrement}>
         <MinusIcon />
       </span>

@@ -1,0 +1,10 @@
+@use '@/styles/base/variables' as vars;
+@use '@/styles/mixins/mixins' as mixins;
+
+.wrapper {
+  @include mixins.flexbox($direction: column, $align: stretch, $gap: 1.5rem);
+}
+
+.list {
+  @include mixins.flexbox($direction: column, $align: stretch, $gap: 1rem);
+}

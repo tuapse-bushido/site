@@ -1,5 +1,16 @@
+@use '@/styles/base/variables' as vars;
+@use 'sass:map';
+
 .productList {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-gap: 0.6rem;
+
+  @media (min-width: map.get(vars.$breakpoints, md)) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media (min-width: map.get(vars.$breakpoints, lg)) {
+    grid-template-columns: repeat(4, 1fr);
+  }
 }

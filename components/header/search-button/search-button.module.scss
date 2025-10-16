@@ -1,5 +1,6 @@
 @use '@/styles/base/variables' as vars;
 @use '@/styles/mixins/mixins' as mixins;
+@use 'sass:map';
 
 .button {
   @include mixins.flexbox;
@@ -12,4 +13,12 @@
   background-color: transparent;
 
   cursor: pointer;
+}
+
+.cart {
+  display: none;
+
+  @media (min-width: map.get(vars.$breakpoints, md)) {
+    display: block;
+  }
 }

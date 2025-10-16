@@ -1,27 +1,22 @@
 import { JSX } from 'react';
-import { menuPage } from '@/utils/navigation';
-import { MenuPageItem } from '@/types';
-import { MenuItem } from '@/components/menu/menu-item/menu-item';
 import styles from './menu-list.module.scss';
+import { getAllActiveCategories } from '@/libs/db/category/category.query';
+import { IconLabelItem } from '../ui/icon-label-item/icon-label-item';
 
-export const MenuList = async (): Promise<JSX.Element> => {
-  const getData = (): Promise<MenuPageItem[]> => {
-    return new Promise((resolve): void => {
-      setTimeout((): void => {
-        resolve(menuPage);
-      }, 500);
-    });
-  };
+export const MenuList = async (): Promise<JSX.Element | null> => {
+  const categories = await getAllActiveCategories();
 
-  const menuItems: MenuPageItem[] = await getData();
+  if (!categories.success) return null;
 
   return (
-    <div className={styles.menuList}>
-      {menuItems.map(
-        (item, i): JSX.Element => (
-          <MenuItem key={i} item={item} />
+    <ul className={styles.sidebar}>
+      {categories.data.map(
+        (item): JSX.Element => (
+          <li key={item.id}>
+            <IconLabelItem href={item.slug} label={item.title} icon={item.image_link ?? 'no_image.png'} />
+          </li>
         ),
       )}
-    </div>
+    </ul>
   );
 };

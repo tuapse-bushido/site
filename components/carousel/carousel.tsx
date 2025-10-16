@@ -17,12 +17,7 @@ import { SwiperClient } from '@/components/carousel/swiper-client/swiper-client'
  * заменён на динамический запрос к базе данных.
  */
 export const Carousel = (): JSX.Element => {
-  const swiper = [
-    '/carousel/image.png',
-    '/carousel/image1.png',
-    '/carousel/image2.png',
-    '/carousel/image3.png',
-  ];
+  const swiper = ['/carousel/image.png', '/carousel/image1.png', '/carousel/image2.png', '/carousel/image3.png'];
 
   return (
     <div className={styles.sliderWrapper}>

@@ -1,0 +1,42 @@
+@use '@/styles/base/variables' as vars;
+@use '@/styles/mixins/mixins' as mixins;
+
+.form {
+  @include mixins.flexbox($align: stretch, $direction: column, $gap: 2rem);
+  width: 40%;
+  min-width: 24rem;
+  max-width: 50rem;
+  padding: 2rem;
+  border-radius: 1.5rem;
+  background-color: vars.$bg-color-secondary;
+
+  -webkit-box-shadow: 0.9rem 0.8rem 1.5rem 0.1rem rgba(0, 0, 0, 0.93);
+  -moz-box-shadow: 0.9rem 0.8rem 1.5rem 0.1rem rgba(0, 0, 0, 0.93);
+  box-shadow: 0.9rem 0.8rem 1.5rem 0.1rem rgba(0, 0, 0, 0.93);
+
+  &:invalid button {
+    pointer-events: none;
+    background-color: vars.$btn-color-primary-30;
+  }
+}
+
+.wrapperInputGroup {
+  gap: 1rem;
+}
+
+.inputLabel {
+  font-size: 1.8rem;
+  font-weight: 500;
+
+  cursor: pointer;
+}
+
+.input {
+  border: 0.1rem solid vars.$color-secondary;
+
+  cursor: pointer;
+
+  &:focus {
+    cursor: text;
+  }
+}

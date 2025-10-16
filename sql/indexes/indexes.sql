@@ -60,13 +60,14 @@ CREATE INDEX IF NOT EXISTS idx_addon_product_id ON addon (product_id);
 -- addon_rule
 CREATE INDEX IF NOT EXISTS idx_addon_rule_is_active ON addon_rule (is_active);
 
--- addon_to_product
-CREATE INDEX IF NOT EXISTS idx_addon_to_product_product_id ON addon_to_product (product_id);
-CREATE INDEX IF NOT EXISTS idx_addon_to_product_addon_id ON addon_to_product (addon_id);
+-- addon_rule_to_product
+CREATE INDEX IF NOT EXISTS idx_addon_rule_to_product_product_id ON addon_rule_to_product (product_id);
+CREATE INDEX IF NOT EXISTS idx_addon_rule_to_product_rule_id ON addon_rule_to_product (addon_rule_id);
 
--- addon_to_category
-CREATE INDEX IF NOT EXISTS idx_addon_to_category_category_id ON addon_to_category (category_id);
-CREATE INDEX IF NOT EXISTS idx_addon_to_category_addon_id ON addon_to_category (addon_id);
+-- addon_rule_to_category
+CREATE INDEX IF NOT EXISTS idx_addon_rule_to_category_category_id ON addon_rule_to_category (category_id);
+CREATE INDEX IF NOT EXISTS idx_addon_rule_to_category_rule_id ON addon_rule_to_category (addon_rule_id);
+
 
 -- set_item
 CREATE INDEX IF NOT EXISTS idx_set_item_set_product_id ON set_item (set_product_id);

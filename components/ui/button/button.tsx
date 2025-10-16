@@ -19,7 +19,7 @@ export const Button = ({ label, type, className, ...props }: ButtonComponentProp
 
   return (
     <button
-      className={clsx(styles.button, className, styles[type])}
+      className={clsx(styles[type], styles.button, className)}
       disabled={isDisabled}
       aria-disabled={isDisabled}
       {...props}

@@ -1,0 +1,5 @@
+@use '@/styles/mixins/mixins' as mixins;
+
+.form {
+  @include mixins.flexbox($align: stretch, $direction: column, $gap: 1.5rem);
+}

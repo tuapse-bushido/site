@@ -1,22 +1,49 @@
 @use '@/styles/base/variables' as vars;
 @use '@/styles/mixins/mixins' as mixins;
+@use 'sass:map';
 
 .header {
-  @include mixins.flexbox($justify: space-between);
+  display: grid;
+  grid-template-columns: auto auto minmax(0, 1200px) auto;
 
-  height: 8.7rem;
-  margin-bottom: 2rem;
-  padding: 2rem 2.3rem 1.5rem;
-
+  width: 100%;
+  height: 8.8rem;
   background-color: vars.$color-white;
-
   box-shadow: 0 0.4rem 1.4rem 0 #0000000a;
+
+  @media (min-width: map.get(vars.$breakpoints, md)) {
+    grid-template-columns: auto 8.8rem minmax(0, 1200px) auto;
+  }
+
+  @media (min-width: map.get(vars.$breakpoints, lg)) {
+    grid-template-columns: auto 13.5rem minmax(0, 1200px) auto;
+  }
 }
 
-.container {
-  @include mixins.flexbox($gap: 1rem);
+.inner {
+  @include mixins.flexbox($justify: center);
+  max-width: 1200px;
+  height: 100%;
+  margin: auto;
+}
+
+.content {
+  grid-column: 3;
+
+  @include mixins.flexbox($justify: space-between);
+  flex: 1;
+  padding: 2rem 1.7rem;
+
+  @media (min-width: map.get(vars.$breakpoints, md)) {
+    padding: 2rem 1.7rem;
+  }
 }
 
 .logo {
+  @include mixins.flexbox($gap: 1rem);
   cursor: pointer;
+}
+
+.actions {
+  @include mixins.flexbox($gap: 1rem);
 }

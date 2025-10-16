@@ -1,6 +1,6 @@
 import { JSX } from 'react';
-import SearchIcon from '@/assets/control-panel/search.svg';
 import styles from './search-button.module.scss';
+import SearchIcon from '@/assets/control-panel/search.svg';
 
 /**
  * Search button component.

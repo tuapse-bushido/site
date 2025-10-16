@@ -30,5 +30,15 @@ type ButtonProps = DetailedHTMLProps<HTMLAttributes<HTMLButtonElement>, HTMLButt
  */
 export type ButtonComponentProps = ButtonProps & {
   label: string;
-  type: 'login' | 'topNav' | 'primary' | 'inCart' | 'inActive' | 'waiting' | 'cancel';
+  type:
+    | 'login'
+    | 'topNav'
+    | 'primary'
+    | 'inCart'
+    | 'inActive'
+    | 'waiting'
+    | 'cancel'
+    | 'primaryCheckout'
+    | 'secondaryCheckout'
+    | 'rule';
 };

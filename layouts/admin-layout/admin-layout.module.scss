@@ -1,0 +1,21 @@
+@use '@/styles/base/variables' as vars;
+
+.layout {
+  display: grid;
+  height: 100%;
+  grid-template-columns: 25rem 1fr;
+  grid-template-rows: 10rem 1fr;
+}
+
+.main {
+  grid-column: 2 / 3;
+  grid-row: 2 / 3;
+
+  margin: 0 3rem 5rem;
+  padding: 3rem 5rem;
+
+  border-radius: 1rem;
+  background-color: vars.$bg-color-secondary;
+
+  overflow: auto;
+}

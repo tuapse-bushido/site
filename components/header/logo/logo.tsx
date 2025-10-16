@@ -1,9 +1,8 @@
 'use client';
-
 import { JSX } from 'react';
-import { LogoIcon, LogoTextIcon } from '@/assets/logo';
 import { useRouter } from 'next/navigation';
 import { LogoProps } from '@/components/header/logo/logo.props';
+import { LogoIcon, LogoTextIcon } from '@/assets/logo';
 
 /**
  * Logo component.

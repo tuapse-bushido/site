@@ -1,3 +1,4 @@
+'use server';
 import { pool } from '@/libs/db/db';
 import { ActionResult, actionResult, ErrorCode, errorResult } from '@/utils';
 import { setItemArraySchema, SetItemType } from '@/types/db/tables/set-item';

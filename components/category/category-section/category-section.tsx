@@ -1,14 +1,10 @@
-import { JSX } from 'react';
-import { CategorySectionProps } from '@/components/category/category-section/category-section.props';
-import { ProductCardMain } from '@/components/product/product-card/product-card-main/product-card-main';
 import clsx from 'clsx';
+import { JSX } from 'react';
 import styles from './category-section.module.scss';
+import { ProductCard } from '@/components/product/product-card/product-card';
+import { CategorySectionProps } from '@/components/category/category-section/category-section.props';
 
-export const CategorySection = ({
-  category,
-  products,
-  ...props
-}: CategorySectionProps): JSX.Element => {
+export const CategorySection = ({ category, products, ...props }: CategorySectionProps): JSX.Element => {
   return (
     <section {...props}>
       <h1>{category.title}</h1>
@@ -16,7 +12,7 @@ export const CategorySection = ({
       <div className={clsx(styles.productList)}>
         {products.map(
           (product): JSX.Element => (
-            <ProductCardMain key={product.id} product={product} type={'main'} />
+            <ProductCard key={product.id} variant={'main'} product={product} />
           ),
         )}
       </div>

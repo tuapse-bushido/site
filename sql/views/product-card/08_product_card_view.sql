@@ -124,7 +124,7 @@ FROM product p
                            ara.addon_group_id,
                            ara.addon_products
                     FROM addon_rules_to_products_view atp
-                             JOIN addon_rule_with_addons_view ara ON ara.addon_rule_id = atp.addon_id
+                             JOIN addon_rule_with_addons_view ara ON ara.addon_rule_id = atp.addon_rule_id
 
                     UNION ALL
 
@@ -138,7 +138,7 @@ FROM product p
                            ara.addon_products
                     FROM product_category pcp
                              JOIN addon_rules_to_categories_view atc ON atc.category_id = pcp.category_id
-                             JOIN addon_rule_with_addons_view ara ON ara.addon_rule_id = atc.addon_id) adr
+                             JOIN addon_rule_with_addons_view ara ON ara.addon_rule_id = atc.addon_rule_id) adr
                    ON adr.product_id = p.id
 
 -- Состав сета

@@ -32,9 +32,9 @@
  *     205    |    2
  */
 CREATE OR REPLACE VIEW addon_rules_to_products_view AS
-SELECT
-    atp.product_id,
-    atp.addon_id
-FROM addon_to_product atp
-         JOIN addon_rule adr ON adr.id = atp.addon_id
+SELECT product_id,
+       addon_rule_id
+FROM addon_rule_to_product arp
+         JOIN addon_rule adr ON adr.id = arp.addon_rule_id
 WHERE adr.is_active = true;
+

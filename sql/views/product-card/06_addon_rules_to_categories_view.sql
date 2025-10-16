@@ -31,9 +31,8 @@
  *     15      |     4
  */
 CREATE OR REPLACE VIEW addon_rules_to_categories_view AS
-SELECT
-    atc.category_id,
-    atc.addon_id
-FROM addon_to_category atc
-         JOIN addon_rule adr ON adr.id = atc.addon_id
+SELECT category_id,
+       addon_rule_id
+FROM addon_rule_to_category arc
+         JOIN addon_rule adr ON adr.id = arc.addon_rule_id
 WHERE adr.is_active = true;

@@ -1,3 +1,4 @@
+'use server';
 import { pool } from '@/libs/db/db';
 import { actionResult, ActionResult, ErrorCode, errorResult } from '@/utils';
 import { Product, productArraySchema, productSchema, ProductWithDetails, productWithDetailsSchema } from '@/types';

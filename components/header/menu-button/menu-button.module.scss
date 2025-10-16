@@ -1,0 +1,114 @@
+@use '@/styles/mixins/mixins' as mixins;
+@use '@/styles/base/variables' as vars;
+@use 'sass:map';
+
+.wrapper {
+  grid-column: 2;
+
+  perspective: 1000px;
+
+  width: 0;
+  height: 8.8rem;
+  overflow: hidden;
+
+  transition:
+    width 0.5s ease,
+    transform 0.5s ease;
+
+  cursor: pointer;
+
+  &.rotated {
+    background-color: vars.$bg-color-primary;
+  }
+
+  @media (min-width: map.get(vars.$breakpoints, md)) {
+    width: 8.8rem;
+    transform: translateX(0);
+  }
+
+  @media (min-width: map.get(vars.$breakpoints, lg)) {
+    width: 13.5rem;
+  }
+}
+
+.rotated {
+  transform: rotateY(180deg);
+}
+
+.flipper {
+  transition: 0.5s;
+  transform-style: preserve-3d;
+
+  position: relative;
+}
+
+.front,
+.back {
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  @include mixins.flexbox($direction: column, $align: center, $gap: 1rem);
+  width: 8.8rem;
+  height: 8.8rem;
+
+  backface-visibility: hidden;
+
+  transition: width 0.3s ease;
+
+  @media (min-width: map.get(vars.$breakpoints, lg)) {
+    width: 13.4rem;
+  }
+}
+
+.front {
+  justify-content: flex-start;
+  padding-top: 2.5rem;
+  z-index: 2;
+  transform: rotateY(0deg);
+  line-height: 1;
+}
+
+.back {
+  transform: rotateY(180deg);
+}
+
+.icon {
+  @include mixins.flexbox($direction: column, $align: stretch);
+  width: 3.5rem;
+  height: 1.6rem;
+  border-top: 0.1rem solid vars.$color-secondary;
+  border-bottom: 0.1rem solid vars.$color-secondary;
+}
+
+.divider {
+  width: 100%;
+  height: 0.1rem;
+  background-color: vars.$color-secondary;
+}
+
+.cross {
+  position: relative;
+  width: 2.5rem;
+  height: 2.5rem;
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 2px;
+    height: 100%;
+    background-color: black;
+    transform-origin: center;
+  }
+
+  &::before {
+    transform: translate(-50%, -50%) rotate(45deg);
+  }
+
+  &::after {
+    transform: translate(-50%, -50%) rotate(-45deg);
+  }
+}

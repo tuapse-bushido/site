@@ -1,0 +1,39 @@
+@use '@/styles/base/variables' as vars;
+
+.fieldset {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+}
+.city,
+.street,
+.comment {
+  grid-column: 1 / 7;
+}
+
+.house {
+  grid-column: 1 / 4;
+}
+
+.apartment {
+  grid-column: 4 / 7;
+}
+
+.floor {
+  grid-column: 1 / 3;
+}
+
+.entrance {
+  grid-column: 3 / 5;
+}
+
+.intercom {
+  grid-column: 5 / 7;
+}
+
+.apartmentLabel {
+  white-space: nowrap;
+}
+
+.required {
+  color: vars.$color-primary;
+}

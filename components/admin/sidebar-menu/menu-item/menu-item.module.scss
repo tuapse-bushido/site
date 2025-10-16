@@ -1,0 +1,9 @@
+.subMenu {
+  overflow: hidden;
+  line-height: 0;
+  transition: line-height 0.5s;
+}
+
+.active {
+  line-height: 1.2;
+}

@@ -1,3 +1,4 @@
+'use server';
 import { pool } from '@/libs/db/db';
 import { ProductCard } from '@/types/db/composite/product-card';
 import { unstable_cache } from 'next/cache';
@@ -31,7 +32,6 @@ import { unstable_cache } from 'next/cache';
  * //   }
  * // ]
  */
-
 export const getProductCards = unstable_cache(
   async (): Promise<ProductCard[]> => {
     const response = await pool.query(`

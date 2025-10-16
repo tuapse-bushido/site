@@ -1,0 +1,25 @@
+@use '@/styles/mixins/mixins' as mixins;
+@use '@/styles/base/variables' as vars;
+
+.section {
+  @include mixins.flexbox($direction: column, $align: stretch, $gap: 1.2rem);
+}
+
+.font {
+  font-size: 1.6rem;
+  line-height: 2.2rem;
+}
+
+.title,
+.total {
+  font-weight: 700;
+  color: vars.$text-color-primary;
+}
+
+.label {
+  color: vars.$text-color-secondary;
+}
+
+.rows {
+  @include mixins.flexbox($justify: space-between);
+}

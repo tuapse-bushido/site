@@ -1,0 +1,22 @@
+@use '@/styles/mixins/mixins' as mixins;
+
+.form {
+  @include mixins.flexbox($direction: column, $gap: 2rem, $align: stretch, $justify: space-between);
+  height: auto;
+}
+
+.p {
+  font-size: 1.9rem;
+  letter-spacing: 0.02em;
+}
+
+.ruleTitle {
+  font-size: 1.7rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.btnWrapper {
+  @include mixins.flexbox($gap: 1rem);
+}

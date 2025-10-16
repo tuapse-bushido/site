@@ -1,0 +1,31 @@
+@use '@/styles/base/variables' as vars;
+
+.emptyImageWrapper {
+  align-self: center;
+  position: relative;
+  width: 100%;
+  max-width: 30rem;
+  height: auto;
+}
+
+.emptyImage {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.emptyText {
+  font-size: 1.8rem;
+  text-align: center;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  text-rendering: optimizeLegibility;
+
+  @media (max-width: 300px) {
+    word-break: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+  }
+}

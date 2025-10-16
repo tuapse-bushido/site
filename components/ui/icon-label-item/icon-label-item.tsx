@@ -24,7 +24,13 @@ export const IconLabelItem = ({
     >
       <span className={clsx(iconClassName)}>
         {isImage ? (
-          <Image src={icon as string} alt="" width={28} height={28} aria-hidden="true" />
+          <Image
+            src={`${process.env.NEXT_PUBLIC_IMAGES_CATEGORIES}${icon as string}`}
+            alt=""
+            width={28}
+            height={28}
+            aria-hidden="true"
+          />
         ) : (
           Icon && <Icon aria-hidden="true" focusable="false" />
         )}

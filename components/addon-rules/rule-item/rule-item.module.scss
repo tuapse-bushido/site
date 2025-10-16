@@ -1,0 +1,26 @@
+@use '@/styles/mixins/mixins' as mixins;
+
+.item {
+  @include mixins.flexbox($gap: 1rem, $justify: flex-start);
+
+  padding: 1rem 2rem;
+  border-radius: 0.5rem;
+
+  font-weight: 500;
+  line-height: 2.4rem;
+
+  -webkit-box-shadow: 6px 2px 11px -3px rgba(66, 68, 90, 1);
+  -moz-box-shadow: 6px 2px 11px -3px rgba(66, 68, 90, 1);
+  box-shadow: 6px 2px 11px -3px rgba(66, 68, 90, 1);
+
+  transition: transform 0.2s ease;
+  cursor: pointer;
+
+  &:hover {
+    transform: scale(1.01) translateY(-0.5rem);
+  }
+
+  &:active {
+    transform: scale(0.99);
+  }
+}

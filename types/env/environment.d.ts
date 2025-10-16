@@ -3,6 +3,7 @@ declare global {
   namespace NodeJS {
     interface ProcessEnv {
       NEXT_PUBLIC_IMAGES_DOMAIN: string;
+      NEXT_PUBLIC_IMAGES_CATEGORIES: string;
       DB_HOST: string;
       DB_PORT: number;
       DB_DATABASE: string;
@@ -13,6 +14,10 @@ declare global {
       ENDPOINT: string;
       BUCKET: string;
       SMS_SEND: string;
+      JWT_SECRET: string;
+      REFRESH_SECRET: string;
+      SMS_PILOT_API_KEY: string;
+      SMS_PILOT_SEND: string;
     }
   }
 }

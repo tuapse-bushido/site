@@ -9,13 +9,7 @@ import { IconMap } from '@/types';
 import { NavItemProps } from '@/components/bottom-nav/nav-item/nav-item.props';
 import clsx from 'clsx';
 
-import {
-  CartIcon,
-  HomeIcon,
-  MenuIcon,
-  ProfileIcon,
-  PromoIcon,
-} from '@/assets/icons-bottom-nav/index';
+import { CartIcon, HomeIcon, MenuIcon, ProfileIcon, PromoIcon } from '@/assets/icons-bottom-nav/index';
 
 const iconMap: IconMap = {
   home: HomeIcon,

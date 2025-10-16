@@ -1,0 +1,9 @@
+@use '@/styles/mixins/mixins' as mixins;
+
+.wrapper {
+  @include mixins.flexbox($direction: column, $gap: 1rem, $align: stretch, $justify: center);
+}
+
+.h1 {
+  line-height: 1;
+}

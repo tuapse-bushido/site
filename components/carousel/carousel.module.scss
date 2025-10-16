@@ -2,6 +2,7 @@
 @use '@/styles/mixins/mixins' as mixins;
 
 .sliderWrapper {
+  grid-area: carousel;
   height: auto;
 
   :global(.swiper) {

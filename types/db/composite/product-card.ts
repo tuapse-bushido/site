@@ -1,5 +1,5 @@
 import { Product, productSchema } from '@/types';
-import { AddonRule } from '@/types/db/tables/addon-rule';
+import { AddonRule } from '@/types/db/tables/addons';
 import { z } from 'zod';
 
 /**

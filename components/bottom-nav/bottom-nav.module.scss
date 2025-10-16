@@ -1,5 +1,6 @@
 @use '@/styles/base/variables' as vars;
 @use '@/styles/mixins/mixins' as mixins;
+@use 'sass:map';
 
 .bottomNav {
   @include mixins.flexbox($align: flex-start, $justify: space-evenly);
@@ -7,4 +8,8 @@
   height: 7.5rem;
   padding-top: 1.4rem;
   background-color: vars.$bg-color-secondary;
+
+  @media (min-width: map.get(vars.$breakpoints, md)) {
+    display: none;
+  }
 }

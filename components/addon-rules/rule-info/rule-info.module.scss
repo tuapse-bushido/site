@@ -1,0 +1,9 @@
+@use '@/styles/mixins/mixins' as mixins;
+
+.wrapper {
+  @include mixins.flexbox($direction: column, $align: stretch, $gap: 1.5rem);
+}
+
+.btnWrapper {
+  @include mixins.flexbox($gap: 1rem);
+}

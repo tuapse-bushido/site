@@ -1,0 +1,26 @@
+@use '@/styles/base/variables' as vars;
+
+.link {
+  display: block;
+  width: fit-content;
+  padding: 1rem 2rem;
+  border-radius: 0.5rem;
+
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 2.5rem;
+  text-transform: uppercase;
+}
+
+.primary {
+  background-color: vars.$btn-color-primary;
+  color: vars.$color-white;
+
+  &:hover {
+    background-color: vars.$btn-color-primary-hover;
+  }
+
+  &:active {
+    background-color: vars.$btn-color-primary-active;
+  }
+}
