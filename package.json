@@ -3,9 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "concurrently \"next dev\" \"tsx server.ts\"",
-    "start": "concurrently \"next start\" \"tsx server.ts\"",
+    "dev": "next dev",
+    "dev:local": "concurrently \"next dev\" \"tsx server.ts\"",
     "build": "next build",
+    "start": "next start",
     "lint": "next lint",
     "prepare": "husky install"
   },
