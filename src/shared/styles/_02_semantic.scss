@@ -1,0 +1,21 @@
+@use 'sass:color';
+@use './01_variables' as vars;
+
+// Backgrounds
+$bg-color-surface: vars.$color-white;
+
+// Text
+$text-color-primary: vars.$color-black;
+$text-color-error: vars.$color-primary-dark;
+
+// Accent (универсальные акценты для кнопок и интерактивных элементов)
+$color-accent: vars.$color-primary;
+$color-accent-hover: color.adjust(vars.$color-primary, $lightness: 10%);
+$color-accent-active: vars.$color-primary-dark;
+$color-accent-disabled: rgba(vars.$color-primary, 0.3);
+
+// Borders (рамки)
+$border-color-default: vars.$color-black;
+$border-color-hover: vars.$color-hover;
+$border-color-focus: vars.$color-focus;
+$border-shadow-focus: rgba(vars.$color-focus, 0.35);

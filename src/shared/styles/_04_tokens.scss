@@ -1,0 +1,22 @@
+@use './01_variables' as variables;
+@use './02_semantic' as semantic;
+@use './03_components' as components;
+
+:root {
+  // Form
+  --form-bg-color: #{components.$form-bg-color};
+
+  // Input
+  --input-border: #{components.$input-border};
+  --input-border-hover: #{components.$input-border-hover};
+  --input-border-focus: #{components.$input-border-focus};
+
+  // Buttons
+  --btn-bg-primary: #{components.$btn-bg-primary};
+  --btn-bg-primary-hover: #{components.$btn-bg-primary-hover};
+  --btn-bg-primary-active: #{components.$btn-bg-primary-active};
+  --btn-bg-primary-disabled: #{components.$btn-bg-primary-disabled};
+
+  // Text
+  --p-color-error: #{components.$p-color-error};
+}

@@ -1,0 +1,18 @@
+@use './02_semantic' as semantic;
+
+// Forms
+$form-bg-color: semantic.$bg-color-surface;
+
+// Inputs
+$input-border: semantic.$border-color-default;
+$input-border-hover: semantic.$border-color-hover;
+$input-border-focus: semantic.$border-color-focus;
+
+// Buttons
+$btn-bg-primary: semantic.$color-accent;
+$btn-bg-primary-hover: semantic.$color-accent-hover;
+$btn-bg-primary-active: semantic.$color-accent-active;
+$btn-bg-primary-disabled: semantic.$color-accent-disabled;
+
+// Text
+$p-color-error: semantic.$text-color-error;

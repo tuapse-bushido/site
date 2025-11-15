@@ -1,0 +1,43 @@
+@use './01_variables' as vars;
+@use 'sass:map';
+
+/**
+* Flex center mixin
+*
+* Creates a flex container with customizable alignment, direction and spacing.
+* By default, aligns and centers items both horizontally and vertically in a row.
+*
+* @param {String} $align [center] - align-items value
+* @param {String} $justify [center] - justify-content value
+* @param {String} $direction [row] - flex-direction value
+* @param {Length} $gap [0] - spacing between flex items
+*
+* ---
+*
+* Миксин для центрирования элементов через flex с возможностью настройки направления и отступов.
+* По умолчанию располагает элементы по центру по обеим осям в строку.
+*
+* @param {String} $align [center] — значение align-items
+* @param {String} $justify [center] — значение justify-content
+* @param {String} $direction [row] — направление flex-элементов (flex-direction)
+* @param {Length} $gap [0] — расстояние между элементами (gap)
+*/
+@mixin flexbox($align: center, $justify: center, $direction: row, $gap: 0) {
+  display: flex;
+  align-items: $align;
+  justify-content: $justify;
+  flex-direction: $direction;
+  gap: $gap;
+}
+
+@mixin responsive-font($sizes) {
+  @each $bp, $size in $sizes {
+    @if $bp == sm {
+      font-size: $size;
+    } @else if map.get(vars.$breakpoints, $bp) != null {
+      @media (min-width: map.get(vars.$breakpoints, $bp)) {
+        font-size: $size;
+      }
+    }
+  }
+}
