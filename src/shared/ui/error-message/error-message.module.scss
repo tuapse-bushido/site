@@ -1,0 +1,7 @@
+@use '@/src/shared/styles/05_mixins' as mixins;
+.p {
+  @include mixins.responsive-font((sm: 1.4rem, md: 1.6rem, lg: 1.6rem));
+  font-weight: 700;
+  color: var(--p-color-error);
+  text-transform: uppercase;
+}

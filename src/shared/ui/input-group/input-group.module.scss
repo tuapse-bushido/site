@@ -1,0 +1,69 @@
+@use '@/src/shared/styles/05_mixins' as mixins;
+@use '@/styles/base/variables' as vars;
+
+.wrapper {
+  @include mixins.flexbox($align: stretch, $direction: column, $gap: 0.2rem);
+}
+
+.label {
+
+}
+
+.input {
+  width: 100%;
+  max-width: 100%;
+
+  height: 5.4rem;
+
+  padding: 0.8rem 1.4rem;
+  border-radius: 0.6rem;
+
+  font-size: 1.6rem;
+  font-weight: 500;
+
+  cursor: pointer;
+
+  &:focus {
+    cursor: text;
+  }
+
+  &:-webkit-autofill {
+    background-color: transparent !important;
+    transition: background-color 9999s ease-in-out 0s;
+    color: inherit !important;
+  }
+}
+
+.wrapper {
+  &.admin {
+    .label {
+      @include mixins.responsive-font((sm: 1.6rem, md: 1.8rem, lg: 2rem));
+      font-weight: 700;
+
+      cursor: pointer;
+
+      user-select: none;
+
+    }
+
+    .input {
+      border: 0.1rem solid var(--input-border);
+
+      outline: none;
+
+      transition: border-color 0.3s linear;
+
+      &:hover {
+        border-color: var(--input-border-hover);
+      }
+
+      &:focus {
+        border-color: var(--input-border-focus);
+      }
+    }
+
+
+  }
+}
+
+
