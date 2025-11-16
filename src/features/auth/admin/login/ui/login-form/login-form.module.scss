@@ -1,0 +1,30 @@
+@use '@/src/shared/styles/05_mixins' as mixins;
+
+.form {
+  @include mixins.flexbox($align: stretch, $direction: column, $gap: 2rem);
+  width: 100%;
+  min-width: 31rem;
+  max-width: 50rem;
+
+  padding-block: 3rem;
+  padding-inline: clamp(1rem, calc(1rem + (100vw - 360px) * 0.0833), 3rem);
+
+  border-radius: 1rem;
+  background-color: var(--form-bg-color);
+
+  transition: box-shadow 0.3s ease;
+  box-shadow:
+          0 0.4rem 1rem rgba(0, 0, 0, 0.25),
+          0 0.1rem 0.3rem rgba(0, 0, 0, 0.15);
+
+  &:hover {
+    box-shadow:
+            0 0.6rem 1.5rem rgba(0, 0, 0, 0.3),
+            0 0.2rem 0.5rem rgba(0, 0, 0, 0.2);
+  }
+
+  &:invalid button {
+    pointer-events: none;
+    background-color: var(--btn-bg-primary-disabled);
+  }
+}
