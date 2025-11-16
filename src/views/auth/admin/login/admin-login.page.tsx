@@ -1,6 +1,6 @@
 import { JSX } from 'react';
-import { LoginForm } from '@/components/admin/login/login-form';
-import styles from './admin-login-page.module.scss';
+import { LoginForm } from '@/src/features/auth/admin/login/ui/login-form/login-form';
+import styles from './admin-login.module.scss';
 
 export const AdminLoginPage = (): JSX.Element => {
   return (
