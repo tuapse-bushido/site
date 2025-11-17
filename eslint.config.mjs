@@ -1,18 +1,39 @@
-import { dirname } from 'path';
-import { fileURLToPath } from 'url';
-import { FlatCompat } from '@eslint/eslintrc';
+import { globalIgnores } from 'eslint/config';
+import nextVitals from 'eslint-config-next/core-web-vitals';
+import reactPlugin from 'eslint-plugin-react';
+import reactHooks from 'eslint-plugin-react-hooks';
+import tseslint from 'typescript-eslint';
+import prettierPlugin from 'eslint-plugin-prettier';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const config = [
+  globalIgnores(['.next/**', 'out/**', 'build/**', 'dist/**', 'node_modules/**', 'socket/**']),
 
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-});
+  ...nextVitals,
 
-const eslintConfig = [
-  ...compat.extends('next/core-web-vitals', 'plugin:@typescript-eslint/recommended', 'plugin:prettier/recommended'),
   {
+    ...reactPlugin.configs.flat.recommended,
+    settings: { react: { version: 'detect' } },
+  },
+  {
+    ...reactPlugin.configs.flat['jsx-runtime'],
+    settings: { react: { version: 'detect' } },
+  },
+
+  reactHooks.configs.flat.recommended,
+
+  ...tseslint.configs.recommended,
+
+  {
+    plugins: { prettier: prettierPlugin },
     rules: {
+      'prettier/prettier': 'error',
+    },
+  },
+
+  {
+    plugins: { '@typescript-eslint': tseslint.plugin },
+    rules: {
+      '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
       '@typescript-eslint/no-explicit-any': 'error',
       '@typescript-eslint/explicit-function-return-type': [
         'error',
@@ -21,11 +42,9 @@ const eslintConfig = [
           allowTypedFunctionExpressions: false,
         },
       ],
-      '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
       '@typescript-eslint/consistent-type-definitions': ['error', 'type'],
-      'prettier/prettier': 'error',
     },
   },
 ];
 
-export default eslintConfig;
+export default config;

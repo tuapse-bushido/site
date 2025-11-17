@@ -2,6 +2,7 @@
 
 # dependencies
 /node_modules
+socket/node_modules
 /.pnp
 .pnp.*
 .yarn/*
@@ -45,3 +46,5 @@ docker-compose.override.yml
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+.idea

@@ -1,2 +1,4 @@
-#!/bin/sh
-./scripts/validate-commit-msg.sh "$1"
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+sh scripts/validate-commit-msg.sh "$1"

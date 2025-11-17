@@ -1,5 +1,6 @@
 import { Inter, Roboto } from 'next/font/google';
 import '@/styles/global.scss';
+import '@/src/shared/styles/global.scss';
 import React, { JSX } from 'react';
 
 const inter = Inter({
