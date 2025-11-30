@@ -2,6 +2,14 @@ import type { NextConfig } from 'next';
 import type { Configuration, RuleSetRule } from 'webpack';
 
 const nextConfig: NextConfig = {
+  cacheComponents: true,
+  cacheLife: {
+    admin: {
+      stale: 60 * 60 * 24 * 10,
+      revalidate: 60 * 60 * 24 * 15,
+      expire: 60 * 60 * 24 * 30,
+    },
+  },
   webpack(config): Configuration {
     const fileLoaderRule = config.module.rules.find(
       (rule: RuleSetRule): boolean => rule.test instanceof RegExp && rule.test.test('.svg'),
