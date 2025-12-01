@@ -1,65 +1,54 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { jwtVerify } from 'jose';
+import type { NextRequest } from 'next/server';
+import { NextResponse } from 'next/server';
 
-const secret = new TextEncoder().encode(process.env.JWT_SECRET!);
+export async function proxy(req: NextRequest): Promise<NextResponse> {
+  const path = req.nextUrl.pathname;
+  const isAdminRoute = path.startsWith('/admin');
+  const isLogin = path === '/admin/login';
+  const isApiRoute = path.startsWith('/api/admin');
 
-const makeRefreshRedirect = (request: NextRequest, redirectTo: string): NextResponse => {
-  const refreshUrl = new URL('/api/session/refresh', request.url);
-  refreshUrl.searchParams.set('redirect', redirectTo);
-  return NextResponse.redirect(refreshUrl);
-};
+  const accessToken = req.cookies.get('admin_token')?.value;
+  const refreshToken = req.cookies.get('admin_refresh')?.value;
 
-export async function proxy(request: NextRequest): Promise<NextResponse> {
-  const { pathname } = request.nextUrl;
+  if (isAdminRoute && !isLogin && !refreshToken) {
+    return NextResponse.redirect(new URL('/admin/login', req.url));
+  }
 
-  const token = request.cookies.get('admin_token')?.value;
-  const refreshToken = request.cookies.get('admin_refresh')?.value;
+  if (isLogin && refreshToken) {
+    return NextResponse.redirect(new URL('/admin/orders', req.url));
+  }
 
-  if (pathname === '/admin/login') {
-    if (token) {
-      try {
-        await jwtVerify(token, secret);
+  if (!accessToken && refreshToken && !isApiRoute) {
+    try {
+      const refreshResponse = await fetch(new URL('/api/admin/auth/refresh', req.url), {
+        method: 'POST',
+        headers: {
+          Cookie: req.headers.get('cookie') || '',
+        },
+      });
 
-        return NextResponse.redirect(new URL('/admin/orders', request.url));
-      } catch {
-        if (refreshToken) return makeRefreshRedirect(request, '/admin/orders');
+      if (refreshResponse.ok) {
+        // Получаем новые cookies из response
+        const setCookie = refreshResponse.headers.get('set-cookie');
 
-        return NextResponse.next();
+        if (setCookie) {
+          // Создаем response и устанавливаем новые cookies
+          const response = NextResponse.next();
+          response.headers.append('set-cookie', setCookie);
+          return response;
+        }
       }
+    } catch (error) {
+      console.error('Token refresh failed:', error);
+      const response = NextResponse.redirect(new URL('/admin/login', req.url));
+
+      response.cookies.delete('admin_token');
+      response.cookies.delete('admin_refresh');
+      return response;
     }
-
-    if (!token && refreshToken) return makeRefreshRedirect(request, '/admin/orders');
-
-    return NextResponse.next();
   }
 
-  // ===============================================
-  //  ОСТАЛЬНЫЕ АДМИН-МАРШРУТЫ
-  // ===============================================
-
-  // Нет токена → пробуем refresh
-  if (!token) {
-    if (refreshToken) {
-      return makeRefreshRedirect(request, pathname);
-    }
-    return NextResponse.redirect(new URL('/admin/login', request.url));
-  }
-
-  // Проверяем токен
-  try {
-    const { payload } = await jwtVerify(token, secret);
-
-    const now = Date.now() / 1000;
-
-    // Осталась 1 минута → refresh
-    if (payload.exp && payload.exp - now < 60) {
-      return makeRefreshRedirect(request, pathname);
-    }
-
-    return NextResponse.next();
-  } catch {
-    return NextResponse.redirect(new URL('/admin/login', request.url));
-  }
+  return NextResponse.next();
 }
 
 export const config = {

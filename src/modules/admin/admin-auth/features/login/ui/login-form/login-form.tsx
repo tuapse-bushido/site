@@ -1,13 +1,13 @@
 'use client';
 
 import Form from 'next/form';
+import { loginAction } from '../../api';
 import { JSX, useActionState } from 'react';
 import styles from './login-form.module.scss';
-import { signupAdmin } from '../../api/signup-admin';
-import { Button, ErrorMessage, InputGroup } from '@/src/shared/ui/';
+import { Button, ErrorMessage, InputGroup } from '@/src/shared/ui';
 
 export const LoginForm = (): JSX.Element => {
-  const [state, formAction] = useActionState(signupAdmin, null);
+  const [state, formAction] = useActionState(loginAction, null);
 
   return (
     <Form action={formAction} className={styles.form}>
