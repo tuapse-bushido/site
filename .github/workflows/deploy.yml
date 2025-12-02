@@ -1,0 +1,101 @@
+name: 🚀 Bushido Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      force:
+        description: "Force deploy even if no changes detected"
+        required: false
+        default: "false"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Detect changes
+        id: check_changes
+        run: |
+          if git diff --quiet HEAD HEAD~1; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Skip deploy (no changes)
+        if: steps.check_changes.outputs.changed == 'false' && github.event.inputs.force != 'true'
+        run: echo "No changes — skipping."
+
+      - name: Backup current app
+        if: steps.check_changes.outputs.changed == 'true' || github.event.inputs.force
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            set -e
+            mkdir -p /opt/bushido/backups
+            TIMESTAMP=$(date +"%Y%m%d_%H%M")
+            tar -czf /opt/bushido/backups/app_$TIMESTAMP.tar.gz -C /opt/bushido app
+
+      - name: Upload project
+        if: steps.check_changes.outputs.changed == 'true' || github.event.inputs.force
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          source: ./
+          target: /opt/bushido/app
+          overwrite: true
+          rm: true
+
+      - name: Rearrange files on server
+        if: steps.check_changes.outputs.changed == 'true' || github.event.inputs.force
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            set -e
+
+            mkdir -p /opt/bushido/socket
+            mkdir -p /opt/bushido/sql
+            mkdir -p /opt/bushido/env
+
+            # socket
+            if [ -d /opt/bushido/app/socket ]; then
+              rm -rf /opt/bushido/socket
+              mv -f /opt/bushido/app/socket /opt/bushido/
+            fi
+
+            # docker-compose
+            if [ -f /opt/bushido/app/docker-compose.yml ]; then
+              mv -f /opt/bushido/app/docker-compose.yml /opt/bushido/
+            fi
+
+            # sql
+            if [ -d /opt/bushido/app/sql ]; then
+              rsync -av /opt/bushido/app/sql/ /opt/bushido/sql/
+            fi
+
+      - name: Restart Docker services
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            set -e
+            cd /opt/bushido
+            docker compose down
+            docker compose up -d --build
+            docker system prune -f
+            echo "Deployment complete"

@@ -1,0 +1,85 @@
+services:
+  app:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    image: bushido-app:latest
+    container_name: bushido-app
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    env_file:
+      - /opt/bushido/env/app.env
+    depends_on:
+      postgres:
+        condition: service_healthy
+      socket:
+        condition: service_started
+    networks:
+      - bushido-net
+
+    # Standalone server.js уже лежит в корне standalone
+    # GENERATE вызываем только если тебе нужно ISR/SSG
+    command: ["node", "server.js"]
+    # Для SSG/ISR:
+    # command: ["sh", "-c", "pnpm generate && node server.js"]
+
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3000"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 30s  # Next.js долго стартует впервые
+
+  socket:
+    build:
+      context: ./socket
+      dockerfile: Dockerfile.socket
+    image: bushido-socket:latest
+    container_name: bushido-socket
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    env_file:
+      - /opt/bushido/env/socket.env
+    networks:
+      - bushido-net
+
+    # tsx запускаем через pnpm exec (без глобальных пакетов)
+    command: ["pnpm", "exec", "tsx", "server.ts"]
+
+    healthcheck:
+      # Если socket имеет HTTP — этот вариант
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3001"]
+      # Если НЕТ HTTP у сокета — используем это:
+      # test: ["CMD-SHELL", "pgrep node || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: bushido-db
+    restart: unless-stopped
+    env_file:
+      - /opt/bushido/env/app.env
+    environment:
+      POSTGRES_USER: ${DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_DATABASE}
+    volumes:
+      - /var/lib/bushido-postgres:/var/lib/postgresql/data
+      - ./sql/migrations:/docker-entrypoint-initdb.d:ro
+    networks:
+      - bushido-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+networks:
+  bushido-net:
+    driver: bridge

@@ -1,0 +1,19 @@
+FROM node:22-alpine
+WORKDIR /app
+
+# Включаем pnpm
+RUN corepack enable && corepack prepare pnpm@10.0.0 --activate
+
+# Копируем файлы зависимостей
+COPY package.json pnpm-lock.yaml ./
+
+# Устанавливаем зависимости БЕЗ прод-фильтра — tsx находится в devDeps
+RUN pnpm install --frozen-lockfile
+
+# Копируем исходники
+COPY . .
+
+EXPOSE 3001
+
+# Запускаем через pnpm exec — это самый быстрый и надёжный вариант
+CMD ["pnpm", "exec", "tsx", "server.ts"]
