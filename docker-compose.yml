@@ -33,8 +33,8 @@ services:
 
   socket:
     build:
-      context: ./socket
-      dockerfile: Dockerfile.socket
+      context: .
+      dockerfile: socket/Dockerfile.socket
     image: bushido-socket:latest
     container_name: bushido-socket
     restart: unless-stopped
