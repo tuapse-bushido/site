@@ -21,7 +21,7 @@ ENV PORT=3000
 
 RUN corepack enable
 
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY package.json pnpm-lock.yaml ./
 RUN pnpm install --prod --frozen-lockfile
 
 COPY --from=builder /app/.next/standalone ./
