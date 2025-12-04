@@ -21,6 +21,9 @@ ENV PORT=3000
 
 RUN corepack enable
 
+# ОТКЛЮЧАЕМ prepare/postinstall/husky/etc
+RUN echo "ignore-scripts=true" > .npmrc
+
 COPY package.json pnpm-lock.yaml ./
 RUN pnpm install --prod --frozen-lockfile
 
@@ -30,5 +33,4 @@ COPY --from=builder /app/public ./public
 
 EXPOSE 3000
 
-# Генерация статики + запуск (быстрее, т.к. компиляция уже сделана)
 CMD ["sh", "-c", "pnpm generate && pnpm start"]
