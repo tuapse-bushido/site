@@ -21,8 +21,13 @@ jobs:
       - name: Detect changes
         id: check_changes
         run: |
-          if git diff --quiet HEAD HEAD~1; then
-            echo "changed=false" >> $GITHUB_OUTPUT
+          # HEAD~1 может отсутствовать при первом запуске
+          if git rev-parse HEAD~1 >/dev/null 2>&1; then
+            if git diff --quiet HEAD HEAD~1; then
+              echo "changed=false" >> $GITHUB_OUTPUT
+            else
+              echo "changed=true" >> $GITHUB_OUTPUT
+            fi
           else
             echo "changed=true" >> $GITHUB_OUTPUT
           fi
@@ -31,8 +36,8 @@ jobs:
         if: steps.check_changes.outputs.changed == 'false' && github.event.inputs.force != 'true'
         run: echo "No changes — skipping."
 
-      - name: Backup current app
-        if: steps.check_changes.outputs.changed == 'true' || github.event.inputs.force
+      - name: Backup current app on server
+        if: steps.check_changes.outputs.changed == 'true' || github.event.inputs.force == 'true'
         uses: appleboy/ssh-action@v0.1.10
         with:
           host: ${{ secrets.SERVER_HOST }}
@@ -43,21 +48,36 @@ jobs:
             mkdir -p /opt/bushido/backups
             TIMESTAMP=$(date +"%Y%m%d_%H%M")
             tar -czf /opt/bushido/backups/app_$TIMESTAMP.tar.gz -C /opt/bushido app
+            echo "Backup complete."
 
-      - name: Upload project
-        if: steps.check_changes.outputs.changed == 'true' || github.event.inputs.force
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SSH_KEY }}
-          source: ./
-          target: /opt/bushido/app
-          overwrite: true
-          rm: true
+      - name: Prepare SSH key for rsync
+        if: steps.check_changes.outputs.changed == 'true' || github.event.inputs.force == 'true'
+        run: |
+          echo "${{ secrets.SSH_KEY }}" > ssh_key
+          chmod 600 ssh_key
+
+      - name: Deploy with rsync (exclude unnecessary files)
+        if: steps.check_changes.outputs.changed == 'true' || github.event.inputs.force == 'true'
+        run: |
+          rsync -avz --delete \
+            --exclude='.git/' \
+            --exclude='.github/' \
+            --exclude='README.md' \
+            --exclude='node_modules/' \
+            --exclude='.env*' \
+            --exclude='*.log' \
+            --exclude='*.db' \
+            --exclude='*.sqlite' \
+            --exclude='screenshots/' \
+            --exclude='backup/' \
+            --exclude='tmp/' \
+            --exclude='.DS_Store' \
+            -e "ssh -o StrictHostKeyChecking=no -i ssh_key" \
+            $GITHUB_WORKSPACE/ \
+            ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/opt/bushido/app/
 
       - name: Rearrange files on server
-        if: steps.check_changes.outputs.changed == 'true' || github.event.inputs.force
+        if: steps.check_changes.outputs.changed == 'true' || github.event.inputs.force == 'true'
         uses: appleboy/ssh-action@v0.1.10
         with:
           host: ${{ secrets.SERVER_HOST }}
@@ -98,4 +118,4 @@ jobs:
             docker compose down
             docker compose up -d --build
             docker system prune -f
-            echo "Deployment complete"
+            echo "Deployment complete."
