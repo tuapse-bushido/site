@@ -5,6 +5,8 @@
   "scripts": {
     "dev": "next dev --webpack",
     "dev:local": "concurrently \"next dev --webpack\" \"tsx socket/server.ts\"",
+    "compile": "next build --experimental-build-mode=compile --webpack",
+    "generate": "next build --experimental-build-mode=generate",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -13,7 +15,8 @@
     "test:ui": "vitest --ui",
     "test:coverage": "vitest run --coverage",
     "test:ci": "vitest run --coverage --reporter=dot",
-    "prepare": "husky"
+    "prepare": "husky",
+    "typecheck": "tsc --noEmit"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
@@ -32,6 +35,7 @@
     "@emotion/cache": "^11.14.0",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
+    "@mui/icons-material": "^7.3.5",
     "@mui/material": "^7.3.5",
     "@mui/material-nextjs": "^7.3.5",
     "@mui/x-data-grid": "^8.19.0",
