@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev --webpack",
     "dev:local": "concurrently \"next dev --webpack\" \"tsx socket/server.ts\"",
-    "compile": "next build --experimental-build-mode=compile",
+    "compile": "next build --experimental-build-mode=compile --webpack",
     "generate": "next build --experimental-build-mode=generate",
     "start": "next start",
     "lint": "next lint",
