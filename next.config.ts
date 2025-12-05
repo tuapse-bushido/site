@@ -10,6 +10,10 @@ const nextConfig: NextConfig = {
       expire: 60 * 60 * 24 * 30,
     },
   },
+  reactCompiler: {
+    compilationMode: 'annotation',
+  },
+
   webpack(config): Configuration {
     const fileLoaderRule = config.module.rules.find(
       (rule: RuleSetRule): boolean => rule.test instanceof RegExp && rule.test.test('.svg'),
