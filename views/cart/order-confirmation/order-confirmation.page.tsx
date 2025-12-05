@@ -1,6 +1,6 @@
 'use client';
 
-import { ChangeEvent, JSX, startTransition, useActionState, useEffect, useState } from 'react';
+import { ChangeEvent, JSX, startTransition, useActionState, useEffect } from 'react';
 import { useAppSelector } from '@/libs/redux/hooks/hooks';
 import { CheckoutState } from '@/libs/redux/slices/checkout-slice';
 import { Button } from '@/components/ui/button/button';
@@ -19,7 +19,6 @@ export const OrderConfirmationPage = (): JSX.Element => {
   const checkout = useAppSelector((state): CheckoutState => state.checkout);
   const cart = useAppSelector((state): CartState => state.cart);
 
-  const [isConfirmed, setIsConfirmed] = useState(false);
   const isEmpty = Object.keys(cart.items).length === 0 && Object.keys(cart.addons).length === 0;
 
   const [timer, restart] = useTimer(5);
@@ -29,13 +28,15 @@ export const OrderConfirmationPage = (): JSX.Element => {
   };
   const [verifyState, verifyAction] = useActionState(verifyCode, null);
 
+  const isConfirmed = Boolean(verifyState?.message);
+
   const resendSms = async (prevState: null, formData: FormData): Promise<null> => {
     restart();
     const phone = checkout.user.phone;
     await actionResendSmsCode(prevState, formData, phone);
     return null;
   };
-  const [sendCodeState, sendCodeAction] = useActionState(resendSms, null);
+  const [, sendCodeAction] = useActionState(resendSms, null);
 
   const handlerOnChange = (event: ChangeEvent<HTMLInputElement>): void => {
     const value = event.target.value;
@@ -62,10 +63,6 @@ export const OrderConfirmationPage = (): JSX.Element => {
     };
 
     void sendOrder();
-  }, [verifyState?.message]);
-
-  useEffect((): void => {
-    if (verifyState?.message) setIsConfirmed(true);
   }, [verifyState?.message]);
 
   if (isEmpty && !isConfirmed) redirect('/cart');

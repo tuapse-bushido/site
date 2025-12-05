@@ -4,9 +4,7 @@ import { z } from 'zod';
 import { uploadImage } from '@/libs/object-storage/storage';
 import { Category } from '@/types';
 import { insertCategory, updateCategoryById } from '@/libs/db/category/category.query';
-import { ActionResult, transliterate } from '@/utils';
-import { revalidatePath } from 'next/cache';
-import { redirect } from 'next/navigation';
+import { transliterate } from '@/utils';
 import { FormAction } from '@/components/forms/category/ingredient-form.props';
 
 // 1. Улучшенная схема валидации
@@ -62,17 +60,17 @@ const handleImageUpload = async (imageFile: File, title: string, existingImage?:
 };
 
 // 5. Общая функция для обработки результата
-const handleActionResult = (response: ActionResult<Category>): ErrorResponse => {
-  if (!response.success) {
-    return {
-      success: false,
-      message: response.message,
-    };
-  }
-
-  revalidatePath('/admin/menu/categories');
-  redirect('/admin/menu/categories');
-};
+// const handleActionResult = (response: ActionResult<Category>): ErrorResponse => {
+//   if (!response.success) {
+//     return {
+//       success: false,
+//       message: response.message,
+//     };
+//   }
+//
+//   revalidatePath('/admin/menu/categories');
+//   redirect('/admin/menu/categories');
+// };
 
 // 6. Основные функции действий
 // export const actionInsertCategory = async (
@@ -90,7 +88,7 @@ const handleActionResult = (response: ActionResult<Category>): ErrorResponse => 
 // };
 
 export const actionInsertCategory: FormAction<Category> = async (
-  prevState,
+  _prevState,
   formData,
 ): Promise<ErrorResponse | { message: string; success: boolean }> => {
   const preparedData = prepareCategoryData(formData);
@@ -130,7 +128,7 @@ export const actionInsertCategory: FormAction<Category> = async (
 // };
 
 export const actionUpdateCategory: FormAction<Category> = async (
-  prevState,
+  _prevState,
   formData,
   category,
 ): Promise<ErrorResponse | { message: string; success: boolean }> => {

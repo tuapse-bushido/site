@@ -1,7 +1,7 @@
-import { JSX } from 'react';
-import { InputGroupProps } from './input-group.props';
-import styles from './input-group.module.scss';
 import clsx from 'clsx';
+import { JSX } from 'react';
+import styles from './input-group.module.scss';
+import { InputGroupProps } from './input-group.props';
 
 export const InputGroup = ({
   id,

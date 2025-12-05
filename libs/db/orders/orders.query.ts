@@ -169,6 +169,7 @@ export const insertOrder = async (orderData: CheckoutState, orderItems: CartStat
     await client.query('COMMIT');
     return actionResult<Order>(order.data);
   } catch (error) {
+    console.error(error);
     await client.query('ROLLBACK');
     return errorResult(ErrorCode.DB_ERROR);
   } finally {
@@ -237,7 +238,7 @@ export const getOrderById = async (order_id: string): Promise<ActionResult<FullO
 
     return actionResult(result.data);
   } catch (error) {
-    console.log(error);
+    console.error(error);
 
     return errorResult(ErrorCode.DB_ERROR);
   }

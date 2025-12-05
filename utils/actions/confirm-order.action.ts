@@ -42,7 +42,7 @@ export const actionResendSmsCode = async (
 };
 
 export const actionVerifySmsCode = async (
-  prevState: FormState,
+  _prevState: FormState,
   formData: FormData,
   cart: CartState,
   checkout: CheckoutState,
@@ -51,11 +51,10 @@ export const actionVerifySmsCode = async (
   const parsed = smsFormSchema.safeParse(formObject);
 
   if (!parsed.success) {
-    const smsCodeError = parsed.error.formErrors.fieldErrors.sms_code?.[0] || 'Ошибка в коде';
     return {
       success: false,
       fields: {
-        sms_code: smsCodeError,
+        sms_code: 'Ошибка в коде',
       },
     };
   }

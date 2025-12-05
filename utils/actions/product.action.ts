@@ -6,7 +6,7 @@ import { uploadImage } from '@/libs/object-storage/storage';
 import { ActionResult, transliterate } from '@/utils';
 import { insertProduct } from '@/libs/db/product/products.query';
 import { insertCategoriesToProduct, insertIngredientsToProduct, insertSetItems } from '@/libs/db/composite/composite';
-import { revalidatePath, revalidateTag } from 'next/cache';
+import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
 function getArrayField(formData: FormData, name: string): string[] {
@@ -54,7 +54,7 @@ const productOptionsFormSchema = z.object({
 });
 
 export const actionProductInsert = async (
-  prev: {
+  _prev: {
     success: boolean;
     message: string;
   } | null,
@@ -138,6 +138,6 @@ export const actionProductInsert = async (
 
   revalidatePath('/');
   revalidatePath('/admin/menu/products');
-  revalidateTag('productCard');
+  // revalidateTag('productCard');
   redirect('/admin/menu/products');
 };

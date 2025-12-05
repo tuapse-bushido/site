@@ -24,7 +24,7 @@ export const actionInsertRule = async (prevState: FormState, formData: FormData)
 
   revalidatePath('/');
   revalidatePath('/admin/rules');
-  revalidateTag('productCard');
+  // revalidateTag('productCard');
   redirect('/admin/rules');
 };
 
@@ -48,7 +48,7 @@ export const actionUpdateRule = async (prevState: FormState, formData: FormData)
 
   revalidatePath('/');
   revalidatePath('/admin/rules');
-  revalidateTag('productCard');
+  // revalidateTag('productCard');
   redirect('/admin/rules');
 };
 
@@ -73,7 +73,7 @@ export const actionDeleteRule = async (prevState: FormState, formData: FormData)
 
   revalidatePath('/');
   revalidatePath('/admin/rules');
-  revalidateTag('productCard');
+  // revalidateTag('productCard');
 
   return {
     success: true,

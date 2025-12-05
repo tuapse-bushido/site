@@ -1,4 +1,4 @@
-import React, { JSX } from 'react';
+import { JSX } from 'react';
 import styles from './client-layout.module.scss';
 import { Header } from '@/components/header/header';
 import { TopNav } from '@/components/top-nav/top-nav';
