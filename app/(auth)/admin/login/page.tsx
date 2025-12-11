@@ -1,3 +1,11 @@
-import { AdminLoginPage } from '@/src/views/auth/admin/login/admin-login.page';
+import { JSX } from 'react';
+import styles from './styles.module.scss';
+import { LoginForm } from '@/src/modules/admin/admin-auth';
 
-export default AdminLoginPage;
+export default function AdminLoginPage(): JSX.Element {
+  return (
+    <div className={styles.page}>
+      <LoginForm />
+    </div>
+  );
+}

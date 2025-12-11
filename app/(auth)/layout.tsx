@@ -1,16 +1,13 @@
-import { Inter, Roboto } from 'next/font/google';
+import { Roboto } from 'next/font/google';
 import '@/styles/global.scss';
-import '@/src/shared/styles/global.scss';
 import React, { JSX } from 'react';
-
-const inter = Inter({
-  variable: '--font-inter',
-  subsets: ['latin'],
-});
+import '@/src/shared/styles/global.scss';
 
 const roboto = Roboto({
-  variable: '--font-roboto',
+  weight: ['300', '400', '500', '700'],
   subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-roboto',
 });
 
 export default function RootLayout({
@@ -20,7 +17,7 @@ export default function RootLayout({
 }>): JSX.Element {
   return (
     <html lang="ru">
-      <body className={`${inter.variable} ${roboto.variable}`}>{children}</body>
+      <body className={roboto.variable}>{children}</body>
     </html>
   );
 }

@@ -1,0 +1,8 @@
+@use '@/styles/mixins/mixins' as mixins;
+
+.page {
+  @include mixins.flexbox($align: center, $direction: column);
+  min-height: 100vh;
+  padding-inline: 2rem;
+  padding-bottom: 25vh;
+}
