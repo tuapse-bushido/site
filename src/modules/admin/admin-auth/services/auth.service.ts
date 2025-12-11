@@ -72,8 +72,6 @@ export async function refreshAdminSession(refreshTokenId: string): Promise<{
   accessToken: string;
   newRefreshToken?: string;
 }> {
-  let session = null;
-
   try {
     // 1. Получаем и проверяем сессию
     const sessionResult = await getRefreshSession(refreshTokenId);
@@ -82,7 +80,7 @@ export async function refreshAdminSession(refreshTokenId: string): Promise<{
       return { success: false, accessToken: '' };
     }
 
-    session = sessionResult.data;
+    const session = sessionResult.data;
 
     if (session.is_revoked || new Date() > new Date(session.expires_at)) {
       return { success: false, accessToken: '' };
@@ -126,13 +124,11 @@ export async function refreshAdminSession(refreshTokenId: string): Promise<{
   } catch (error) {
     console.error('Refresh session error:', error);
 
-    // Удаляем проблемную сессию только если она была найдена
-    if (session) {
-      try {
-        await deleteRefreshSession(refreshTokenId);
-      } catch (deleteError) {
-        console.error('Failed to delete refresh session:', deleteError);
-      }
+    // В случае ошибки пытаемся удалить refresh сессию
+    try {
+      await deleteRefreshSession(refreshTokenId);
+    } catch (deleteError) {
+      console.error('Failed to delete refresh session:', deleteError);
     }
 
     return { success: false, accessToken: '' };
