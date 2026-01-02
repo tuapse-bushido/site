@@ -1,5 +1,6 @@
 import { z, ZodType } from 'zod';
-import { ErrorCode, errorMessages, FormState, ParsedFormResult } from '@/src/shared/types';
+import { FormState, ParsedFormResult } from 'shared/types/form.types';
+import { ErrorCode, errorMessages } from 'shared/types/error-codes.types';
 
 export function parsedFormData<T extends ZodType>(formData: FormData, schema: T): ParsedFormResult<z.infer<T>> {
   const obj = Object.fromEntries(formData.entries());
@@ -8,7 +9,7 @@ export function parsedFormData<T extends ZodType>(formData: FormData, schema: T)
   if (!parsed.success) {
     const fieldErrors = z.flattenError(parsed.error).fieldErrors;
 
-    return { success: false, fieldErrors };
+    return { success: false, fieldErrors, data: obj as Partial<z.infer<T>> };
   }
 
   return { success: true, data: parsed.data };
@@ -29,10 +30,12 @@ export function formError<T>({
   code,
   message,
   fieldErrors,
+  data,
 }: {
   code?: ErrorCode;
   message?: string;
   fieldErrors?: Partial<Record<keyof T, string[]>>;
+  data?: Partial<T>;
 } = {}): FormState<T> {
   const finalMessage = message ?? (code ? errorMessages[code] : undefined);
 
@@ -40,5 +43,6 @@ export function formError<T>({
     success: false,
     ...(finalMessage ? { message: finalMessage } : {}),
     ...(fieldErrors ? { fieldErrors } : {}),
+    ...(data ? { data: data } : {}),
   };
 }

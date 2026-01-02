@@ -1,4 +1,5 @@
-import { ActionResult, ErrorCode, errorMessages } from '@/src/shared/types';
+import { ActionResult } from 'shared/types/action.types';
+import { ErrorCode, errorMessages } from 'shared/types/error-codes.types';
 
 export function actionSuccess<T>(data: T): ActionResult<T> {
   return { ok: true, data };
