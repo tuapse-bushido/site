@@ -1,10 +1,10 @@
 'use server';
 import { FormState, ruleCreateSchema, ruleIdSchema, ruleUpdateSchema } from '@/types/actions/form-schemas';
 import { deleteAddonRuleById, insertFullRule, updateFullRule } from '@/libs/db/addons/addons.query';
-import { revalidatePath, revalidateTag } from 'next/cache';
+import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
-export const actionInsertRule = async (prevState: FormState, formData: FormData): Promise<FormState> => {
+export const actionInsertRule = async (_prevState: FormState, formData: FormData): Promise<FormState> => {
   const formObject = Object.fromEntries(formData.entries());
   const parsed = ruleCreateSchema.safeParse(formObject);
 

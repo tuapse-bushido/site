@@ -158,7 +158,7 @@ export const insertCategory = async (category: Omit<Category, 'id'>): Promise<Ac
  *
  * Получает категорию по её ID.
  *
- * @param {string} categoryId - The ID of the category
+ * @param {string} id - The ID of the category
  * @returns {Promise<ActionResult<Category>>} Result with the found category or error
  *
  * @example
@@ -167,13 +167,13 @@ export const insertCategory = async (category: Omit<Category, 'id'>): Promise<Ac
  *   console.log(result.data); // category object
  * }
  */
-export const getCategoryById = async (categoryId: string): Promise<ActionResult<Category>> => {
+export const getCategoryById = async (id: number): Promise<ActionResult<Category>> => {
   try {
     const response = await pool.query(
       `SELECT id, title, is_active, slug, image_link, sort_number
        FROM category
        WHERE id = $1`,
-      [categoryId],
+      [id],
     );
 
     if (response.rowCount === 0) {

@@ -50,7 +50,7 @@ export const getAllIngredients = async (): Promise<ActionResult<Ingredient[]>> =
  * @example
  * const result = await getIngredientById('3');
  */
-export const getIngredientById = async (id: string): Promise<ActionResult<Ingredient>> => {
+export const getIngredientById = async (id: number): Promise<ActionResult<Ingredient>> => {
   try {
     const response = await pool.query(
       `SELECT id, title
