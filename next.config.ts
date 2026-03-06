@@ -2,6 +2,12 @@ import type { NextConfig } from 'next';
 import type { Configuration, RuleSetRule } from 'webpack';
 
 const nextConfig: NextConfig = {
+  experimental: {
+    proxyClientMaxBodySize: '20mb',
+    serverActions: {
+      bodySizeLimit: '20mb',
+    },
+  },
   cacheComponents: true,
   cacheLife: {
     admin: {
@@ -10,9 +16,7 @@ const nextConfig: NextConfig = {
       expire: 60 * 60 * 24 * 30,
     },
   },
-  reactCompiler: {
-    compilationMode: 'annotation',
-  },
+  reactCompiler: true,
 
   webpack(config): Configuration {
     const fileLoaderRule = config.module.rules.find(
@@ -40,7 +44,10 @@ const nextConfig: NextConfig = {
   },
   devIndicators: false,
   images: {
-    remotePatterns: [new URL('https://955a99af-74d7-4b91-a36a-20819b829e85.selstorage.ru/**')],
+    remotePatterns: [
+      new URL('https://955a99af-74d7-4b91-a36a-20819b829e85.selstorage.ru/**'),
+      new URL('https://www.example.com/**'),
+    ],
   },
 };
 

@@ -21,23 +21,22 @@
         "name": "next"
       }
     ],
+    "baseUrl": ".",
     "paths": {
-      "modules/*": ["./src/modules/*"],
-      "shared/configs/*": ["./src/shared/configs/*"],
-      "shared/styles/*": ["./src/shared/styles/*"],
-      "shared/types/*": ["./src/shared/types/*"],
-      "shared/ui/*": ["./src/shared/ui/*"],
-      "shared/utils/*": ["./src/shared/utils/*"],
-      "@/*": ["./*"]
+      "modules/*": ["src/modules/*"],
+      "shared/*": ["src/shared/*"],
+      "styles/*": ["src/shared/styles/*"]
     }
   },
   "include": [
-    "types/svg/svgr.d.ts",
+    "src/old/types/svg/svgr.d.ts",
     "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
+    "app/**/*.ts",
+    "app/**/*.tsx",
+    "src/**/*.ts",
+    "src/**/*.tsx",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", ".next", "dist", "build"]
 }
