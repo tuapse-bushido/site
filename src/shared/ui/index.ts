@@ -1,4 +1,2 @@
 export * from './button/button';
-export * from './app-image/app-image';
-export * from './input-group/input-group';
-export * from './error-message/error-message';
+export * from 'modules/client/shared/ui/input-group/input-group';
