@@ -17,12 +17,15 @@ const io = new Server(server, {
 io.on('connection', (socket): void => {
   console.log('🟢 Connected:', socket.id);
 
-  socket.on('newOrder', (data): void => {
+  socket.on('newOrder', (data) => {
+    console.log('newOrder received');
+    console.log(data);
+
     io.emit('admin:order:new', data);
   });
 
-  socket.on('disconnect', (): void => {
-    console.log('❌ Disconnected:', socket.id);
+  socket.on('disconnect', (reason): void => {
+    console.log('❌ Disconnected:', socket.id, 'reason:', reason);
   });
 });
 
