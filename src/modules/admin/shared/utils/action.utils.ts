@@ -21,3 +21,10 @@ export function actionError<T>(
     },
   };
 }
+
+export function unwrap<T>(result: ActionResult<T>): T {
+  if (!result.ok) {
+    throw result;
+  }
+  return result.data;
+}
