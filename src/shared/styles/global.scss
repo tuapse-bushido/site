@@ -1,1 +1,43 @@
-@use './04_tokens' as *;
+@use './02_variables' as vars;
+@use './03_tokens' as *;
+@use './05_components' as *;
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  height: 100%;
+  font-size: 62.5%;
+}
+
+body {
+  min-height: 100dvh;
+  //height: 100%;
+  overflow-x: hidden;
+
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  min-height: 100%;
+
+  background-color: var(--surface-layout);
+
+  font-family: vars.$font;
+  font-size: 1.6rem;
+  color: var(--text-primary);
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}

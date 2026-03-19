@@ -1,0 +1,22 @@
+//@use './01_variables' as vars;
+//@use 'sass:map';
+
+@mixin flexbox($display: flex, $align: center, $justify: center, $direction: row, $gap: 0) {
+  display: $display;
+  align-items: $align;
+  justify-content: $justify;
+  flex-direction: $direction;
+  gap: $gap;
+}
+//
+//@mixin responsive-font($sizes) {
+//  @each $bp, $size in $sizes {
+//    @if $bp == sm {
+//      font-size: $size;
+//    } @else if map.get(vars.$breakpoints, $bp) != null {
+//      @media (min-width: map.get(vars.$breakpoints, $bp)) {
+//        font-size: $size;
+//      }
+//    }
+//  }
+//}

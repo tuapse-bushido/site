@@ -1,0 +1,37 @@
+@use './01_colors' as colors;
+
+:root {
+  --color-brand-primary: #{colors.$figma-brand-primary};
+  --color-brand-primary-hover: #{colors.$figma-brand-primary-hover};
+  --color-brand-primary-active: #{colors.$figma-brand-primary-active};
+
+  // SURFACE
+  --surface-layout: #{colors.$figma-gray-100};
+  --surface-base: #{colors.$figma-white};
+
+  --surface-divider: #{colors.$figma-gray-400};
+
+  /* BUTTON */
+  --btn-bg-primary: var(--color-brand-primary);
+  --btn-bg-primary-hover: var(--color-brand-primary-hover);
+  --btn-bg-primary-active: var(--color-brand-primary-active);
+
+  --btn-bg-secondary: #{colors.$figma-gray-200};
+
+  /* INPUT */
+  --input-bg-primary: #{colors.$figma-white};
+
+  // TEXT
+  --text-primary: #{colors.$figma-black};
+  --text-secondary: #{colors.$figma-gray-500};
+  --text-inverse: #{colors.$figma-white};
+
+  --text-cart-free: #{colors.$figma-green};
+
+  // BORDER
+  --border-primary: #{colors.$figma-black};
+
+  // LINK
+  --link: #2563eb;
+  --link-hover: #1d4ed8;
+}
