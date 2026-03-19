@@ -2,10 +2,9 @@
 
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
-import { FormState } from '@/src/shared/types';
-import { formError, parsedFormData } from '@/src/shared/utils';
-import { insertIngredient } from '@/src/modules/admin/menu/ingredients/repository/ingredient.repository';
-import { ingredientFormSchema, IngredientFormType } from 'modules/admin/menu/ingredients';
+import { FormState } from 'shared/types/form.types';
+import { formError, parsedFormData } from 'modules/admin/shared/utils/form.utils';
+import { ingredientFormSchema, IngredientFormType, insertIngredient } from 'modules/admin/menu/ingredients';
 
 export const createIngredientAction = async (
   _prevState: FormState | null,
@@ -15,12 +14,10 @@ export const createIngredientAction = async (
 
   if (!parsed.success) return formError({ fieldErrors: parsed.fieldErrors });
 
-  const { title } = parsed.data;
-
-  const response = await insertIngredient(title);
+  const response = await insertIngredient(parsed.data.title);
 
   if (!response.ok) return formError({ message: response.message });
 
-  revalidatePath('/admin/menu/ingredients');
-  redirect('/admin/menu/ingredients');
+  revalidatePath('/admin/menu/categories');
+  redirect('/admin/menu/categories');
 };
