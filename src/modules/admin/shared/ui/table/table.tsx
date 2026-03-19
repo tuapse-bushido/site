@@ -2,7 +2,7 @@
 
 import React, { JSX } from 'react';
 import { TableComponentProps } from './table.props';
-import { BaseRow } from '@/components/ui/table/tbody/tbody.props';
+import { BaseRow } from 'src/old/components/ui/table/tbody/tbody.props';
 import Paper from '@mui/material/Paper';
 import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
