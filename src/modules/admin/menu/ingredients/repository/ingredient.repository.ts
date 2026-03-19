@@ -1,10 +1,9 @@
 'use server';
 
 import { cacheLife, cacheTag } from 'next/cache';
-import { ActionResult } from '@/src/shared/types';
-import { ingredientSchema } from '@/types/db/tables/ingredient';
-import { dbExecute, dbQuery } from '@/src/shared/utils/dbQuery';
-import { Ingredient, ingredientArraySchema } from '@/src/modules/admin/menu/ingredients';
+import { ActionResult } from 'shared/types/action.types';
+import { dbExecute, dbQuery } from 'shared/utils/db.utils';
+import { Ingredient, ingredientArraySchema, ingredientSchema } from 'modules/admin/menu/ingredients';
 
 export const getIngredientById = async (id: number): Promise<ActionResult<Ingredient>> => {
   'use cache';
@@ -23,6 +22,7 @@ export const getIngredientById = async (id: number): Promise<ActionResult<Ingred
 
 export const getAllIngredients = async (): Promise<ActionResult<Ingredient[]>> => {
   'use cache';
+  cacheLife('admin');
   cacheTag(`ingredients`);
 
   const query = `
@@ -45,10 +45,7 @@ export const insertIngredient = async (title: string): Promise<ActionResult<Ingr
   return dbExecute(query, params);
 };
 
-export const updateIngredient = async (ingredient: Ingredient): Promise<ActionResult<Ingredient>> => {
-  'use cache';
-  cacheTag(`ingredient-${ingredient.id}`);
-
+export const updateIngredientById = async (ingredient: Ingredient): Promise<ActionResult<Ingredient>> => {
   const query = `
     UPDATE ingredient
     SET title = $1
