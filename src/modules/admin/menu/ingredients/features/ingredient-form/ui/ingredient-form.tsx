@@ -7,9 +7,7 @@ import { JSX, useActionState } from 'react';
 import { useRouter } from 'next/navigation';
 import TextField from '@mui/material/TextField';
 import { Divider, Typography } from '@mui/material';
-import { Ingredient } from '@/src/modules/admin/menu/ingredients';
-import { createIngredientAction } from 'modules/admin/menu/ingredients';
-import { updateIngredientAction } from 'modules/admin/menu/ingredients';
+import { createIngredientAction, Ingredient, updateIngredientAction } from 'src/modules/admin/menu/ingredients';
 
 export const IngredientForm = ({ ingredient }: { ingredient?: Ingredient }): JSX.Element => {
   const router = useRouter();
