@@ -1,26 +1,31 @@
 import { z, ZodType } from 'zod';
-import { DatabaseError } from 'pg';
 import { pool } from 'shared/configs/db';
+import { DatabaseError, PoolClient } from 'pg';
 import { ActionResult } from 'shared/types/action.types';
 import { ErrorCode } from 'shared/types/error-codes.types';
-import { actionError, actionSuccess } from './action.utils';
+import { actionError, actionSuccess } from 'modules/admin/shared/utils/action.utils';
 
 export const dbQuery = async <T extends ZodType>(
   query: string,
   params: unknown[] = [],
   schema: T,
   mode: 'single' | 'multiple' = 'single',
+  executor: PoolClient | typeof pool = pool,
 ): Promise<ActionResult<z.infer<T>>> => {
   try {
-    const { rows, rowCount } = await pool.query(query, params);
+    const { rows, rowCount } = await executor.query(query, params);
 
-    if (rowCount === 0) return actionError(ErrorCode.NOT_FOUND);
+    if (!rowCount) {
+      return actionError(ErrorCode.NOT_FOUND);
+    }
 
     const data = mode === 'single' ? rows[0] : rows;
 
     const result = schema.safeParse(data);
 
-    if (!result.success) return actionError(ErrorCode.VALIDATION_FAILED);
+    if (!result.success) {
+      return actionError(ErrorCode.VALIDATION_FAILED);
+    }
 
     return actionSuccess(result.data);
   } catch (err) {
