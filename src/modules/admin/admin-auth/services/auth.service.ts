@@ -1,6 +1,6 @@
 import { cookies } from 'next/headers';
 import { JWTPayload, jwtVerify, SignJWT } from 'jose';
-import { Admin, getAdminById } from '@/src/modules/admin/shared';
+import { Admin, getAdminById } from 'src/modules/admin/shared';
 import { createRefreshSession, deleteRefreshSession, deleteSessionByAdminId, getRefreshSession } from '../index';
 
 if (!process.env.JWT_SECRET) {
