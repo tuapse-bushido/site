@@ -1,6 +1,9 @@
 import { z } from 'zod';
 
-const fileSchema = z.file().mime(['image/jpeg', 'image/png', 'image/webp']).max(5_120);
+const fileSchema = z
+  .file()
+  .mime(['image/jpeg', 'image/png', 'image/webp'])
+  .max(5 * 1024 * 1024);
 
 export const imageFileSchema = z
   .file()
