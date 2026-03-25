@@ -1,6 +1,6 @@
 import { dbQuery } from 'shared/utils/db.utils';
 import { ActionResult } from 'shared/types/action.types';
-import { Admin, adminEntity } from '@/src/modules/admin/shared';
+import { Admin, adminEntity } from 'src/modules/admin/shared';
 
 export const getAdminByLogin = async (login: string): Promise<ActionResult<Admin>> => {
   const query = `
