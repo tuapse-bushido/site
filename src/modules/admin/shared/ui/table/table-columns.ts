@@ -27,3 +27,17 @@ export const productColumns: GridColDef[] = [
   { field: 'is_visible', headerName: 'Видимо' },
   { field: 'is_set', headerName: 'Сет' },
 ];
+
+export const orderColumns: GridColDef[] = [
+  { field: 'order_number', headerName: '№ Заказа', width: 120 },
+  {
+    field: 'created_at',
+    headerName: 'Дата',
+  },
+  { field: 'status', headerName: 'Статус', width: 150 },
+  { field: 'total_price', headerName: 'Сумма', width: 110, type: 'number' },
+  { field: 'payment_status', headerName: 'Оплата', width: 130 },
+  { field: 'full_address', headerName: 'Адрес доставки' },
+  { field: 'customer_name', headerName: 'Клиент', width: 150 },
+  { field: 'order_type', headerName: 'Тип', width: 120 },
+];

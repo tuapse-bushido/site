@@ -23,13 +23,14 @@ const DataGrid = dynamic<DataGridProps>(loadDataGrid, { ssr: false });
 export function TableComponent<T extends BaseRow>({ columns, data, slug }: TableComponentProps<T>): JSX.Element {
   const router = useRouter();
   return (
-    <Paper>
+    <Paper sx={{ height: '100%', width: '100%', display: 'flex', flexDirection: 'column' }}>
       <DataGrid
         columns={columns}
         rows={data}
-        getRowId={(row): number => row.title}
+        getRowId={(row): number => row.id}
         sx={{ border: 0 }}
-        onRowClick={(params): void => router.push(`/admin/menu/${slug}/${params.row.id}`)}
+        onRowClick={(params): void => router.push(`/admin/${slug}/${params.row.id}`)}
+        hideFooter
       />
     </Paper>
   );
