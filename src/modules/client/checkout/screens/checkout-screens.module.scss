@@ -1,0 +1,15 @@
+@use 'shared/styles/04_mixins' as mixins;
+
+.page {
+  @include mixins.flexbox($direction: column, $justify: flex-start, $align: stretch, $gap: 1.5rem);
+}
+.container {
+  @include mixins.flexbox();
+}
+
+.checkoutBtn {
+  width: 100%;
+  height: 3.2rem;
+  font-size: 1.4rem;
+  font-weight: 400;
+}
