@@ -1,6 +1,0 @@
-@use '@/styles/mixins/mixins' as mixins;
-
-.wrapper {
-  @include mixins.flexbox($gap: 4rem, $justify: flex-start, $align: flex-start);
-  flex: 1;
-}
