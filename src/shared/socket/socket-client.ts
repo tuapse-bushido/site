@@ -1,29 +1,11 @@
-import { io, Socket } from 'socket.io-client';
-import { CreateOrderPayload } from 'modules/order/model';
-
-export async function sendOrderToSocketServer(payload: CreateOrderPayload): Promise<void> {
-  const socket = io(process.env.WS_SERVER_URL!, {
-    autoConnect: false,
-  });
-
-  const connectSocket = (s: Socket): Promise<void> =>
-    new Promise<void>((resolve, reject): void => {
-      const handleConnect = (): void => {
-        s.off('connect_error', handleError);
-        resolve();
-      };
-      const handleError = (error: Error): void => {
-        s.off('connect', handleConnect);
-        reject(error);
-      };
-      s.once('connect', handleConnect);
-      s.once('connect_error', handleError);
-      s.connect();
+export async function sendOrderToSocketServer(payload: unknown): Promise<void> {
+  try {
+    await fetch('http://127.0.0.1:3001', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
     });
-
-  await connectSocket(socket);
-
-  socket.emit('newOrder', payload);
-
-  socket.disconnect();
+  } catch (error) {
+    console.error('Socket notification failed:', error);
+  }
 }
