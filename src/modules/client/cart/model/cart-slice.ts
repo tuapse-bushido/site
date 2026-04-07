@@ -1,6 +1,6 @@
+import { CartItem, CartState } from './cart-state.types';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { CartItem, CartState } from '@/types';
-import { pruneAddonsForParent, upsertAddonForProduct } from '@/utils/redux/cart-slice-utils';
+import { pruneAddonsForParent, upsertAddonForProduct } from './cart-mutations';
 
 const initialState: CartState = {
   items: {},
@@ -8,17 +8,10 @@ const initialState: CartState = {
 };
 
 export const cartSlice = createSlice({
-  name: 'addToCart',
+  name: 'cart',
   initialState,
   reducers: {
     /**
-     * Adds a product to the cart or updates the quantity if it already exists.
-     *
-     * - If the product is an addon, updates `quantity_in_cart` and marks it as user-modified.
-     * - Otherwise, adds it to `items` and processes related addon rules via `upsertAddonForProduct`.
-     *
-     * ---
-     *
      * Добавляет товар в корзину или обновляет его количество, если он уже есть.
      *
      * - Если это добавка — обновляет `quantity_in_cart` и помечает как изменённую пользователем.
@@ -49,13 +42,6 @@ export const cartSlice = createSlice({
       }
     },
     /**
-     * Increments the quantity of a product or addon in the cart by 1.
-     *
-     * - If the product is an addon, directly increments and flags as user-modified.
-     * - Otherwise, increments main product quantity and runs `upsertAddonForProduct`.
-     *
-     * ---
-     *
      * Увеличивает количество товара или добавки в корзине на 1.
      *
      * - Если это добавка — увеличивает и помечает как изменённую пользователем.
@@ -80,17 +66,6 @@ export const cartSlice = createSlice({
       }
     },
     /**
-     * Decreases quantity of a product or addon in the cart by 1, with cleanup.
-     *
-     * - If the product is an addon:
-     *   - Decrements `quantity_in_cart`
-     *   - If it reaches 0 — removes addon entirely
-     * - If it is a main product:
-     *   - Calls `pruneAddonsForParent` to remove associated addon rules
-     *   - Decrements or deletes the product
-     *
-     * ---
-     *
      * Уменьшает количество товара или добавки в корзине на 1 с учётом удаления.
      *
      * - Если это добавка:
