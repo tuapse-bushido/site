@@ -1,7 +1,7 @@
-import { JSX } from 'react';
-import { FieldsetProps } from '@/components/ui/fieldset/fieldset.props';
-import styles from './fieldset.module.scss';
 import clsx from 'clsx';
+import { JSX } from 'react';
+import styles from './fieldset.module.scss';
+import { FieldsetProps } from './fieldset.props';
 
 export const Fieldset = ({ children, legendTitle, className, ...props }: FieldsetProps): JSX.Element => {
   return (
