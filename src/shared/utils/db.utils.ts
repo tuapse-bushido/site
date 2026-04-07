@@ -15,7 +15,7 @@ export const dbQuery = async <T extends ZodType>(
   try {
     const { rows, rowCount } = await executor.query(query, params);
 
-    if (!rowCount) {
+    if (!rowCount && mode === 'single') {
       return actionError(ErrorCode.NOT_FOUND);
     }
 
@@ -52,11 +52,16 @@ export const dbExecute = async <T>(query: string, params: unknown[] = []): Promi
   }
 };
 
-export const dbDelete = async (query: string, params: unknown[] = []): Promise<ActionResult<null>> => {
+export const dbDelete = async (
+  query: string,
+  params: unknown[] = [],
+  executor: PoolClient | typeof pool = pool,
+  options: { strict?: boolean } = { strict: true },
+): Promise<ActionResult<null>> => {
   try {
-    const { rowCount } = await pool.query(query, params);
+    const { rowCount } = await executor.query(query, params);
 
-    if (rowCount === 0) {
+    if (options.strict && rowCount === 0) {
       return actionError(ErrorCode.NOT_FOUND);
     }
 
