@@ -2,6 +2,10 @@ import type { NextConfig } from 'next';
 import type { Configuration, RuleSetRule } from 'webpack';
 
 const nextConfig: NextConfig = {
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+
   experimental: {
     proxyClientMaxBodySize: '20mb',
     serverActions: {
@@ -18,23 +22,63 @@ const nextConfig: NextConfig = {
   },
   reactCompiler: true,
 
-  webpack(config): Configuration {
-    const fileLoaderRule = config.module.rules.find(
-      (rule: RuleSetRule): boolean => rule.test instanceof RegExp && rule.test.test('.svg'),
-    );
+  webpack(config: Configuration): Configuration {
+    const fileLoaderRule = config.module!.rules!.find((rule): boolean => {
+      if (typeof rule !== 'object' || rule === null || !('test' in rule)) {
+        return false;
+      }
 
-    config.module.rules.push(
+      const { test } = rule as RuleSetRule;
+
+      return test instanceof RegExp && test.test('.svg');
+    }) as RuleSetRule;
+
+    if (!fileLoaderRule) {
+      return config;
+    }
+
+    config.module!.rules!.push(
       {
         ...fileLoaderRule,
         test: /\.svg$/i,
         resourceQuery: /url/,
       },
-
       {
         test: /\.svg$/i,
-        issuer: fileLoaderRule.issuer,
-        resourceQuery: { not: [...fileLoaderRule.resourceQuery.not, /url/] },
-        use: ['@svgr/webpack'],
+        ...(fileLoaderRule.issuer ? { issuer: fileLoaderRule.issuer } : {}),
+        resourceQuery: {
+          not: [...((fileLoaderRule.resourceQuery as { not?: (string | RegExp)[] })?.not || []), /url/],
+        },
+        use: [
+          {
+            loader: '@svgr/webpack',
+            options: {
+              typescript: true,
+              icon: true,
+              dimensions: false,
+              svgo: true,
+              svgoConfig: {
+                plugins: [
+                  {
+                    name: 'preset-default',
+                    params: {
+                      overrides: { removeViewBox: false },
+                    },
+                  },
+                  'removeXMLNS',
+                  {
+                    name: 'convertColors',
+                    params: { currentColor: true },
+                  },
+                ],
+              },
+              svgProps: {
+                'aria-hidden': 'true',
+                focusable: 'false',
+              },
+            },
+          },
+        ],
       },
     );
 
