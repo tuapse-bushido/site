@@ -38,7 +38,7 @@ export const addonRuleSchema = z.object({
  * ---
  * Тип правила добавок, выведенный из схемы `addonRuleSchema`.
  */
-export type AddonRule = z.infer<typeof addonRuleSchema>;
+// export type AddonRule = z.infer<typeof addonRuleSchema>;
 
 export const addonSchema = z.object({
   id: z.number(),
