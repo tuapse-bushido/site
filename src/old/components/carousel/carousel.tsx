@@ -1,6 +1,6 @@
 import styles from './carousel.module.scss';
 import { JSX } from 'react';
-import { SwiperClient } from '@/components/carousel/swiper-client/swiper-client';
+import { SwiperClient } from './swiper-client/swiper-client';
 
 /**
  * Carousel component.

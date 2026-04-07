@@ -3,8 +3,8 @@
 import { JSX, useEffect, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { io } from 'socket.io-client';
-import { OrdersList } from '@/components/order/orders-list/orders-list';
-import { FullOrder } from '@/types/db/composite/full-order';
+import { OrdersList } from 'src/old/components/order/orders-list/orders-list';
+import { FullOrder } from 'src/old/types/db/composite/full-order';
 
 export default function OrdersClient({
   initialOrders,

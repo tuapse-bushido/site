@@ -1,8 +1,8 @@
 'use server';
 
-import { pool } from '@/libs/db/db';
-import { ActionResult, actionResult, ErrorCode, errorResult } from '@/utils';
-import { Category, categoryArraySchema, categorySchema } from '@/types';
+import { pool } from 'src/old/libs/db/db';
+import { ActionResult, actionResult, ErrorCode, errorResult } from 'src/old/utils';
+import { Category, categoryArraySchema, categorySchema } from 'src/old/types';
 import { DatabaseError } from 'pg';
 
 /**

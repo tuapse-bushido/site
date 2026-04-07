@@ -1,6 +1,6 @@
 import { JSX } from 'react';
-import { FullOrder } from '@/types/db/composite/full-order';
-import { OrderItem } from '@/components/order/order-item/order-item';
+import { FullOrder } from 'src/old/types/db/composite/full-order';
+import { OrderItem } from 'src/old/components/order/order-item/order-item';
 import { useRouter } from 'next/navigation';
 import styles from './order-list.module.scss';
 

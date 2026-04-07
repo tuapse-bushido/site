@@ -1,5 +1,5 @@
 import { JSX } from 'react';
-import { OrderItemProps } from '@/components/order/order-item/order-item.props';
+import { OrderItemProps } from 'src/old/components/order/order-item/order-item.props';
 import styles from './order-item.module.scss';
 import clsx from 'clsx';
 

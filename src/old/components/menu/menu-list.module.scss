@@ -1,4 +1,4 @@
-@use '@/styles/mixins/mixins' as mixins;
+@use 'styles/04_mixins' as mixins;
 
 .sidebar {
   @include mixins.flexbox($direction: column, $gap: 0.3rem);

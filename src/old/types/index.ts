@@ -1,4 +1,3 @@
-export * from './misc';
 export * from './html/html';
 
 // Database

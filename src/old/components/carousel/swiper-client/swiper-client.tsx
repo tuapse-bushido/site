@@ -4,7 +4,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Pagination } from 'swiper/modules';
 
 import { JSX } from 'react';
-import { SwiperClientProps } from '@/components/carousel/swiper-client/swiper-client.props';
+import { SwiperClientProps } from './swiper-client.props';
 import Image from 'next/image';
 
 /**

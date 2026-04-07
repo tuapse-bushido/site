@@ -1,5 +1,5 @@
-import { DivProps } from '@/types';
-import { FullOrder } from '@/types/db/composite/full-order';
+import { DivProps } from 'src/old/types';
+import { FullOrder } from 'src/old/types/db/composite/full-order';
 
 export type OrderItemProps = DivProps & {
   index: number;

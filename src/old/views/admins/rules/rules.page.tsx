@@ -1,6 +1,6 @@
 import { JSX } from 'react';
 import styles from './rules.module.scss';
-import { ClientRulesWrapper } from '@/components/addon-rules/rules-wrapper/rules-wrapper';
+import { ClientRulesWrapper } from 'src/old/components/addon-rules/rules-wrapper/rules-wrapper';
 import { getAllAddonRuleFull } from '@/libs/db/addons/addons.query';
 import { LinkButton } from '@/components/ui/link-button/link-button';
 import { AdminPageHeader } from '@/components/admin/admin-page-header/admin-page.header';

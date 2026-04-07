@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { orderSchema } from 'old/types/db/tables/order';
+import { orderSchema } from 'src/old/types/db/tables/order';
 
 const productInOrderSchema = z.object({
   title: z.string(),

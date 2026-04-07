@@ -6,7 +6,7 @@ import { ActionResult, actionResult, ErrorCode, errorResult } from '@/utils';
 import { orderDailyCounterSchema } from 'src/old/types/db/tables/order-daily-counter';
 import { Order, orderSchema } from '@/types/db/tables/order';
 import { ColumnWiseOrderItems, orderItemArraySchema } from 'src/old/types/db/tables/order-item';
-import { FullOrder, fullOrderArraySchema, fullOrderSchema } from '@/types/db/composite/full-order';
+import { FullOrder, fullOrderArraySchema, fullOrderSchema } from 'src/old/types/db/composite/full-order';
 
 export const insertOrder = async (orderData: CheckoutState, orderItems: CartState): Promise<ActionResult<Order>> => {
   const client = await pool.connect();
