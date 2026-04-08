@@ -1,0 +1,5 @@
+@use 'shared/styles/04_mixins' as mixins;
+
+.page {
+  @include mixins.flexbox($direction: column, $align: stretch, $gap: 2rem);
+}

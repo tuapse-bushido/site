@@ -4,56 +4,43 @@ import Image from 'next/image';
 
 import styles from './product-card-view.module.scss';
 
-import { getImageUrl } from '../../../../../../../old/utils';
 import { ProductCardViewProps } from 'modules/client/catalog/entities/ui/product-card/product-card-view/product-card-view.props';
 import { ButtonCardMain } from 'modules/client/catalog/entities/ui/product-card/button-card/button-card-main';
 
-export const ProductCardView = ({ product, type, product_type }: ProductCardViewProps): JSX.Element => {
-  const isCart = type === 'cart';
-  const isProduct = product_type === 'product';
-
-  const imageLink = isProduct ? product.image_link : product.addon_product.image_link;
-  const title = isProduct ? product.title : product.addon_product.title;
-  const countPortion = isProduct ? product.count_portion : product.addon_product.count_portion;
-  const weight = isProduct ? product.weight : product.addon_product.weight;
-  const price = isProduct ? product.price : product.addon_product.price;
-
-  const cx = (base: string): string => clsx(styles[base], isCart && styles[`${base}Cart`]);
+export const ProductCardView = ({ product }: ProductCardViewProps): JSX.Element => {
+  const cx = (base: string): string => clsx(styles[base]);
 
   return (
     <div className={cx('productCard')}>
       <div className={cx('productImageWrapper')}>
         <Image
           className={clsx(styles.productImage)}
-          src={getImageUrl(imageLink)}
-          alt={title}
+          src={process.env.NEXT_PUBLIC_IMAGES_PRODUCTS + product.image_link}
+          alt={product.title}
           width={500}
           height={375}
-          sizes={type !== 'cart' ? '(max-width: 440px) 50vw' : '(max-width: 440px) 29vw'}
+          sizes={'(max-width: 440px) 29vw'}
         />
       </div>
 
       <div className={cx('productContent')}>
         <div className={styles.productContentHeader}>
-          <h2 className={styles.productHeaderTitle}>{title}</h2>
+          <h2 className={styles.productHeaderTitle}>{product.title}</h2>
           <span className={styles.productHeaderDescription}>
-            {countPortion && `${countPortion} шт / `}
-            {weight} г
+            {product.count_portion && `${product.count_portion} шт / `}
+            {product.weight} г
           </span>
+          {/*<div>*/}
+          {/*  <p>{ingredients}</p>*/}
+          {/*</div>*/}
         </div>
 
         <div className={clsx(styles.productContentFooter)}>
           <div className={cx('productFooterPrice')}>
-            {isProduct ? (
-              <span>{price} ₽</span>
-            ) : product.quantity_in_cart <= product.max_free_quantity ? (
-              <span className={styles.priceFree}>Бесплатно</span>
-            ) : (
-              <span>{price} ₽</span>
-            )}
+            <span>{product.price} ₽</span>
           </div>
 
-          <ButtonCardMain product={isProduct ? product : product.addon_product} />
+          <ButtonCardMain product={product} />
         </div>
       </div>
     </div>

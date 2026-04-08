@@ -1,4 +1,4 @@
-type Option = {
+export type Option = {
   readonly value: string;
   readonly label: string;
 };

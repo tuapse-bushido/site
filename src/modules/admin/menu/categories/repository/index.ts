@@ -1,1 +1,1 @@
-export * from './category.repository';
+export { getAllCategories, getCategoryById, insertCategory, updateCategoryById } from './category.repository';

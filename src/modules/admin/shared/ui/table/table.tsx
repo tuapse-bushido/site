@@ -2,7 +2,6 @@
 
 import React, { JSX } from 'react';
 import { TableComponentProps } from './table.props';
-import { BaseRow } from 'src/old/components/ui/table/tbody/tbody.props';
 import Paper from '@mui/material/Paper';
 import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
@@ -20,7 +19,7 @@ const loadDataGrid = async (): Promise<React.ComponentType<DataGridProps>> => {
 
 const DataGrid = dynamic<DataGridProps>(loadDataGrid, { ssr: false });
 
-export function TableComponent<T extends BaseRow>({ columns, data, slug }: TableComponentProps<T>): JSX.Element {
+export function TableComponent<T>({ columns, data, slug }: TableComponentProps<T>): JSX.Element {
   const router = useRouter();
   return (
     <Paper sx={{ height: '100%', width: '100%', display: 'flex', flexDirection: 'column' }}>

@@ -1,0 +1,33 @@
+@use 'shared/styles/04_mixins' as mixins;
+
+.item {
+  @include mixins.flexbox($align: center, $justify: space-between, $direction: column, $gap: 0.2rem);
+
+  color: var(--text-secondary);
+
+  &:active {
+    color: var(--color-brand-primary-active);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      color: var(--color-brand-primary-hover);
+      text-decoration: underline;
+    }
+  }
+}
+
+.label {
+  font-size: 1.2rem;
+  text-align: center;
+  letter-spacing: -0.04em;
+
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.active {
+  color: var(--color-brand-primary);
+}

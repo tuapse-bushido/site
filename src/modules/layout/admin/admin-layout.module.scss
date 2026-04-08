@@ -1,0 +1,51 @@
+@use 'shared/styles/04_mixins' as mixins;
+
+.layout {
+  display: grid;
+  grid-template-rows: 6rem 1fr;
+  grid-template-columns: 1fr;
+  grid-template-areas:
+    'header'
+    'main';
+
+  gap: 1rem;
+
+  height: 100dvh;
+  max-height: 100dvh;
+
+  padding: 0 1rem 1rem;
+
+  overflow: hidden;
+
+  transition: grid-template-columns 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  @include mixins.respond-to(sm) {
+    grid-template-columns: 8rem 1fr;
+    grid-template-areas:
+      'header header'
+      'sidebar main';
+  }
+
+  @include mixins.respond-to(md) {
+    grid-template-columns: 24rem 1fr;
+  }
+
+  @include mixins.respond-to(lg) {
+    grid-template-columns: 28rem 1fr;
+  }
+}
+
+.header {
+  grid-area: header;
+}
+
+.sidebar {
+  grid-area: sidebar;
+}
+
+.main {
+  grid-area: main;
+  min-height: 0;
+
+  overflow: hidden;
+}

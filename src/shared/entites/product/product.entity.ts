@@ -29,6 +29,5 @@ export const productSchema = z.object({
 
   weight: z.number().nonnegative().default(0),
   count_portion: z.number().int().min(1).default(1),
-
   quantity: z.number().int().min(1).default(1),
 }) satisfies z.ZodType<Product>;

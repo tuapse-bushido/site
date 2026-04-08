@@ -4,6 +4,7 @@ import { cacheLife, cacheTag } from 'next/cache';
 import { ActionResult } from 'shared/types/action.types';
 import { dbExecute, dbQuery } from 'shared/utils/db.utils';
 import { Ingredient, ingredientArraySchema, ingredientSchema } from 'modules/admin/menu/ingredients';
+import { z } from 'zod';
 
 export const getIngredientById = async (id: number): Promise<ActionResult<Ingredient>> => {
   'use cache';
@@ -55,4 +56,14 @@ export const updateIngredientById = async (ingredient: Ingredient): Promise<Acti
   const params = [ingredient.title, ingredient.id];
 
   return dbExecute(query, params);
+};
+
+export const getCount = async (): Promise<ActionResult<{ count: number }>> => {
+  const query = `
+        SELECT count(*) AS count
+        FROM ingredient
+        ;
+    `;
+
+  return dbQuery(query, [], z.object({ count: z.coerce.number() }));
 };

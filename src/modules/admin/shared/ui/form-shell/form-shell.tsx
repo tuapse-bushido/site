@@ -1,19 +1,26 @@
 'use server';
 
 import { ElementType, JSX } from 'react';
-import { cacheLife } from 'next/cache';
+import { cacheLife, cacheTag } from 'next/cache';
 import { FormShellProps } from './from-shell.props';
 import { formShellRegistry } from 'src/modules/admin/shared/ui/form-shell/form-shell.config';
 
 export async function FormShell({
   params,
   token,
+  tagConfig,
   cacheProfile = 'admin',
 }: FormShellProps): Promise<JSX.Element | null> {
   'use cache';
   if (cacheProfile) cacheLife(cacheProfile);
 
   const { id } = await params;
+
+  if (tagConfig && id) {
+    cacheTag(tagConfig.base, `${tagConfig.prefix}${id}`);
+  } else if (tagConfig) {
+    cacheTag(tagConfig.base);
+  }
 
   const config = formShellRegistry[token];
   // 2. Приводим компонент к ElementType

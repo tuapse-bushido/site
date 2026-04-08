@@ -1,6 +1,7 @@
 import { CartItem, CartState } from './cart-state.types';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { pruneAddonsForParent, upsertAddonForProduct } from './cart-mutations';
+import { AddonProduct } from 'modules/client/entities';
 
 const initialState: CartState = {
   items: {},

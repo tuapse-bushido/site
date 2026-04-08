@@ -1,1 +1,1 @@
-export type { AddonRule } from './addons.entity';
+export type * from './addons.entity';

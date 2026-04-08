@@ -15,6 +15,31 @@ export function parsedFormData<T extends ZodType>(formData: FormData, schema: T)
   return { success: true, data: parsed.data };
 }
 
+export function parsedFormDataNew<T extends ZodType>(
+  formData: FormData,
+  schema: T,
+  extraData?: Partial<z.infer<T>>,
+): ParsedFormResult<z.infer<T>> {
+  const rawValues: Record<string, unknown> = {};
+
+  for (const key of formData.keys()) {
+    const values = formData.getAll(key);
+    rawValues[key] = values.length > 1 ? values : values[0];
+  }
+
+  const mergedData = { ...rawValues, ...extraData };
+
+  const parsed = schema.safeParse(mergedData);
+
+  if (!parsed.success) {
+    const fieldErrors = z.flattenError(parsed.error).fieldErrors;
+
+    return { success: false, fieldErrors, data: mergedData as Partial<z.infer<T>> };
+  }
+
+  return { success: true, data: parsed.data };
+}
+
 /**
  * Универсальная функция для успешного состояния формы
  */

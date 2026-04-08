@@ -18,29 +18,16 @@ describe('InputGroup UI', (): void => {
       <InputGroup
         id="email"
         labelTitle="Email"
+        className={'input-y'}
         classNames={{
-          rootClassName: 'root-x',
-          labelClassName: 'label-z',
-          inputClassName: 'input-y',
+          root: 'root-x',
+          label: 'label-z',
         }}
       />,
     );
 
     expect(screen.getByText('Email').className).toContain('label-z');
     expect(screen.getByRole('textbox').className).toContain('input-y');
-  });
-
-  it('передаёт rootProps в корневой div', (): void => {
-    render(<InputGroup id="email" labelTitle="Email" rootProps={{ 'data-test': 'root' }} />);
-
-    const root = screen.getByRole('textbox').parentElement;
-    expect(root).toHaveAttribute('data-test', 'root');
-  });
-
-  it('передаёт labelProps в label', (): void => {
-    render(<InputGroup id="email" labelTitle="Email" labelProps={{ title: 'tooltip' }} />);
-
-    expect(screen.getByText('Email')).toHaveAttribute('title', 'tooltip');
   });
 
   it('передаёт HTML-пропсы input через rest props', (): void => {

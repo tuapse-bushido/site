@@ -26,10 +26,11 @@
       "modules/*": ["src/modules/*"],
       "shared/*": ["src/shared/*"],
       "styles/*": ["src/shared/styles/*"]
-    }
+    },
+    "types": ["vitest/globals", "@testing-library/jest-dom"]
   },
   "include": [
-    "src/old/types/svg/svgr.d.ts",
+    "src/shared/types/svgr.d.ts",
     "next-env.d.ts",
     "app/**/*.ts",
     "app/**/*.tsx",
@@ -38,5 +39,5 @@
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts"
   ],
-  "exclude": ["node_modules", "src/old", ".next", "dist", "build"]
+  "exclude": ["node_modules", ".next", "dist", "build"]
 }

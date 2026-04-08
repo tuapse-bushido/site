@@ -1,5 +1,4 @@
-@use 'src/old/styles/base/variables' as vars;
-@use 'src/old/styles/mixins/mixins' as mixins;
+@use 'shared/styles/04_mixins' as mixins;
 @use 'sass:map';
 
 .productCard {
@@ -8,7 +7,7 @@
   padding: 1rem;
   border-radius: 0.8rem;
 
-  background-color: vars.$bg-color-secondary;
+  background-color: var(--surface-base);
 }
 
 .productCardCart {
@@ -55,7 +54,7 @@
 }
 
 .productHeaderDescription {
-  color: vars.$text-color-secondary;
+  color: var(--text-secondary);
   font-size: 1rem;
   line-height: 100%;
   letter-spacing: -0.04rem;
@@ -77,15 +76,15 @@
 }
 
 .priceFree {
-  color: vars.$text-color-cart-free;
+  color: var(--text-cart-free);
 }
 
 .priceOld {
-  color: vars.$text-color-secondary;
+  color: var(--text-secondary);
   font-size: 1rem;
   text-decoration: line-through;
 }
 
 .priceDiscount {
-  color: vars.$color-primary;
+  color: var(--text-primary);
 }

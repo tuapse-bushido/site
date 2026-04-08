@@ -4,7 +4,7 @@ import Form from 'next/form';
 import { loginAction } from '../../api';
 import { JSX, useActionState } from 'react';
 import styles from './login-form.module.scss';
-import { Button, InputGroup } from 'src/shared/ui';
+import { InputGroup } from 'src/shared/ui';
 
 export const LoginForm = (): JSX.Element => {
   const [state, formAction] = useActionState(loginAction, null);
@@ -22,7 +22,7 @@ export const LoginForm = (): JSX.Element => {
         required
       />
 
-      <Button label={'Войти'} type={'primary'} />
+      <button className={'btn btnPrimary'}>Войти</button>
     </Form>
   );
 };

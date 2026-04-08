@@ -6,8 +6,8 @@ export type AppImageProps = {
   alt: string;
 
   classNames?: {
-    root: string;
-    image: string;
+    root?: string;
+    image?: string;
   };
 
   rootProps?: DivProps;

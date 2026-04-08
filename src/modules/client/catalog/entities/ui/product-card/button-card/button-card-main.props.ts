@@ -1,4 +1,4 @@
-import { ProductCard } from 'src/old/types';
+import { ProductCard } from 'modules/client/catalog/entities/product-card.entity';
 
 export type ButtonCardMainProps = {
   product: ProductCard;

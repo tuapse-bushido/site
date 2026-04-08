@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { refreshAdminSession } from '@/src/modules/admin/admin-auth';
+import { refreshAdminSession } from 'modules/admin/admin-auth';
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
   try {

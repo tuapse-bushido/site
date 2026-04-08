@@ -1,11 +1,10 @@
 'use client';
 
 import { JSX } from 'react';
-import { Button } from 'src/old/components/ui/button/button';
 import { useAppDispatch, useAppSelector } from 'modules/client/redux/hooks/hooks';
 import { addToCart, decrementQuantity, incrementQuantity } from 'modules/client/cart/model/cart-slice';
-import { CountButton } from 'src/old/components/ui/count-button/count-button';
-import { ButtonCardMainProps } from 'src/old/components/product/product-card/button-card/button-card-main.props';
+import { CountButton } from 'modules/client/shared/ui/count-button/count-button';
+import { ButtonCardMainProps } from './button-card-main.props';
 import { CartState } from 'modules/client/cart/model/cart-state.types';
 
 export const ButtonCardMain = ({ product }: ButtonCardMainProps): JSX.Element => {
@@ -44,7 +43,9 @@ export const ButtonCardMain = ({ product }: ButtonCardMainProps): JSX.Element =>
           onIncrement={handlerIncrementQuantity}
         />
       ) : (
-        <Button label={'В корзину'} type={'inCart'} onClick={handlerAddToCart} />
+        <button className={'btn btnInCart'} type={'button'} onClick={handlerAddToCart}>
+          В корзину
+        </button>
       )}
     </>
   );

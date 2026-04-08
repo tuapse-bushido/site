@@ -4,6 +4,7 @@ import { cacheLife, cacheTag } from 'next/cache';
 import { ActionResult } from 'shared/types/action.types';
 import { dbExecute, dbQuery } from 'shared/utils/db.utils';
 import { Category, categoryArraySchema } from 'modules/admin/menu/categories';
+import { z } from 'zod';
 
 /**
  * Fetches all categories from the database.
@@ -26,9 +27,9 @@ export const getAllCategories = async (): Promise<ActionResult<Category[]>> => {
   cacheTag(`categories`);
 
   const query = `
-    SELECT id, title, is_active, slug, image_link, sort_number
-    FROM category
-    ORDER BY id;
+      SELECT id, title, is_active, slug, image_link, sort_number
+      FROM category
+      ORDER BY id;
   `;
 
   return dbQuery(query, [], categoryArraySchema, 'multiple');
@@ -56,9 +57,9 @@ export const getCategoryById = async (id: number): Promise<ActionResult<Category
   cacheTag(`category-${id}`);
 
   const query = `
-    SELECT id, title, is_active, slug, image_link, sort_number
-    FROM category
-    WHERE id = $1;
+      SELECT id, title, is_active, slug, image_link, sort_number
+      FROM category
+      WHERE id = $1;
   `;
   const params = [id];
 
@@ -89,9 +90,9 @@ export const getCategoryById = async (id: number): Promise<ActionResult<Category
  */
 export const insertCategory = async (category: Omit<Category, 'id'>): Promise<ActionResult<Category>> => {
   const query = `
-    INSERT INTO category (title, is_active, slug, image_link, sort_number)
-    VALUES ($1, $2, $3, $4, $5)
-    RETURNING id, title, is_active, slug, image_link, sort_number;`;
+      INSERT INTO category (title, is_active, slug, image_link, sort_number)
+      VALUES ($1, $2, $3, $4, $5)
+      RETURNING id, title, is_active, slug, image_link, sort_number;`;
   const params = [category.title, category.is_active, category.slug, category.image_link, category.sort_number];
 
   return dbExecute(query, params);
@@ -122,10 +123,10 @@ export const insertCategory = async (category: Omit<Category, 'id'>): Promise<Ac
  */
 export const updateCategoryById = async (category: Category): Promise<ActionResult<Category>> => {
   const query = `
-    UPDATE category
-    SET (title, is_active, slug, image_link, sort_number) = ($2, $3, $4, $5, $6)
-    WHERE id = $1
-    RETURNING id, title, is_active, slug, image_link, sort_number;
+      UPDATE category
+      SET (title, is_active, slug, image_link, sort_number) = ($2, $3, $4, $5, $6)
+      WHERE id = $1
+      RETURNING id, title, is_active, slug, image_link, sort_number;
   `;
   const params = [
     category.id,
@@ -137,4 +138,14 @@ export const updateCategoryById = async (category: Category): Promise<ActionResu
   ];
 
   return dbExecute(query, params);
+};
+
+export const getCount = async (): Promise<ActionResult<{ count: number }>> => {
+  const query = `
+        SELECT count(*) AS count
+        FROM category
+        ;
+    `;
+
+  return dbQuery(query, [], z.object({ count: z.coerce.number() }));
 };

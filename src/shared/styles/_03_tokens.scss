@@ -17,11 +17,13 @@
   --btn-bg-primary-active: var(--color-brand-primary-active);
 
   --btn-bg-secondary: #{colors.$figma-gray-200};
+  --btn-border-count: #{colors.$figma-gray-300};
 
   /* INPUT */
   --input-bg-primary: #{colors.$figma-white};
 
   // TEXT
+  --text-brand: var(--color-brand-primary);
   --text-primary: #{colors.$figma-black};
   --text-secondary: #{colors.$figma-gray-500};
   --text-inverse: #{colors.$figma-white};

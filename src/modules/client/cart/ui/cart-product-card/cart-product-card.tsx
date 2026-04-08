@@ -1,18 +1,27 @@
 import { JSX } from 'react';
 import { AppImage } from 'shared/ui/app-image';
 import styles from './cart-product-card.module.scss';
-import { CartCardViewModel } from 'modules/client/cart/model/cart-state.types';
+import { AddonEntry, CartCardViewModel, CartItem } from 'modules/client/cart/model/cart-state.types';
 import { ButtonCardMain } from 'modules/client/catalog/entities/ui/product-card/button-card/button-card-main';
 
-export const CartProductCard = ({ product }: { product: CartCardViewModel }): JSX.Element => {
+export const CartProductCard = ({
+  product,
+  prod,
+  add,
+}: {
+  product: CartCardViewModel;
+  prod?: CartItem;
+  add?: AddonEntry;
+}): JSX.Element => {
   const { imageLink, title, countPortion, weight, isFree, price, discountPrice } = product;
 
   return (
     <div className={styles.card}>
       <AppImage
+        classNames={{ root: styles.root, image: styles.image }}
         src={process.env.NEXT_PUBLIC_IMAGES_DOMAIN + '/' + imageLink}
         alt={title}
-        imageProps={{ width: 100, height: 100, loading: 'eager' }}
+        imageProps={{ width: 100, height: 75, loading: 'eager' }}
       />
 
       <div className={styles.content}>
@@ -34,7 +43,7 @@ export const CartProductCard = ({ product }: { product: CartCardViewModel }): JS
             )}
           </div>
 
-          <ButtonCardMain product={product} />
+          <ButtonCardMain product={prod! ?? add?.addon_product} />
         </div>
       </div>
     </div>

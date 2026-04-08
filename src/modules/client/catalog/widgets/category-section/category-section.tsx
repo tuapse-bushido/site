@@ -1,7 +1,7 @@
 import { JSX } from 'react';
 import styles from './category-section.module.scss';
 import { CategorySectionProps } from './category-section.props';
-import { ProductCard } from 'modules/client/catalog/entities/ui/product-card';
+import { ProductCardView } from 'modules/client/catalog/entities/ui/product-card/product-card-view/product-card-view';
 
 export const CategorySection = ({ category, products }: CategorySectionProps): JSX.Element => {
   return (
@@ -11,7 +11,7 @@ export const CategorySection = ({ category, products }: CategorySectionProps): J
       <div className={styles.productList}>
         {products.map(
           (product): JSX.Element => (
-            <ProductCard key={product.id} variant={'main'} product={product} />
+            <ProductCardView key={product.id} product={product} />
           ),
         )}
       </div>
