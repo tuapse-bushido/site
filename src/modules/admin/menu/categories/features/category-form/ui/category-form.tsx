@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Divider, Typography } from '@mui/material';
 import { PickedImage } from 'modules/admin/shared/ui/picked-image';
 import { getSelectValue, selectOptions } from 'modules/admin/shared/config/select-options';
-import { MuiBox, MuiButton, MuiPaper, MuiTextField } from 'shared/ui/mui';
+import { MuiBox, MuiButton, MuiPaper, MuiTextField } from 'modules/admin/shared/ui/mui';
 import { SelectComponent } from 'modules/admin/shared/ui/select-component/select-component';
 import { Category, createCategoryAction, updateCategoryAction } from 'modules/admin/menu/categories';
 
