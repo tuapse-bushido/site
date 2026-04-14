@@ -1,9 +1,8 @@
 'use client';
 
-import { InputGroup } from 'shared/ui';
 import { formatPhone } from 'shared/utils';
 import React, { JSX, useState } from 'react';
-import { Fieldset, Label } from 'modules/client/shared/ui';
+import { Fieldset, InputGroup, Label } from 'modules/client/shared/ui';
 
 export const ContactSection = (): JSX.Element => {
   const [phone, setPhone] = useState('');
