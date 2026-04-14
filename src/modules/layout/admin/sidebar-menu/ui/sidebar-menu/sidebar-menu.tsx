@@ -1,6 +1,6 @@
 import { JSX, Suspense } from 'react';
 import { menu } from '../../model/menu.config';
-import { MuiList } from 'shared/ui/mui';
+import { MuiList } from 'modules/admin/shared/ui/mui';
 import { SidebarMenuItem } from 'modules/layout/admin/sidebar-menu/ui/menu-item/menu-item';
 
 export const AdminSidebarMenu = (): JSX.Element => {

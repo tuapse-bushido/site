@@ -5,7 +5,7 @@ import { JSX, memo } from 'react';
 import { MenuItem } from '../../model/menu.config';
 import { usePathname } from 'next/navigation';
 import { Tooltip, useMediaQuery, useTheme } from '@mui/material';
-import { MuiListItem, MuiListItemButton, MuiListItemText } from 'shared/ui/mui';
+import { MuiListItem, MuiListItemButton, MuiListItemText } from 'modules/admin/shared/ui/mui';
 import { ADMIN_ICONS } from 'modules/layout/admin/sidebar-menu/model/icon-map';
 
 export const SidebarMenuItem = memo(({ item }: { item: MenuItem }): JSX.Element => {
