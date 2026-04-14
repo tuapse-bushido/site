@@ -1,11 +1,7 @@
 {
   "compilerOptions": {
     "target": "es2023",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -25,21 +21,23 @@
         "name": "next"
       }
     ],
+    "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "./*"
-      ]
-    }
+      "modules/*": ["src/modules/*"],
+      "shared/*": ["src/shared/*"],
+      "styles/*": ["src/shared/styles/*"]
+    },
+    "types": ["vitest/globals", "@testing-library/jest-dom"]
   },
   "include": [
-    "types/svg/svgr.d.ts",
+    "src/shared/types/svgr.d.ts",
     "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
+    "app/**/*.ts",
+    "app/**/*.tsx",
+    "src/**/*.ts",
+    "src/**/*.tsx",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts"
   ],
-  "exclude": [
-    "node_modules"
-  ]
+  "exclude": ["node_modules", ".next", "dist", "build"]
 }

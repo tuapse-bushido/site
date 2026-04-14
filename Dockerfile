@@ -2,6 +2,16 @@
 FROM node:22-alpine AS builder
 WORKDIR /app
 
+# Объявляем, что Docker ожидает эти данные при сборке
+ARG JWT_SECRET
+ARG DATABASE_URL
+
+# Прокидываем их в систему, чтобы Next.js их увидел
+ENV JWT_SECRET=$JWT_SECRET
+ENV DATABASE_URL=$DATABASE_URL
+ENV HUSKY=0
+ENV NEXT_TELEMETRY_DISABLED=1
+
 RUN corepack enable && corepack prepare pnpm@10.0.0 --activate
 
 COPY package.json pnpm-lock.yaml ./
@@ -9,28 +19,5 @@ RUN pnpm install --frozen-lockfile
 
 COPY . .
 
-# ТОЛЬКО компиляция (самое долгое)
-RUN pnpm compile
-
-# ---------- Stage 2: production ----------
-FROM node:22-alpine AS production
-WORKDIR /app
-
-ENV NODE_ENV=production
-ENV PORT=3000
-
-RUN corepack enable
-
-# ОТКЛЮЧАЕМ prepare/postinstall/husky/etc
-RUN echo "ignore-scripts=true" > .npmrc
-
-COPY package.json pnpm-lock.yaml ./
-RUN pnpm install --prod --frozen-lockfile
-
-COPY --from=builder /app/.next/standalone ./
-COPY --from=builder /app/.next/static ./.next/static
-COPY --from=builder /app/public ./public
-
-EXPOSE 3000
-
-CMD ["sh", "-c", "pnpm generate && pnpm start"]
+# Теперь обычный билд создаст папку standalone и не упадет
+RUN ./node_modules/.bin/next build --webpack

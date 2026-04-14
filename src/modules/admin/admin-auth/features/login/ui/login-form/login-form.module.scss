@@ -1,4 +1,4 @@
-@use '@/src/shared/styles/05_mixins' as mixins;
+@use 'src/shared/styles/04_mixins' as mixins;
 
 .form {
   @include mixins.flexbox($align: stretch, $direction: column, $gap: 2rem);

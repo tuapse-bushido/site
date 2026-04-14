@@ -6,7 +6,6 @@ on:
   push:
     branches: ["main"]
 
-# Отмена старых запущенных workflow, если появился новый коммит
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -14,59 +13,46 @@ concurrency:
 jobs:
   checks:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 15 # Уменьшил таймаут, так как билд должен быть быстрым
 
     steps:
-      # 1. Получаем код
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
-      # 2. Настраиваем pnpm
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
           version: 10
 
-      # 3. Кэшируем pnpm store (ускорение CI в 3–6 раз)
-      - name: Cache pnpm store
-        uses: actions/cache@v3
-        with:
-          path: ~/.pnpm-store
-          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-
-
-      # 4. Устанавливаем Node.js 24 LTS
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 24
           cache: 'pnpm'
 
-      # 5. Устанавливаем зависимости
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      # 6. Пробуем линтинг
       - name: Lint
         run: pnpm lint
 
-      # 7. Проверка TypeScript
       - name: Typecheck
         run: pnpm typecheck
 
-      # 8. Запускаем тесты в CI режиме
       - name: Run tests (CI mode)
         run: pnpm test:ci
 
-      # 9. Сборка Next.js
       - name: Build Next.js project
         env:
           NEXT_TELEMETRY_DISABLED: 1
+          JWT_SECRET: "ci-placeholder"
+          DATABASE_URL: "postgresql://postgres:postgres@localhost:5432/bushido"
         run: pnpm build
 
-      # 10. Проверяем сборку Docker образов
-      - name: Build Docker images
-        run: docker compose build
+      # Вместо сборки всего compose, проверяем только Dockerfile
+      # Это проверит корректность шагов сборки без привязки к путям на сервере
+      - name: Validate Dockerfile
+        run: |
+          docker build -t bushido-test . \
+            --build-arg JWT_SECRET="ci-placeholder-secret-123" \
+            --build-arg DATABASE_URL="postgresql://postgres:postgres@localhost:5432/bushido".

@@ -1,0 +1,20 @@
+@use 'shared/styles/02_variables' as vars;
+@use 'shared/styles/04_mixins' as mixins;
+@use 'sass:map';
+
+.navigation {
+  position: fixed;
+  bottom: 0;
+
+  @include mixins.flexbox($align: center, $justify: center, $gap: 2rem);
+
+  width: 100%;
+  min-width: 32rem;
+
+  padding: 1rem 2rem 0;
+  background-color: var(--surface-base);
+
+  @media (min-width: map.get(vars.$breakpoints, md)) {
+    display: none;
+  }
+}

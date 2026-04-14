@@ -1,0 +1,35 @@
+@use 'shared/styles/02_variables' as vars;
+@use 'shared/styles/04_mixins' as mixins;
+@use 'sass:map';
+
+.header {
+  display: grid;
+
+  @media (min-width: map.get(vars.$breakpoints, lg)) {
+    grid-template-columns: 1fr 1200px 1fr;
+  }
+
+  width: 100%;
+
+  background-color: var(--surface-base);
+  box-shadow: 0 0.4rem 1.4rem 0 #0000000a;
+}
+
+.content {
+  @media (min-width: map.get(vars.$breakpoints, lg)) {
+    grid-column: 2;
+  }
+
+  @include mixins.flexbox($justify: space-between);
+  padding: 1.5rem 2rem;
+}
+
+.cart {
+  @include mixins.flexbox;
+
+  width: 3.2rem;
+  height: 3.2rem;
+
+  border: 1px solid var(--border-primary);
+  border-radius: 50%;
+}

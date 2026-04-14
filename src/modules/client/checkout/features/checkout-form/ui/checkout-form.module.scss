@@ -1,0 +1,10 @@
+@use 'shared/styles/04_mixins' as mixins;
+
+.form {
+  @include mixins.flexbox($direction: column, $align: stretch, $justify: flex-start, $gap: 1.5rem);
+}
+
+.form:has(:invalid) button[type='submit'] {
+  opacity: 0.4;
+  pointer-events: none;
+}

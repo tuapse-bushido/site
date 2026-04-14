@@ -1,0 +1,5 @@
+@use 'styles/04_mixins' as mixins;
+
+.list {
+  @include mixins.flexbox($direction: column, $align: stretch, $justify: flex-start, $gap: 1rem);
+}

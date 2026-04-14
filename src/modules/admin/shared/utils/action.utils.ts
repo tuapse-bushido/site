@@ -1,0 +1,30 @@
+import { ActionResult } from 'shared/types/action.types';
+import { ErrorCode, errorMessages } from 'shared/types/error-codes.types';
+
+export function actionSuccess<T>(data: T): ActionResult<T> {
+  return { ok: true, data };
+}
+
+export function actionError<T>(
+  code: ErrorCode,
+  options?: {
+    details?: unknown;
+  },
+): ActionResult<T> {
+  const { details } = options || {};
+  return {
+    ok: false,
+    code,
+    message: errorMessages[code],
+    options: {
+      ...(details ? { details } : {}),
+    },
+  };
+}
+
+export function unwrap<T>(result: ActionResult<T>): T {
+  if (!result.ok) {
+    throw result;
+  }
+  return result.data;
+}

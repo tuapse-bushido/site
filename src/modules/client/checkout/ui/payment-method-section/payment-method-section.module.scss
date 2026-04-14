@@ -1,0 +1,15 @@
+@use 'shared/styles/04_mixins' as mixins;
+
+.root {
+  @include mixins.flexbox($justify: flex-start, $direction: row-reverse, $gap: 1rem);
+  width: fit-content;
+}
+
+.label {
+  white-space: wrap;
+}
+
+.input {
+  width: 2rem;
+  height: 2rem;
+}

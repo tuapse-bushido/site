@@ -1,6 +1,0 @@
-@use '@/styles/mixins/mixins' as mixins;
-
-.page {
-  @include mixins.flexbox($direction: column, $gap: 1.5rem, $align: stretch);
-  height: 100%;
-}

@@ -1,0 +1,32 @@
+@use 'shared/styles/02_variables' as vars;
+@use 'shared/styles/04_mixins' as mixins;
+@use 'sass:map';
+
+.section {
+  @include mixins.flexbox($direction: column, $align: stretch, $gap: 1.5rem);
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.productList {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem 1rem;
+
+  @media (min-width: map.get(vars.$breakpoints, xs)) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (min-width: map.get(vars.$breakpoints, md)) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media (min-width: map.get(vars.$breakpoints, lg)) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}

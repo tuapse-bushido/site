@@ -1,1 +1,103 @@
-@use './04_tokens' as *;
+@use './02_variables' as vars;
+@use './03_tokens' as *;
+@use './05_components' as *;
+
+@layer reset, base, components, utilities;
+
+@layer reset {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  html {
+    height: 100%;
+    font-size: 62.5%; // 1rem = 10px
+    /* Предотвращает дергание контента при появлении скролла */
+    scrollbar-gutter: stable;
+    /* Плавный скролл (кроме тех, кто просил его отключить) */
+    @media (prefers-reduced-motion: no-preference) {
+      scroll-behavior: smooth;
+    }
+  }
+
+  body {
+    min-height: 100dvh;
+    overflow-x: hidden;
+    background-color: var(--surface-layout);
+
+    font-family: vars.$font;
+    font-size: 1.6rem;
+    color: var(--text-primary);
+
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+
+    /* Современное распределение строк: убирает "висячие" слова в параграфах */
+    text-wrap: pretty;
+  }
+
+  img,
+  svg,
+  video {
+    display: block;
+    /* Для Safari: сохраняет качество при масштабировании */
+    image-rendering: -webkit-optimize-contrast;
+  }
+
+  a {
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+    /* Убирает задержку клика в 300мс на старых мобилках */
+    touch-action: manipulation;
+  }
+
+  button {
+    font: inherit;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+  }
+}
+
+@layer base {
+  /* 1. Заголовки: обычно это короткие строки, им не нужен лишний воздух.
+        1.1 — это технический минимум, чтобы буквы не слиплись при переносе. */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    line-height: 1.1;
+    text-wrap: balance;
+  }
+
+  /* 2. Параграфы: по умолчанию задаем 1.5 для читабельности описаний блюд.
+        Если в модуле тебе нужна "сжатая" строка, ты просто напишешь line-height: 1. */
+  p {
+    line-height: 1.5;
+    text-wrap: pretty;
+  }
+
+  /* 3. Инпуты, кнопки, ссылки: здесь лучше держать 1 или 1.2,
+        чтобы не ломать высоту кнопок из Фигмы. */
+  button,
+  input,
+  a {
+    line-height: 1.2;
+  }
+
+  /* Улучшаем фокус для доступности */
+  :focus-visible {
+    outline: 2px solid var(--color-brand-primary);
+    outline-offset: 4px;
+  }
+}

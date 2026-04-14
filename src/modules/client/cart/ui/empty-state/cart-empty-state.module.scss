@@ -1,0 +1,10 @@
+@use 'shared/styles/04_mixins' as mixins;
+
+.page {
+  @include mixins.flexbox($direction: column, $justify: center, $align: center, $gap: 2rem);
+}
+
+.text {
+  font-size: 1.8rem;
+  text-align: center;
+}

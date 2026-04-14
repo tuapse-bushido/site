@@ -1,0 +1,18 @@
+@use 'sass:map';
+@use './02_variables' as vars;
+
+@mixin flexbox($display: flex, $align: center, $justify: center, $direction: row, $gap: 0) {
+  display: $display;
+  align-items: $align;
+  justify-content: $justify;
+  flex-direction: $direction;
+  gap: $gap;
+}
+
+@mixin respond-to($breakpoint) {
+  @if map.get(vars.$breakpoints, $breakpoint) {
+    @media (min-width: map.get(vars.$breakpoints, $breakpoint)) {
+      @content;
+    }
+  }
+}
