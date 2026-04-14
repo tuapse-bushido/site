@@ -13,7 +13,7 @@ RUN pnpm install --frozen-lockfile
 COPY . .
 
 # Вызываем напрямую, чтобы обойти проверку workspaces в pnpm v10
-RUN ./node_modules/.bin/next build --experimental-build-mode=compile --webpack
+RUN ./node_modules/.bin/next build --webpack
 
 # ---------- Stage 2: production ----------
 FROM node:22-alpine AS production

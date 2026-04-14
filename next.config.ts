@@ -2,6 +2,8 @@ import type { NextConfig } from 'next';
 import type { Configuration, RuleSetRule } from 'webpack';
 
 const nextConfig: NextConfig = {
+  output: 'standalone',
+
   typescript: {
     ignoreBuildErrors: true,
   },
