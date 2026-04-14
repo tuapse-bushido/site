@@ -5,13 +5,13 @@ import { Inter, Roboto } from 'next/font/google';
 const inter = Inter({
   variable: '--font-inter',
   weight: ['300', '400', '500', '600', '700'],
-  subsets: ['latin'],
+  subsets: ['cyrillic'],
   display: 'swap',
 });
 
 const roboto = Roboto({
   weight: ['300', '400', '500', '600', '700'],
-  subsets: ['latin'],
+  subsets: ['cyrillic'],
   display: 'swap',
   variable: '--font-roboto',
 });

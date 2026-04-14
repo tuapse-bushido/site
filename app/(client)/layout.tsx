@@ -1,6 +1,7 @@
-import { JSX, ReactNode } from 'react';
-import { ClientLayout } from 'modules/layout/client';
+import React, { JSX } from 'react';
+import 'shared/styles/global.scss';
 import type { Metadata } from 'next';
+import { ClientLayout } from 'modules/layout/client';
 
 export const metadata: Metadata = {
   title: {
@@ -21,10 +22,10 @@ export const metadata: Metadata = {
   ],
 };
 
-export default function Layout({
+export default function ClientRootLayout({
   children,
 }: Readonly<{
-  children: ReactNode;
+  children: React.ReactNode;
 }>): JSX.Element {
   return <ClientLayout>{children}</ClientLayout>;
 }
