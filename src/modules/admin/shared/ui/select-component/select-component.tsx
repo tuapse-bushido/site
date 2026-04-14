@@ -1,7 +1,7 @@
 import { JSX, useState } from 'react';
 import { SelectChangeEvent } from '@mui/material/Select';
 import { SelectComponentProps } from './select-component.props';
-import { MuiBox, MuiFormControl, MuiInputLabel, MuiMenuItem, MuiSelect } from 'shared/ui/mui';
+import { MuiBox, MuiFormControl, MuiInputLabel, MuiMenuItem, MuiSelect } from 'modules/admin/shared/ui/mui';
 
 export const SelectComponent = (props: SelectComponentProps): JSX.Element => {
   const { label, name, options } = props;

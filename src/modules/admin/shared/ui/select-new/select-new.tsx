@@ -2,7 +2,7 @@
 
 import { SelectComponentProps } from './select-component.props';
 import { JSX, useState } from 'react';
-import { MuiAutocomplete, MuiBox, MuiTextField } from 'shared/ui/mui';
+import { MuiAutocomplete, MuiBox, MuiTextField } from 'modules/admin/shared/ui/mui';
 
 export const SelectNew = (props: SelectComponentProps): JSX.Element => {
   const { label, name, options, multiple, defaultSelect } = props;
