@@ -1,5 +1,5 @@
 import { JSX } from 'react';
-import { MuiAvatar, MuiBox, MuiCard, MuiCardActionArea, MuiGrid, MuiTypography } from 'shared/ui/mui';
+import { MuiAvatar, MuiBox, MuiCard, MuiCardActionArea, MuiGrid, MuiTypography } from 'modules/admin/shared/ui/mui';
 import { MenuConfig } from 'modules/admin/menu/screens/menu-screen.config';
 import Link from 'next/link';
 
