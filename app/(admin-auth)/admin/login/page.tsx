@@ -1,6 +1,6 @@
 import { JSX } from 'react';
 import styles from './styles.module.scss';
-import { LoginForm } from 'src/modules/admin/admin-auth';
+import { LoginForm } from 'modules/admin/admin-auth';
 
 export default function AdminLoginPage(): JSX.Element {
   return (
