@@ -6,7 +6,7 @@ import { dbQuery } from 'shared/utils/db.utils';
 export const getProductCards = async (): Promise<ActionResult<ProductCard[]>> => {
   'use cache';
   cacheLife('admin');
-  cacheTag(`product-cards`);
+  cacheTag('products', 'product-cards');
 
   const query = `
       SELECT id,

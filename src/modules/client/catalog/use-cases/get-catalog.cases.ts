@@ -13,7 +13,7 @@ export type CatalogGroupedItem = {
 export const getCatalog = async (): Promise<ActionResult<CatalogGroupedItem[]>> => {
   'use cache';
   cacheLife('admin');
-  cacheTag(`catalog`);
+  cacheTag('catalog');
 
   const [productsRes, categoriesRes] = await Promise.all([getProductCards(), getAllActiveCategories()]);
 

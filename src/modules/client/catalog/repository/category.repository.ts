@@ -6,7 +6,7 @@ import { cacheLife, cacheTag } from 'next/cache';
 export const getAllActiveCategories = async (): Promise<ActionResult<Category[]>> => {
   'use cache';
   cacheLife('admin');
-  cacheTag(`categories-active`);
+  cacheTag('categories', `categories-active`);
 
   const query = `
       SELECT id, title, slug, is_active, image_link, sort_number
