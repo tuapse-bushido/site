@@ -1,4 +1,7 @@
+'use client';
 import { GridColDef } from '@mui/x-data-grid';
+import { JSX } from 'react';
+import { OrderStatusChip } from 'modules/admin/orders/ui/order-status-chip';
 
 export const ingredientColumns: GridColDef[] = [
   { field: 'id', headerName: 'ID' },
@@ -29,15 +32,27 @@ export const productColumns: GridColDef[] = [
 ];
 
 export const orderColumns: GridColDef[] = [
-  { field: 'order_number', headerName: '№ Заказа', width: 120 },
+  { field: 'order_number', headerName: '№ Заказа', width: 100 },
+  { field: 'formattedDate', headerName: 'Дата', width: 140 },
   {
-    field: 'created_at',
-    headerName: 'Дата',
+    field: 'status',
+    headerName: 'Статус',
+    width: 125,
+    renderCell: (params): JSX.Element => <OrderStatusChip status={params.value} />,
   },
-  { field: 'status', headerName: 'Статус', width: 150 },
-  { field: 'total_price', headerName: 'Сумма', width: 110, type: 'number' },
-  { field: 'payment_status', headerName: 'Оплата', width: 130 },
-  { field: 'full_address', headerName: 'Адрес доставки' },
+  {
+    field: 'orderType',
+    headerName: 'Тип',
+    width: 120,
+  },
+  {
+    field: 'total_price',
+    headerName: 'Сумма',
+    width: 110,
+    type: 'number',
+    valueFormatter: (value): string => `${value} ₽`,
+  },
   { field: 'customer_name', headerName: 'Клиент', width: 150 },
-  { field: 'order_type', headerName: 'Тип', width: 120 },
+  { field: 'customer_phone', headerName: 'Телефон', width: 125 },
+  { field: 'fullAddress', headerName: 'Адрес доставки', flex: 1 },
 ];
