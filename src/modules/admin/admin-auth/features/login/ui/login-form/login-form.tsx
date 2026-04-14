@@ -4,7 +4,7 @@ import Form from 'next/form';
 import { loginAction } from '../../api';
 import { JSX, useActionState } from 'react';
 import styles from './login-form.module.scss';
-import { InputGroup } from 'src/shared/ui';
+import { InputGroup } from 'modules/client/shared/ui';
 
 export const LoginForm = (): JSX.Element => {
   const [state, formAction] = useActionState(loginAction, null);
