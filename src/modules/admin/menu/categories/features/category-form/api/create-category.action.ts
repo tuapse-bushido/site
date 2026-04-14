@@ -19,7 +19,7 @@ export const createCategoryAction = async (
 
   const category = {
     ...parsed.data,
-    image_link: image_file ? await uploadImage(image_file, title) : current_image,
+    image_link: image_file ? await uploadImage(image_file, title, 'categories') : current_image,
     sort_number: sortNumber ?? 0,
   };
 

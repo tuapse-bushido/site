@@ -18,7 +18,7 @@ export const updateCategoryAction = async (
 
   const { id, image_file, current_image, sort_number: sortNumber, slug: href, title } = parsed.data;
 
-  const image_link = image_file ? await uploadImage(image_file, title) : current_image;
+  const image_link = image_file ? await uploadImage(image_file, title, 'categories') : current_image;
   const sort_number = sortNumber ?? 0;
   const slug = href ?? transliterate(title);
 
