@@ -36,12 +36,16 @@ export const orderSchema = z.object({
   }, z.date()),
 });
 
+export type Order = z.infer<typeof orderSchema>;
+export type OrderStatus = 'new' | 'in_progress' | 'sent' | 'done' | 'canceled';
+
 const orderItemSchema = z.object({
   id: z.number(),
   title: z.string(),
   quantity: z.number(),
   price: z.coerce.number(),
   total_price: z.coerce.number(),
+  image_link: z.string(),
 });
 export type OrderItem = z.infer<typeof orderItemSchema>;
 
