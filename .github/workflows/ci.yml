@@ -52,4 +52,7 @@ jobs:
       # Вместо сборки всего compose, проверяем только Dockerfile
       # Это проверит корректность шагов сборки без привязки к путям на сервере
       - name: Validate Dockerfile
-        run: docker build -t bushido-test .
+        run: |
+          docker build -t bushido-test . \
+            --build-arg JWT_SECRET="ci-placeholder-secret-123" \
+            --build-arg DATABASE_URL="postgresql://postgres:postgres@localhost:5432/bushido".
