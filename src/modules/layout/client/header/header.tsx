@@ -9,7 +9,7 @@ export const Header = (): JSX.Element => {
     <header className={styles.header}>
       <div className={styles.content}>
         <Link href={'/'}>
-          <Image src={'/logo/logo.png'} alt={'Bushido'} width={180} height={50} />
+          <Image src={'/logo/logo.png'} alt={'Bushido'} width={180} height={50} priority />
         </Link>
 
         <div className={styles.actions}>
