@@ -5,7 +5,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { Button, Divider, Typography } from '@mui/material';
 import { getAllIngredients } from '../../../../../src/modules/admin/menu/ingredients';
 import { TableComponent } from '../../../../../src/modules/admin/shared/ui/table/table';
-import { ingredientColumns } from '../../../../../src/modules/admin/shared/ui/table/table-columns';
+import { ingredientColumns } from 'modules/admin/shared/ui/table/table-columns';
 
 export default async function IngredientsPage(): Promise<JSX.Element | null> {
   'use cache';

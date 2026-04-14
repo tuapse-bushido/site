@@ -2,11 +2,11 @@ import { JSX, Suspense } from 'react';
 import { OrdersScreen } from 'modules/admin/orders';
 
 type Params = { from?: string; to?: string };
-type OrdersPageParams = {
+type Props = {
   searchParams: Promise<Params>;
 };
 
-export default async function OrdersPage({ searchParams }: OrdersPageParams): Promise<JSX.Element> {
+export default async function OrdersPage({ searchParams }: Props): Promise<JSX.Element> {
   const params = searchParams.then(
     (sp): Params => ({ ...(sp.from ? { from: sp.from } : {}), ...(sp.to ? { to: sp.to } : {}) }),
   );

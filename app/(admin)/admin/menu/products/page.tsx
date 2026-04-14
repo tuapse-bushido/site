@@ -6,7 +6,7 @@ import { Button, Divider, Typography } from '@mui/material';
 import { TableComponent } from 'modules/admin/shared/ui/table/table';
 import { productColumns } from 'modules/admin/shared/ui/table/table-columns';
 import { getAllProducts } from 'modules/admin/menu/products/repository';
-import { MuiBox } from 'shared/ui/mui';
+import { MuiBox } from 'modules/admin/shared/ui/mui';
 
 export default async function ProductsPage(): Promise<JSX.Element | null> {
   'use cache';
