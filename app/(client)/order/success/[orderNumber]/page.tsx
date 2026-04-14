@@ -3,9 +3,11 @@ import { OrderGetNumber } from 'modules/order/screens/order-get-number';
 
 import type { Metadata } from 'next';
 
-export async function generateMetadata({ params }: { params: { orderNumber: string } }): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ orderNumber: string }> }): Promise<Metadata> {
+  const { orderNumber } = await params;
+
   return {
-    title: `Заказ №${params.orderNumber} принят`,
+    title: `Заказ №${orderNumber} принят`,
     description: 'Ваш заказ в Бушидо успешно оформлен и передан на кухню.',
     robots: {
       index: false,

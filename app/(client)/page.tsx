@@ -7,7 +7,7 @@ import { CategorySection, getCatalog } from 'modules/client/catalog';
 
 export default async function HomePage(): Promise<JSX.Element | null> {
   cacheLife('admin');
-  cacheTag('page', 'home');
+  cacheTag('client-pages', 'home');
 
   const catalog = await getCatalog();
 
