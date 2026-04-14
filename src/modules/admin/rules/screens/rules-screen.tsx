@@ -2,7 +2,7 @@
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { JSX } from 'react';
-import { MuiBox, MuiButton, MuiListItemButton, MuiListItemText } from 'shared/ui/mui';
+import { MuiBox, MuiButton, MuiListItemButton, MuiListItemText } from 'modules/admin/shared/ui/mui';
 import { LayoutGroup, motion } from 'framer-motion';
 import { AddonRuleDetail } from 'modules/admin/rules/entities';
 import AddIcon from './icons/add.svg';

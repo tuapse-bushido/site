@@ -1,7 +1,7 @@
 'use client';
 
 import { JSX, useState } from 'react';
-import { MuiBox, MuiSwitch, MuiTypography } from 'shared/ui/mui';
+import { MuiBox, MuiSwitch, MuiTypography } from 'modules/admin/shared/ui/mui';
 
 type Props = {
   title: string | undefined;

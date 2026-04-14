@@ -1,7 +1,7 @@
 'use client';
 
 import { JSX, useTransition } from 'react';
-import { MuiBox, MuiButton } from 'shared/ui/mui';
+import { MuiBox, MuiButton } from 'modules/admin/shared/ui/mui';
 import { deleteAddonRuleAction } from 'modules/admin/rules/features/addon-rule-form/api/delete-addon-rule.action';
 
 export const FormAction = ({ id }: { id: number | undefined }): JSX.Element => {

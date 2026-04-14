@@ -1,7 +1,7 @@
 'use client';
 
 import { JSX, useActionState } from 'react';
-import { MuiPaper } from 'shared/ui/mui';
+import { MuiPaper } from 'modules/admin/shared/ui/mui';
 import { FormHeader } from './form-header';
 import { FormAction } from './form-action';
 import { GeneralInfo } from './general-info';

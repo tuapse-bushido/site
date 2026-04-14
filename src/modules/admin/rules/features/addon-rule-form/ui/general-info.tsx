@@ -1,5 +1,5 @@
 import { JSX } from 'react';
-import { MuiBox, MuiTextField } from 'shared/ui/mui';
+import { MuiBox, MuiTextField } from 'modules/admin/shared/ui/mui';
 
 type Props = {
   title: string | undefined;

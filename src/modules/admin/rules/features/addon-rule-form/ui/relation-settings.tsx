@@ -1,5 +1,5 @@
 import { SelectNew } from 'modules/admin/shared/ui/select-new/select-new';
-import { MuiBox, MuiTypography } from 'shared/ui/mui';
+import { MuiBox, MuiTypography } from 'modules/admin/shared/ui/mui';
 import { optionsMapper } from 'modules/admin/menu/products';
 import { AddonRuleDetail } from 'modules/admin/rules/entities';
 import { Category } from 'modules/admin/menu/categories';
