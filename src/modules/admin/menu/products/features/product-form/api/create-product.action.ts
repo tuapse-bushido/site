@@ -21,7 +21,7 @@ export const createProductAction = async (
 
   const product = {
     ...parsed.data,
-    image_link: image_file ? await uploadImage(image_file, title) : current_image,
+    image_link: image_file ? await uploadImage(image_file, title, 'products') : current_image,
   };
 
   const response = await insertProduct(product);
@@ -45,15 +45,15 @@ export const updateProductAction = async (
 
   const product = {
     ...parsed.data,
-    image_link: image_file ? await uploadImage(image_file, title) : current_image,
+    image_link: image_file ? await uploadImage(image_file, title, 'products') : current_image,
   };
 
   const response = await updateProduct(product);
 
   if (!response.ok) return formError({ message: response.message });
 
-  updateTag('products');
   updateTag(`product-details-${product.id}`);
+  updateTag('products');
   updateTag('home');
   redirect('/admin/menu/products');
 };
