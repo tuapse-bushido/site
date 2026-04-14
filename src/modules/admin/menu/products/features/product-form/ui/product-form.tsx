@@ -9,7 +9,7 @@ import {
 } from 'modules/admin/menu/products/features/product-form/api/create-product.action';
 import { ProductEditData } from 'modules/admin/menu/products/use-cases/product.cases.types';
 import { PickedImage } from 'modules/admin/shared/ui/picked-image';
-import { MuiBox, MuiButton, MuiPaper, MuiTextField } from 'shared/ui/mui';
+import { MuiBox, MuiButton, MuiPaper, MuiTextField } from 'modules/admin/shared/ui/mui';
 import { SelectComponent } from 'modules/admin/shared/ui/select-component/select-component';
 import { getSelectValue, selectOptions } from 'modules/admin/shared/config/select-options';
 import { optionsMapper } from 'modules/admin/menu/products';
