@@ -20,12 +20,12 @@ services:
 
     # Standalone server.js уже лежит в корне standalone
     # GENERATE вызываем только если тебе нужно ISR/SSG
-    command: ["node", "server.js"]
+    command: [ "node", "server.js" ]
     # Для SSG/ISR:
     # command: ["sh", "-c", "pnpm generate && node server.js"]
 
     healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3000"]
+      test: [ "CMD", "wget", "--spider", "-q", "http://127.0.0.1:3000" ]
       interval: 10s
       timeout: 5s
       retries: 3
@@ -46,11 +46,11 @@ services:
       - bushido-net
 
     # tsx запускаем через pnpm exec (без глобальных пакетов)
-    command: ["pnpm", "exec", "tsx", "server.ts"]
+    command: [ "pnpm", "exec", "tsx", "server.ts" ]
 
     healthcheck:
       # Если socket имеет HTTP — этот вариант
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3001"]
+      test: [ "CMD", "wget", "--spider", "-q", "http://127.0.0.1:3001" ]
       # Если НЕТ HTTP у сокета — используем это:
       # test: ["CMD-SHELL", "pgrep node || exit 1"]
       interval: 10s
@@ -64,17 +64,13 @@ services:
     restart: unless-stopped
     env_file:
       - /opt/bushido/env/app.env
-    environment:
-      POSTGRES_USER: ${DB_USER:-postgres}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_DB: ${DB_DATABASE}
     volumes:
       - /var/lib/bushido-postgres:/var/lib/postgresql/data
       - ./sql/migrations:/docker-entrypoint-initdb.d:ro
     networks:
       - bushido-net
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres}"]
+      test: [ "CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB" ]
       interval: 10s
       timeout: 5s
       retries: 5
