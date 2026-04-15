@@ -7,9 +7,15 @@ dotenv.config({ path: 'socket/.env' });
 const PORT = Number(process.env.SOCKET_PORT || 3001);
 const HOST = process.env.SOCKET_HOST || '0.0.0.0';
 
-// 1. Добавляем обработку HTTP запросов
 const server = http.createServer((req, res) => {
-  console.log(`[HTTP] ${req.method} ${req.url}`); // ЛОГ ДЛЯ ПРОВЕРКИ
+  console.log(`[HTTP] ${req.method} ${req.url}`);
+
+  // ✅ healthcheck
+  if (req.url === '/health') {
+    res.writeHead(200, { 'Content-Type': 'text/plain' });
+    res.end('ok');
+    return;
+  }
 
   if (req.method === 'POST') {
     let body = '';
@@ -32,9 +38,11 @@ const server = http.createServer((req, res) => {
     });
     return;
   }
+
   res.writeHead(404);
   res.end();
 });
+
 const io = new Server(server, {
   cors: { origin: '*' },
 });
