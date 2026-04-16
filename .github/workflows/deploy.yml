@@ -77,7 +77,6 @@ jobs:
             ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/opt/bushido/app/
 
       - name: Rearrange files on server
-        if: steps.check_changes.outputs.changed == 'true' || github.event.inputs.force == 'true'
         uses: appleboy/ssh-action@v0.1.10
         with:
           host: ${{ secrets.SERVER_HOST }}
@@ -85,25 +84,25 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script: |
             set -e
-
+            
             mkdir -p /opt/bushido/socket
-            mkdir -p /opt/bushido/sql
+            mkdir -p /opt/bushido/sql/migrations
             mkdir -p /opt/bushido/env
-
+            
             # socket
             if [ -d /opt/bushido/app/socket ]; then
               rm -rf /opt/bushido/socket
               mv -f /opt/bushido/app/socket /opt/bushido/
             fi
-
+            
             # docker-compose
             if [ -f /opt/bushido/app/docker-compose.yml ]; then
               mv -f /opt/bushido/app/docker-compose.yml /opt/bushido/
             fi
-
-            # sql
-            if [ -d /opt/bushido/app/sql ]; then
-              rsync -av /opt/bushido/app/sql/ /opt/bushido/sql/
+            
+            # migrations ✅ НОВОЕ
+            if [ -d /opt/bushido/app/src/shared/sql/migrations ]; then
+              rsync -av /opt/bushido/app/src/shared/sql/migrations/ /opt/bushido/sql/migrations/
             fi
 
       - name: Restart Docker services
