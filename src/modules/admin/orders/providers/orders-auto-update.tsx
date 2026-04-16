@@ -17,7 +17,9 @@ export const OrdersAutoUpdate = (): null => {
     audioRef.current.volume = 1;
 
     if (!socket) {
-      socket = io(process.env.NEXT_PUBLIC_SOCKET_URL || 'http://127.0.0.1:3001', {
+      socket = io({
+        path: '/socket.io',
+        transports: ['websocket'],
         autoConnect: true,
         reconnection: true,
       });
