@@ -1,90 +1,44 @@
 'use client';
 
-import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
-import Button from '@mui/material/Button';
 import { JSX, useActionState } from 'react';
-import { useRouter } from 'next/navigation';
-import TextField from '@mui/material/TextField';
-import { Divider, Typography } from '@mui/material';
-import { createIngredientAction, Ingredient, updateIngredientAction } from 'src/modules/admin/menu/ingredients';
+import { Ingredient } from 'modules/admin/menu/ingredients/entities';
+import { deleteIngredientAction, upsertIngredientAction } from '../api';
+import { MuiAlert, MuiBox, MuiTextField } from 'modules/admin/shared/ui/mui';
+import { EntityFormActions } from 'modules/admin/shared/features/entity-form-actions';
 
-export const IngredientForm = ({ ingredient }: { ingredient?: Ingredient }): JSX.Element => {
-  const router = useRouter();
-
-  const action = ingredient ? updateIngredientAction : createIngredientAction;
-  const [state, formAction] = useActionState(action, null);
+type Props = {
+  ingredient?: Ingredient | undefined;
+  setFormKeyAction: () => void;
+};
+export const IngredientFormContent = ({ ingredient, setFormKeyAction }: Props): JSX.Element => {
+  const boundAction = upsertIngredientAction.bind(null, ingredient?.id ? ingredient.id : null);
+  const [state, formAction] = useActionState(boundAction, null);
 
   return (
-    <Paper sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, height: '100%', p: 2.5 }}>
-      <Typography variant={'h3'}>Ингредиент - {ingredient ? `${ingredient.title}` : 'Новый ингредиент'}</Typography>
+    <MuiBox component={'form'} action={formAction} sx={{ width: 500 }}>
+      <MuiTextField
+        id="title"
+        name={'title'}
+        label="Название"
+        defaultValue={ingredient?.title}
+        fullWidth
+        required
+        error={!!state?.fieldErrors?.title}
+        helperText={state?.fieldErrors?.title?.[0]}
+      />
 
-      <Divider />
+      {state?.message && !state?.fieldErrors && (
+        <MuiAlert severity="error" variant="outlined">
+          {state.message}
+        </MuiAlert>
+      )}
 
-      <Box
-        component={'form'}
-        action={formAction}
-        sx={{
-          display: 'flex',
-          flexDirection: { xs: 'column', sm: 'row' },
-          gap: 2,
-          alignItems: 'center',
-        }}
-      >
-        {ingredient && <input type={'hidden'} name={'id'} defaultValue={ingredient.id} />}
-
-        <TextField
-          sx={{
-            flex: 1,
-            minWidth: { xs: '100%', sm: 250 },
-            maxWidth: { sm: 400 },
-            '& .MuiInputBase-root': {
-              height: 56,
-            },
-          }}
-          id="title"
-          name={'title'}
-          label="Название"
-          defaultValue={ingredient?.title}
-          helperText={state?.fieldErrors?.title ?? state?.message}
-          required
-        />
-
-        {state?.message && <p>{state.message}</p>}
-
-        <Box
-          sx={{
-            display: 'flex',
-            gap: 1,
-            width: { xs: '100%', sm: 240 },
-            '& .MuiButton-root': {
-              height: 56,
-              width: '100%',
-            },
-          }}
-        >
-          <Button
-            type={'button'}
-            variant={'outlined'}
-            sx={{
-              order: { xs: 2, sm: 1 },
-            }}
-            onClick={(): void => router.push('/admin/menu/ingredients')}
-          >
-            Отмена
-          </Button>
-          <Button
-            type={'submit'}
-            variant={'contained'}
-            color="success"
-            sx={{
-              order: { xs: 1, sm: 2 },
-            }}
-          >
-            Сохранить
-          </Button>
-        </Box>
-      </Box>
-    </Paper>
+      <EntityFormActions
+        id={ingredient?.id}
+        cancelPath={'/admin/menu/ingredients'}
+        onDeleteAction={deleteIngredientAction}
+        setFormKeyAction={setFormKeyAction}
+      />
+    </MuiBox>
   );
 };
