@@ -5,17 +5,17 @@
  * Перечисление возможных кодов ошибок при действиях.
  */
 export enum ErrorCode {
-  DUPLICATE = 'duplicate',
-  DB_ERROR = 'db_error',
   UNAUTHORIZED = 'unauthorized',
-  VALIDATION_FAILED = 'validation_failed',
-  CONFLICT = 'conflict',
-  UNKNOWN = 'unknown',
-
-  NOT_FOUND = 'not_found',
   INVALID_INPUT = 'invalid_input',
-
   INVALID_CREDENTIALS = 'invalid_credentials',
+
+  // Что используется
+  NOT_FOUND = 'not_found',
+  DB_ERROR = 'db_error',
+  DUPLICATE = 'duplicate',
+  CONFLICT = 'conflict',
+  VALIDATION_FAILED = 'validation_failed',
+  UNKNOWN = 'unknown',
 }
 
 /**
@@ -25,15 +25,15 @@ export enum ErrorCode {
  * Соответствие кодов ошибок понятным текстовым сообщениям.
  */
 export const errorMessages: Record<ErrorCode, string> = {
-  [ErrorCode.DUPLICATE]: 'Данные с таким названием уже существуют',
-  [ErrorCode.DB_ERROR]: 'Ошибка соединения с базой данных, попробуйте позже',
-  [ErrorCode.UNAUTHORIZED]: 'Доступ запрещён',
-  [ErrorCode.VALIDATION_FAILED]: 'Ошибка валидации данных',
-  [ErrorCode.CONFLICT]: 'Конфликт данных, операция невозможна',
-  [ErrorCode.UNKNOWN]: 'Неизвестная ошибка',
-
+  [ErrorCode.UNAUTHORIZED]: 'Доступ запрещён. Пожалуйста, авторизуйтесь',
   [ErrorCode.INVALID_INPUT]: 'Введены некорректные данные',
-  [ErrorCode.NOT_FOUND]: 'Запрашиваемый ресурс не найден',
-
   [ErrorCode.INVALID_CREDENTIALS]: 'Неверный логин или пароль',
+
+  // Актуальные для текущей логики
+  [ErrorCode.NOT_FOUND]: 'Запрашиваемая запись не найдена',
+  [ErrorCode.DB_ERROR]: 'Сервис временно недоступен. Попробуйте позже',
+  [ErrorCode.DUPLICATE]: 'Запись с такими данными уже существует',
+  [ErrorCode.CONFLICT]: 'Удаление невозможно: запись используется в других разделах',
+  [ErrorCode.VALIDATION_FAILED]: 'Проверьте правильность заполнения полей',
+  [ErrorCode.UNKNOWN]: 'Произошла непредвиденная ошибка',
 };
