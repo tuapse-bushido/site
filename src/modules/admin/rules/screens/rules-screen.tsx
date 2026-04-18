@@ -22,7 +22,7 @@ export const RulesScreen = ({ rules }: { rules: AddonRuleDetail[] }): JSX.Elemen
         variant="contained"
         color="info"
         startIcon={<AddIcon />}
-        disabled={isCreating} // Чтобы не кликали дважды
+        disabled={isCreating}
       >
         Создать правило
       </MuiButton>
