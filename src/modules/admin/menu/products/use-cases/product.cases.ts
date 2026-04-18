@@ -1,13 +1,13 @@
-import { ProductWithDetails, productWithDetailSchema } from 'modules/admin/menu/products/entities';
-import { ActionResult } from 'shared/types/action.types';
-import { cacheLife, cacheTag } from 'next/cache';
 import { dbQuery } from 'shared/utils/db.utils';
-import { getAllIngredients } from 'modules/admin/menu/ingredients';
-import { getAllCategories } from 'modules/admin/menu/categories';
-import { actionError, actionSuccess, unwrap } from 'modules/admin/shared/utils/action.utils';
+import { cacheLife, cacheTag } from 'next/cache';
 import { ProductEditData } from './product.cases.types';
-import { getAllProducts } from 'modules/admin/menu/products/repository';
+import { ActionResult } from 'shared/types/action.types';
 import { ErrorCode } from 'shared/types/error-codes.types';
+import { getAllCategories } from 'modules/admin/menu/categories';
+import { getAllProducts } from 'modules/admin/menu/products/repository';
+import { ingredientRepo } from 'modules/admin/menu/ingredients/repository';
+import { actionError, actionSuccess, unwrap } from 'modules/admin/shared/utils/action.utils';
+import { ProductWithDetails, productWithDetailSchema } from 'modules/admin/menu/products/entities';
 
 /**
  * Fetches a product along with its ingredients, categories, and set items.
@@ -88,7 +88,7 @@ export const getProductWithDetails = async (id: number): Promise<ActionResult<Pr
 export const getProductEditData = async (id?: number): Promise<ActionResult<ProductEditData>> => {
   try {
     const [ingredients, categories, products] = await Promise.all([
-      getAllIngredients().then(unwrap),
+      ingredientRepo.getAllIngredients().then(unwrap),
       getAllCategories().then(unwrap),
       getAllProducts().then(unwrap),
     ]);
