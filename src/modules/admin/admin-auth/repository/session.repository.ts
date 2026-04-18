@@ -1,8 +1,8 @@
 'use server';
 
 import { dbDelete, dbQuery } from 'shared/utils/db.utils';
-import { Session, SessionRow, sessionRowSchema, sessionSchema } from 'src/modules/admin/admin-auth';
 import { ActionResult } from 'shared/types/action.types';
+import { Session, SessionRow, sessionRowSchema, sessionSchema } from 'modules/admin/admin-auth';
 
 export const createRefreshSession = async (adminId: number, expiresAt: Date): Promise<ActionResult<SessionRow>> => {
   const query = `

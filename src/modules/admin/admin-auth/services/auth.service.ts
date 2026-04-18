@@ -1,7 +1,7 @@
 import { cookies } from 'next/headers';
 import { JWTPayload, jwtVerify, SignJWT } from 'jose';
-import { Admin, getAdminById } from 'src/modules/admin/shared';
 import { createRefreshSession, deleteRefreshSession, deleteSessionByAdminId, getRefreshSession } from '../index';
+import { Admin, getAdminById } from 'modules/admin/shared';
 
 if (!process.env.JWT_SECRET) {
   throw new Error('JWT_SECRET environment variable is not set');
