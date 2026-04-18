@@ -18,6 +18,12 @@ services:
     networks:
       - bushido-net
 
+    volumes:
+      - /opt/bushido/logs:/app/logs
+
+    environment:
+      - LOG_FILE_PATH=/app/logs/app.log
+
     command: [ "node", "server.js" ]
 
     healthcheck:
@@ -40,9 +46,6 @@ services:
       - /opt/bushido/env/socket.env
     networks:
       - bushido-net
-
-    volumes:
-      - /opt/bushido/logs:/app/logs
 
     command: [ "pnpm", "exec", "tsx", "server.ts" ]
 
