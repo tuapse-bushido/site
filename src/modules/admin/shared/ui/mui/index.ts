@@ -3,6 +3,7 @@ export { default as MuiCard } from '@mui/material/Card';
 export { default as MuiChip } from '@mui/material/Chip';
 export { default as MuiGrid } from '@mui/material/Grid';
 export { default as MuiList } from '@mui/material/List';
+export { default as MuiAlert } from '@mui/material/Alert';
 export { default as MuiPaper } from '@mui/material/Paper';
 export { default as MuiStack } from '@mui/material/Stack';
 export { default as MuiAvatar } from '@mui/material/Avatar';
