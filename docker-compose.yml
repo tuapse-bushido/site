@@ -23,6 +23,7 @@ services:
 
     environment:
       - LOG_FILE_PATH=/app/logs/app.log
+      - ERROR_LOG_FILE_PATH=/app/logs/error.log
 
     command: [ "node", "server.js" ]
 
