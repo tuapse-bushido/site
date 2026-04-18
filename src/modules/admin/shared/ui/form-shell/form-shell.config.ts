@@ -4,11 +4,12 @@ import { AddonRuleForm } from 'modules/admin/rules/features/addon-rule-form/ui';
 
 import { getAddonRuleEditData } from 'modules/admin/rules/use-cases';
 import { getProductEditData } from 'modules/admin/menu/products/use-cases';
-import { getIngredientById, IngredientForm } from 'modules/admin/menu/ingredients';
+import { IngredientForm } from 'modules/admin/menu/ingredients/widgets';
+import { ingredientRepo } from 'modules/admin/menu/ingredients/repository';
 
 export const formShellRegistry = {
   ingredient: {
-    fetch: getIngredientById,
+    fetch: ingredientRepo.getIngredientById,
     propName: 'ingredient' as const,
     Component: IngredientForm,
   },

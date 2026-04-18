@@ -4,8 +4,8 @@ import { JSX } from 'react';
 import { OrderStatusChip } from 'modules/admin/orders/ui/order-status-chip';
 
 export const ingredientColumns: GridColDef[] = [
-  { field: 'id', headerName: 'ID' },
-  { field: 'title', headerName: 'Название' },
+  { field: 'id', headerName: 'ID', width: 85 },
+  { field: 'title', headerName: 'Название', width: 160 },
 ];
 
 export const categoryColumns: GridColDef[] = [
@@ -50,6 +50,8 @@ export const orderColumns: GridColDef[] = [
     headerName: 'Сумма',
     width: 110,
     type: 'number',
+    align: 'left',
+    headerAlign: 'left',
     valueFormatter: (value): string => `${value} ₽`,
   },
   { field: 'customer_name', headerName: 'Клиент', width: 150 },
