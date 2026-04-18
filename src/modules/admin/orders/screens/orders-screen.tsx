@@ -1,24 +1,15 @@
-import { JSX, Suspense } from 'react';
+import { JSX } from 'react';
 import { ordersRepo } from 'modules/admin/orders/repository';
 import { OrdersDateFilter } from '../features/orders-date-filter';
 import { orderColumns, TableComponent } from 'modules/admin/shared/ui/table';
 import { getSafeDateRange, mapOrdersToTable } from 'modules/admin/orders/utils';
-import { MuiBox, MuiDivider, MuiTypography } from 'modules/admin/shared/ui/mui';
+import { MuiDivider, MuiStack, MuiTypography } from 'modules/admin/shared/ui/mui';
 
 type Props = {
   params: Promise<{
     from?: string;
     to?: string;
   }>;
-};
-
-const styles = {
-  container: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: 4,
-    height: '100%',
-  },
 };
 
 export const OrdersScreen = async ({ params }: Props): Promise<JSX.Element | null> => {
@@ -31,13 +22,11 @@ export const OrdersScreen = async ({ params }: Props): Promise<JSX.Element | nul
   if (!orders.ok) return null;
 
   return (
-    <MuiBox sx={styles.container}>
+    <MuiStack direction={'column'} gap={4} sx={{ height: '100%' }}>
       <MuiTypography variant={'h1'}>Заказы</MuiTypography>
       <MuiDivider />
       <OrdersDateFilter />
-      <Suspense fallback={<div>loading</div>}>
-        <TableComponent columns={orderColumns} data={mapOrdersToTable(orders.data)} slug={'orders'} />
-      </Suspense>
-    </MuiBox>
+      <TableComponent columns={orderColumns} data={mapOrdersToTable(orders.data)} slug={'orders'} />
+    </MuiStack>
   );
 };
