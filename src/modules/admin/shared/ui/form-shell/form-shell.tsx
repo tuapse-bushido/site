@@ -3,7 +3,7 @@
 import { ElementType, JSX } from 'react';
 import { cacheLife, cacheTag } from 'next/cache';
 import { FormShellProps } from './from-shell.props';
-import { formShellRegistry } from 'src/modules/admin/shared/ui/form-shell/form-shell.config';
+import { formShellRegistry } from 'modules/admin/shared/ui/form-shell/form-shell.config';
 
 export async function FormShell({
   params,

@@ -71,3 +71,41 @@ export function formError<T>({
     ...(data ? { data: data } : {}),
   };
 }
+
+export const formErrorNew = <T>({
+  code,
+  message,
+  fieldErrors = {},
+  data,
+  options,
+}: {
+  code?: ErrorCode;
+  message?: string;
+  fieldErrors?: Partial<Record<keyof T, string[]>>;
+  data?: Partial<T>;
+  options?: { details?: unknown };
+} = {}): FormState<T> => {
+  const finalFieldErrors: Partial<Record<keyof T, string[]>> = { ...fieldErrors };
+
+  let finalMessage = message ?? (code ? errorMessages[code] : undefined);
+
+  if (code === ErrorCode.DUPLICATE && typeof options?.details === 'object' && options.details !== null) {
+    const details = options.details as Record<string, unknown>;
+
+    if (typeof details.conflictField === 'string') {
+      const field = details.conflictField as keyof T;
+
+      if (!finalFieldErrors[field]) {
+        finalFieldErrors[field] = [finalMessage || 'Это значение уже занято'];
+      }
+      finalMessage = undefined;
+    }
+  }
+
+  return {
+    success: false,
+    ...(finalMessage ? { message: finalMessage } : {}),
+    fieldErrors: finalFieldErrors,
+    ...(data ? { data } : {}),
+  };
+};

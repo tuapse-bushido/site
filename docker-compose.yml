@@ -18,11 +18,13 @@ services:
     networks:
       - bushido-net
 
-    # Standalone server.js уже лежит в корне standalone
-    # GENERATE вызываем только если тебе нужно ISR/SSG
+    volumes:
+      - /opt/bushido/logs:/app/logs
+
+    environment:
+      - LOG_FILE_PATH=/app/logs/app.log
+
     command: [ "node", "server.js" ]
-    # Для SSG/ISR:
-    # command: ["sh", "-c", "pnpm generate && node server.js"]
 
     healthcheck:
       test: [ "CMD", "wget", "--spider", "-q", "http://127.0.0.1:3000" ]
@@ -45,14 +47,10 @@ services:
     networks:
       - bushido-net
 
-    # tsx запускаем через pnpm exec (без глобальных пакетов)
     command: [ "pnpm", "exec", "tsx", "server.ts" ]
 
     healthcheck:
-      # Если socket имеет HTTP — этот вариант
       test: [ "CMD", "wget", "--spider", "-q", "http://127.0.0.1:3001/health" ]
-      # Если НЕТ HTTP у сокета — используем это:
-      # test: ["CMD-SHELL", "pgrep node || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 3

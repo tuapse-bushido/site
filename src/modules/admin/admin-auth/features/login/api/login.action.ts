@@ -2,12 +2,11 @@
 
 import bcrypt from 'bcryptjs';
 import { redirect } from 'next/navigation';
-import { getAdminByLogin } from 'src/modules/admin/shared/repository/admin.repository';
 import { formError, parsedFormData } from 'modules/admin/shared/utils/form.utils';
-import { startSession } from 'src/modules/admin/admin-auth/services/auth.service';
 import { FormState } from 'shared/types/form.types';
-import { loginFormSchema } from 'modules/admin/admin-auth';
+import { loginFormSchema, startSession } from 'modules/admin/admin-auth';
 import { ErrorCode } from 'shared/types/error-codes.types';
+import { getAdminByLogin } from 'modules/admin/shared';
 
 export const loginAction = async (_prevState: FormState | null, formData: FormData): Promise<FormState> => {
   const parsed = parsedFormData(formData, loginFormSchema);

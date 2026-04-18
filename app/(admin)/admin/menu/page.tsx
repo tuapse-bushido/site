@@ -1,9 +1,9 @@
 import { JSX } from 'react';
 import { MenuScreen } from 'modules/admin/menu/screens/menu.screen';
-import { getMenuDashboardConfig } from 'modules/admin/menu/screens/menu-screen.config';
-import { ingredientRepo } from 'modules/admin/menu/ingredients/repository/repo';
-import { categoryRepo } from 'modules/admin/menu/categories/repository/repo';
 import { productRepo } from 'modules/admin/menu/products/repository/repo';
+import { ingredientRepo } from 'modules/admin/menu/ingredients/repository';
+import { categoryRepo } from 'modules/admin/menu/categories/repository/repo';
+import { getMenuDashboardConfig } from 'modules/admin/menu/screens/menu-screen.config';
 
 export default async function MenuPage(): Promise<JSX.Element> {
   'use cache';

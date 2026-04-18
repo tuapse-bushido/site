@@ -21,11 +21,10 @@
         "name": "next"
       }
     ],
-    "baseUrl": ".",
     "paths": {
-      "modules/*": ["src/modules/*"],
-      "shared/*": ["src/shared/*"],
-      "styles/*": ["src/shared/styles/*"]
+      "modules/*": ["./src/modules/*"],
+      "shared/*": ["./src/shared/*"],
+      "styles/*": ["./src/shared/styles/*"]
     },
     "types": ["vitest/globals", "@testing-library/jest-dom"]
   },

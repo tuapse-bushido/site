@@ -6,7 +6,7 @@ import { addonRuleRepo } from 'modules/admin/rules/repository';
 export default async function RulesPage(): Promise<JSX.Element | null> {
   'use cache';
   cacheLife('admin');
-  cacheTag(`rules-page`);
+  cacheTag('admin-pages', 'rules-page');
 
   const rules = await addonRuleRepo.rule.getAddonRules();
 
