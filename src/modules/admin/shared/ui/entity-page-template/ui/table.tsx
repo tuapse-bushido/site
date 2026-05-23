@@ -11,38 +11,35 @@ const loadDataGrid = (): Promise<ComponentType<DataGridProps>> =>
 
 const DataGrid = dynamic<DataGridProps>(loadDataGrid, {
   ssr: false,
-  loading: (): JSX.Element => <div style={{ height: 400, width: '100%' }}>Загрузка таблицы...</div>,
+  loading: (): JSX.Element => <Paper style={{ height: '100%', width: '100%' }}>Загрузка таблицы...</Paper>,
 });
 
 export type Props<T> = {
   columns: GridColDef[];
   data: T[];
-  slug: string;
+  getRowHrefAction: (id: string | number) => string;
 };
 
-const styles = {
-  paper: {
-    height: '100%',
-    overflow: 'hidden',
-  },
-  dataGrid: {
-    '& .MuiDataGrid-row': {
-      cursor: 'pointer',
-    },
-  },
-};
-
-export function TableComponent<T>({ columns, data, slug }: Props<T>): JSX.Element {
+export function TableComponent<T>({ columns, data, getRowHrefAction }: Props<T>): JSX.Element {
   const router = useRouter();
 
   return (
-    <Paper sx={styles.paper}>
+    <Paper sx={{ height: '100%', overflow: 'hidden' }}>
       <DataGrid
-        sx={styles.dataGrid}
+        sx={{
+          '& .MuiDataGrid-row': {
+            cursor: 'pointer',
+          },
+        }}
         columns={columns}
         rows={data}
         getRowId={(row): number => row.id}
-        onRowClick={(params): void => router.push(`/admin/${slug}/${params.row.id}`)}
+        onRowClick={(params): void => router.push(getRowHrefAction(params.id))}
+        autosizeOnMount
+        autosizeOptions={{
+          includeHeaders: true,
+          includeOutliers: true,
+        }}
         hideFooter
         slotProps={{
           loadingOverlay: {

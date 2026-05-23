@@ -1,11 +1,12 @@
-import { CategoryForm, getCategoryById } from 'modules/admin/menu/categories';
+import { CategoryForm } from 'modules/admin/menu/categories/widgets';
+import { IngredientForm } from 'modules/admin/menu/ingredients/widgets';
 import { ProductForm } from 'modules/admin/menu/products/features/product-form/';
 import { AddonRuleForm } from 'modules/admin/rules/features/addon-rule-form/ui';
 
 import { getAddonRuleEditData } from 'modules/admin/rules/use-cases';
 import { getProductEditData } from 'modules/admin/menu/products/use-cases';
-import { IngredientForm } from 'modules/admin/menu/ingredients/widgets';
 import { ingredientRepo } from 'modules/admin/menu/ingredients/repository';
+import { categoryRepo } from 'modules/admin/menu/categories/repository';
 
 export const formShellRegistry = {
   ingredient: {
@@ -14,7 +15,7 @@ export const formShellRegistry = {
     Component: IngredientForm,
   },
   category: {
-    fetch: getCategoryById,
+    fetch: categoryRepo.getCategoryById,
     propName: 'category' as const,
     Component: CategoryForm,
   },

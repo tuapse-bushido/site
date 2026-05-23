@@ -1,15 +1,14 @@
 'use client';
 
 import Image from 'next/image';
-import { Box, Button } from '@mui/material';
-import styles from './picked-image.module.scss';
 import { PickedImageProps } from './picked-image.props';
 import { ChangeEvent, JSX, useRef, useState } from 'react';
+import { MuiBox, MuiButton, MuiStack } from 'modules/admin/shared/ui/mui';
 
 export const PickedImage = ({ imageLink, altImage }: PickedImageProps): JSX.Element => {
   const link = imageLink
-    ? `${process.env.NEXT_PUBLIC_IMAGES_DOMAIN}/${imageLink}`
-    : `${process.env.NEXT_PUBLIC_IMAGES_DOMAIN}/no_image.png`;
+    ? process.env.NEXT_PUBLIC_IMAGES_DOMAIN + imageLink
+    : process.env.NEXT_PUBLIC_IMAGES_DOMAIN + 'no-image.png';
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -31,17 +30,17 @@ export const PickedImage = ({ imageLink, altImage }: PickedImageProps): JSX.Elem
   };
 
   return (
-    <Box display="flex" flexDirection="column">
-      <Box className={styles.imageWrapper}>
+    <MuiStack display="flex" flexDirection="column" gap={2} sx={{ width: '100%', height: '100%' }}>
+      <MuiBox sx={{ position: 'relative', width: '100%', flexGrow: 1, overflow: 'hidden' }}>
         <Image
           src={pickedImage}
           alt={altImage ?? 'Изображение отсутствует'}
-          width={100}
-          height={100}
-          sizes="(max-width: 1439px) 25vw"
+          sizes="(max-width: 599.95px) 100vw, 500px"
           priority
+          fill
+          style={{ objectFit: 'contain' }}
         />
-      </Box>
+      </MuiBox>
 
       <input
         ref={inputRef}
@@ -52,11 +51,11 @@ export const PickedImage = ({ imageLink, altImage }: PickedImageProps): JSX.Elem
         onChange={handleAddImage}
       />
 
-      <input name="current_image" defaultValue={imageLink ?? 'no_image.png'} hidden />
+      <input name="current_image" defaultValue={imageLink ?? 'no-image.png'} hidden />
 
-      <Button variant="outlined" size="small" onClick={(): void => inputRef.current?.click()}>
+      <MuiButton variant="outlined" size="medium" onClick={(): void => inputRef.current?.click()}>
         Загрузить изображение
-      </Button>
-    </Box>
+      </MuiButton>
+    </MuiStack>
   );
 };

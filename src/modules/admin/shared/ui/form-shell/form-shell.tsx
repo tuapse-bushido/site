@@ -3,7 +3,7 @@
 import { ElementType, JSX } from 'react';
 import { cacheLife, cacheTag } from 'next/cache';
 import { FormShellProps } from './from-shell.props';
-import { formShellRegistry } from 'modules/admin/shared/ui/form-shell/form-shell.config';
+import { formShellRegistry } from './form-shell.config';
 
 export async function FormShell({
   params,
@@ -23,14 +23,13 @@ export async function FormShell({
   }
 
   const config = formShellRegistry[token];
-  // 2. Приводим компонент к ElementType
+
   const Component = config.Component as ElementType;
   const { fetch, propName } = config;
 
   const result = await fetch(Number(id));
   if (!result.ok || !result.data) return null;
 
-  // 3. Теперь TS позволит прокинуть объект с любым ключом
   const componentProps = {
     [propName]: result.data,
   };
