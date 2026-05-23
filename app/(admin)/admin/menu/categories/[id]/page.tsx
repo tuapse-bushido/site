@@ -1,14 +1,10 @@
-import { JSX, Suspense } from 'react';
-import { FormShell } from 'modules/admin/shared/ui/form-shell/form-shell';
+import { JSX } from 'react';
+import { UpdateCategoryScreen } from 'modules/admin/menu/categories';
 
 export default async function UpdateCategoryPage({
   params,
 }: {
   params: Promise<{ id: string }>;
 }): Promise<JSX.Element> {
-  return (
-    <Suspense fallback="loading your inbox...">
-      <FormShell params={params} token="category" cacheProfile={'admin'} />
-    </Suspense>
-  );
+  return <UpdateCategoryScreen params={params} />;
 }

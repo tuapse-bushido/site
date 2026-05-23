@@ -1,3 +1,1 @@
-export * from './entities';
-export * from './features';
-export * from './repository';
+export { CategoriesScreen, CreateCategoryScreen, UpdateCategoryScreen } from './screens';

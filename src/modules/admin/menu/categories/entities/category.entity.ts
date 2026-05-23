@@ -1,52 +1,54 @@
 import { z } from 'zod';
+import { imageFileSchema } from 'modules/admin/shared/utils/validators.schema';
 
-/**
- * Zod schema for a product category.
- *
- * Fields:
- * - id (number): Unique identifier of the category.
- * - title (string): Category name.
- * - is_active (boolean): Whether the category is active and visible.
- * - slug (string): URL-friendly unique identifier.
- * - image_link (string | null): Image URL for the category.
- * - sort_number (number): Sort order index.
- * - created_at (string): Creation timestamp (ISO string).
- * - updated_at (string): Last update timestamp (ISO string).
- *
- * ---
- * Схема Zod для категории товаров.
- *
- * Поля:
- * - id (number): Уникальный идентификатор категории.
- * - title (string): Название категории.
- * - is_active (boolean): Категория активна и отображается в интерфейсе.
- * - slug (string): Уникальный идентификатор для URL.
- * - image_link (string | null): Ссылка на изображение категории.
- * - sort_number (number): Порядковый номер для сортировки.
- * - created_at (string): Дата создания (строка в формате ISO).
- * - updated_at (string): Дата последнего обновления (строка в формате ISO).
- */
-export const categorySchema = z.object({
-  id: z.number(),
-  title: z.string(),
+const baseCategorySchema = z.object({
+  id: z.coerce.number().int().positive('Некорректный ID'),
+
+  title: z
+    .string()
+    .trim()
+    .toLowerCase()
+    .transform((val): string => val.replace(/\s+/g, ' '))
+    .pipe(z.string().min(1, 'Укажите название ингредиента').max(50, 'Название слишком длинное (макс. 50 символов)')),
+
   is_active: z.boolean(),
-  slug: z.string(),
-  image_link: z.string().nullable(),
-  sort_number: z.number(),
+  slug: z.string().trim(),
+  image_link: z.string().trim().default('no-image.png'),
+  sort_number: z.number().default(0),
 });
 
-/**
- * Array schema for multiple categories.
- *
- * ---
- * Схема массива категорий.
- */
-export const categoryArraySchema = z.array(categorySchema);
+const formCategorySchema = baseCategorySchema.omit({ image_link: true }).extend({
+  image_file: imageFileSchema,
+  current_image: z.string().trim(),
 
-/**
- * Inferred TypeScript type for a category.
- *
- * ---
- * Тип категории, выведенный из схемы.
- */
-export type Category = z.infer<typeof categorySchema>;
+  is_active: z
+    .string()
+    .trim()
+    .refine((v): boolean => v === 'true' || v === 'false', 'Статус должен быть: Активно или Неактивно')
+    .transform((v): boolean => v === 'true'),
+
+  sort_number: z
+    .string()
+    .trim()
+    .regex(/^\d*$/, 'Значение должно быть числом')
+    .transform((v): number => Number(v || 0)),
+});
+
+export const categorySchemas = {
+  base: baseCategorySchema,
+  arraySchema: z.array(baseCategorySchema),
+  create: baseCategorySchema.omit({ id: true }),
+  update: baseCategorySchema,
+  delete: '',
+  upsert: baseCategorySchema.partial({ id: true }),
+  form: {
+    create: formCategorySchema.omit({ id: true }),
+    update: formCategorySchema.partial({ id: true }),
+  },
+};
+
+export type Category = z.infer<typeof baseCategorySchema>;
+export type InsertCategory = z.infer<typeof categorySchemas.create>;
+export type UpsertCategory = z.infer<typeof categorySchemas.upsert>;
+
+export type UpsertFormCategory = z.infer<typeof categorySchemas.form.update>;
