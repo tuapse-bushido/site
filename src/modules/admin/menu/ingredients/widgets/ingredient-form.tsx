@@ -1,20 +1,18 @@
 'use client';
 
-import { JSX, useState } from 'react';
-import { Ingredient } from '../entities';
-import { MuiPaper } from 'modules/admin/shared/ui/mui';
-import { IngredientFormContent } from '../features/ingredient-form';
+import { JSX } from 'react';
+import { IngredientFormContent } from 'modules/admin/menu/ingredients/features';
+import { FormResetContainer } from 'modules/admin/shared/ui/form-reset-container';
+import { Ingredient } from 'modules/admin/menu/ingredients/entities';
 
-export const IngredientForm = ({ ingredient }: { ingredient?: Ingredient }): JSX.Element => {
-  const [formKey, setFormKey] = useState(0);
+type Props = {
+  ingredient: Ingredient;
+};
 
+export const IngredientForm = ({ ingredient }: Props): JSX.Element => {
   return (
-    <MuiPaper sx={{ height: '100%', p: 4 }}>
-      <IngredientFormContent
-        key={formKey}
-        ingredient={ingredient}
-        setFormKeyAction={(): void => setFormKey((prev): number => prev + 1)}
-      />
-    </MuiPaper>
+    <FormResetContainer
+      renderAction={(reset): JSX.Element => <IngredientFormContent ingredient={ingredient} setFormKeyAction={reset} />}
+    />
   );
 };

@@ -1,1 +1,1 @@
-export * from './ingredient-form';
+export * from './ingredient-form-content';

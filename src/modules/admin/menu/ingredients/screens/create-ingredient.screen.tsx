@@ -1,15 +1,11 @@
 import { JSX } from 'react';
-import { IngredientForm } from '../widgets';
-import { MuiDivider, MuiStack, MuiTypography } from 'modules/admin/shared/ui/mui';
+import { PageContainer } from 'modules/admin/shared/ui/page-container';
+import { IngredientForm } from 'modules/admin/menu/ingredients/widgets';
 
 export const CreateIngredientScreen = (): JSX.Element => {
   return (
-    <MuiStack direction={'column'} gap={4} height={'100%'}>
-      <MuiTypography variant={'h1'}>Создание нового ингредиента</MuiTypography>
-
-      <MuiDivider />
-
+    <PageContainer title={'Новый ингредиент'}>
       <IngredientForm />
-    </MuiStack>
+    </PageContainer>
   );
 };

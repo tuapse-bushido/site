@@ -10,6 +10,7 @@ type Props = {
   ingredient?: Ingredient | undefined;
   setFormKeyAction: () => void;
 };
+
 export const IngredientFormContent = ({ ingredient, setFormKeyAction }: Props): JSX.Element => {
   const boundAction = upsertIngredientAction.bind(null, ingredient?.id ? ingredient.id : null);
   const [state, formAction] = useActionState(boundAction, null);
