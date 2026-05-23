@@ -4,6 +4,8 @@ import type { Configuration, RuleSetRule } from 'webpack';
 const nextConfig: NextConfig = {
   output: 'standalone',
 
+  allowedDevOrigins: ['192.168.1.100', 'localhost'],
+
   cacheComponents: true,
   cacheLife: {
     admin: {

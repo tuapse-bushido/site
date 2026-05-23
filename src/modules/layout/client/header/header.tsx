@@ -12,11 +12,15 @@ export const Header = (): JSX.Element => {
           <Image src={'/logo/logo.png'} alt={'Bushido'} width={180} height={50} priority />
         </Link>
 
-        <div className={styles.actions}>
-          <Link href={'/cart'} className={styles.cart}>
-            <CartIcon width={20} height={20} />
-          </Link>
-        </div>
+        <nav className={styles.actions} aria-label="Пользовательское меню">
+          <ul>
+            <li>
+              <Link href={'/cart'} className={styles.cart} aria-label={'Корзина'}>
+                <CartIcon />
+              </Link>
+            </li>
+          </ul>
+        </nav>
       </div>
     </header>
   );
