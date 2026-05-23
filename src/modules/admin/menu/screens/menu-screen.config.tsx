@@ -1,7 +1,7 @@
-import IngredientIcon from './icons/ingredient.svg';
-import CategoryIcon from './icons/category.svg';
-import ProductIcon from './icons/product.svg';
 import { JSX } from 'react';
+import ProductIcon from './icons/product.svg';
+import CategoryIcon from './icons/category.svg';
+import IngredientIcon from './icons/ingredient.svg';
 
 export type MenuConfig = {
   title: string;

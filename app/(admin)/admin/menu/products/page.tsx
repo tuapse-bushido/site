@@ -3,8 +3,8 @@ import Link from 'next/link';
 import { cacheLife } from 'next/cache';
 import AddIcon from '@mui/icons-material/Add';
 import { Button, Divider, Typography } from '@mui/material';
-import { TableComponent } from 'modules/admin/shared/ui/table/table';
-import { productColumns } from 'modules/admin/shared/ui/table/table-columns';
+import { TableComponent } from '../../../../../src/modules/admin/shared/ui/entity-page-template/ui/table';
+import { productColumns } from '../../../../../src/modules/admin/shared/ui/entity-page-template/model/table.config';
 import { getAllProducts } from 'modules/admin/menu/products/repository';
 import { MuiBox } from 'modules/admin/shared/ui/mui';
 

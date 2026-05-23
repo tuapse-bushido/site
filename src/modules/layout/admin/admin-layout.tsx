@@ -1,35 +1,22 @@
-import { JSX, ReactNode } from 'react';
-import Drawer from '@mui/material/Drawer';
+'use client';
+
+import { AdminSidebar } from './sidebar-menu';
 import styles from './admin-layout.module.scss';
-import { AdminSidebarMenu } from './sidebar-menu';
+import { JSX, ReactNode, useState } from 'react';
+import { Header } from 'modules/layout/admin/header/header';
 
 export const AdminLayout = ({ children }: { children: ReactNode }): JSX.Element => {
+  const [open, setOpen] = useState(false);
+  const toggleDrawer = (): void => setOpen((prev): boolean => !prev);
+
   return (
     <div className={styles.layout}>
-      <header className={styles.header}></header>
+      <header className={styles.header}>
+        <Header onClickAction={toggleDrawer} />
+      </header>
 
-      <Drawer
-        component="aside"
-        className={styles.sidebar}
-        variant="permanent"
-        open
-        slotProps={{
-          paper: {
-            sx: {
-              position: 'static',
-              width: '100%',
-              height: '100%',
-              border: 'none',
-            },
-          },
-        }}
-        sx={{
-          height: '100%',
-          '& .MuiDrawer-paper': { boxSizing: 'border-box' },
-        }}
-      >
-        <AdminSidebarMenu />
-      </Drawer>
+      <AdminSidebar variant="temporary" open={open} onClose={toggleDrawer} />
+      <AdminSidebar variant="permanent" />
 
       <main className={styles.main}>{children}</main>
     </div>

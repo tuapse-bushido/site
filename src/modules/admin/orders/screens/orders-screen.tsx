@@ -1,9 +1,10 @@
 import { JSX } from 'react';
 import { ordersRepo } from 'modules/admin/orders/repository';
 import { OrdersDateFilter } from '../features/orders-date-filter';
-import { orderColumns, TableComponent } from 'modules/admin/shared/ui/table';
 import { getSafeDateRange, mapOrdersToTable } from 'modules/admin/orders/utils';
-import { MuiDivider, MuiStack, MuiTypography } from 'modules/admin/shared/ui/mui';
+import { TableComponent } from 'modules/admin/shared/ui/entity-page-template/ui/table';
+import { TABLE_CONFIG } from 'modules/admin/shared/ui/entity-page-template/model/table.config';
+import { PageContainer } from 'modules/admin/shared/ui/page-container';
 
 type Props = {
   params: Promise<{
@@ -13,6 +14,7 @@ type Props = {
 };
 
 export const OrdersScreen = async ({ params }: Props): Promise<JSX.Element | null> => {
+  const config = TABLE_CONFIG.orders;
   const { from: fromParam, to: toParam } = await params;
 
   const { from, to } = getSafeDateRange(fromParam, toParam);
@@ -22,11 +24,8 @@ export const OrdersScreen = async ({ params }: Props): Promise<JSX.Element | nul
   if (!orders.ok) return null;
 
   return (
-    <MuiStack direction={'column'} gap={4} sx={{ height: '100%' }}>
-      <MuiTypography variant={'h1'}>Заказы</MuiTypography>
-      <MuiDivider />
-      <OrdersDateFilter />
-      <TableComponent columns={orderColumns} data={mapOrdersToTable(orders.data)} slug={'orders'} />
-    </MuiStack>
+    <PageContainer title={config.label.plural} filters={<OrdersDateFilter />}>
+      <TableComponent columns={config.columns} data={mapOrdersToTable(orders.data)} getRowHrefAction={''} />
+    </PageContainer>
   );
 };
