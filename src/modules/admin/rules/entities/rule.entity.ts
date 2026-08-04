@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { Category } from 'modules/admin/menu/categories';
+import { Category } from 'modules/admin/menu/categories/entities';
 import { Product } from 'modules/admin/menu/products/entities';
 
 export const addonRuleSchema = z.object({
