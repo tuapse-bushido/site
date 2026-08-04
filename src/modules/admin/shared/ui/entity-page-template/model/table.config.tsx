@@ -1,14 +1,19 @@
 import { GridColDef } from '@mui/x-data-grid';
+
+import { Order } from 'modules/admin/orders/entities';
+import { Product } from 'modules/admin/menu/products/entities';
 import { Category } from 'modules/admin/menu/categories/entities';
 import { Ingredient } from 'modules/admin/menu/ingredients/entities';
-import { categoryColumns } from 'modules/admin/menu/categories/config';
-import { Order } from 'modules/admin/orders/entities';
+
 import { orderColumns } from 'modules/admin/orders/config';
+import { productColumns } from 'modules/admin/menu/products/config';
+import { categoryColumns } from 'modules/admin/menu/categories/config';
 
 type EntityMap = {
   ingredients: Ingredient;
   categories: Category;
   orders: Order;
+  products: Product;
 };
 
 type TableSlug = keyof EntityMap;
@@ -65,6 +70,18 @@ export const TABLE_CONFIG: { [K in TableSlug]: TableSchema<EntityMap[K]> } = {
       edit: (id): string => `/admin/menu/categories/${id}`,
     },
     columns: orderColumns,
+  },
+  products: {
+    label: {
+      plural: 'Продукты',
+      singular: 'продукт',
+    },
+    searchKey: 'title',
+    href: {
+      create: '/admin/menu/products/create',
+      edit: (id): string => `/admin/menu/products/${id}`,
+    },
+    columns: productColumns,
   },
 };
 
