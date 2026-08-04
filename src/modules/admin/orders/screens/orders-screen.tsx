@@ -25,7 +25,11 @@ export const OrdersScreen = async ({ params }: Props): Promise<JSX.Element | nul
 
   return (
     <PageContainer title={config.label.plural} filters={<OrdersDateFilter />}>
-      <TableComponent columns={config.columns} data={mapOrdersToTable(orders.data)} getRowHrefAction={''} />
+      <TableComponent
+        columns={config.columns}
+        data={mapOrdersToTable(orders.data)}
+        getRowHrefAction={config.href.edit}
+      />
     </PageContainer>
   );
 };
