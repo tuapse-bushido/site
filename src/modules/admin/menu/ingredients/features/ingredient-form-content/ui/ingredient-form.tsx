@@ -8,10 +8,9 @@ import { EntityFormActions } from 'modules/admin/shared/features/entity-form-act
 
 type Props = {
   ingredient?: Ingredient | undefined;
-  setFormKeyAction: () => void;
 };
 
-export const IngredientFormContent = ({ ingredient, setFormKeyAction }: Props): JSX.Element => {
+export const IngredientFormContent = ({ ingredient }: Props): JSX.Element => {
   const boundAction = upsertIngredientAction.bind(null, ingredient?.id ? ingredient.id : null);
   const [state, formAction] = useActionState(boundAction, null);
 
@@ -38,7 +37,6 @@ export const IngredientFormContent = ({ ingredient, setFormKeyAction }: Props): 
         id={ingredient?.id}
         cancelPath={'/admin/menu/ingredients'}
         onDeleteAction={deleteIngredientAction}
-        setFormKeyAction={setFormKeyAction}
       />
     </MuiBox>
   );
