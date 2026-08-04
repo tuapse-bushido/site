@@ -2,7 +2,7 @@ import { SelectNew } from 'modules/admin/shared/ui/select-new/select-new';
 import { MuiBox, MuiTypography } from 'modules/admin/shared/ui/mui';
 import { optionsMapper } from 'modules/admin/menu/products';
 import { AddonRuleDetail } from 'modules/admin/rules/entities';
-import { Category } from 'modules/admin/menu/categories';
+import { Category } from 'modules/admin/menu/categories/entities';
 import { Product } from 'modules/admin/menu/products/entities';
 import { JSX } from 'react';
 
