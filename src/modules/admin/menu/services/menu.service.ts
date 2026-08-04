@@ -1,6 +1,6 @@
 import { DashboardStats } from '../model/stats.types';
+import { productRepo } from 'modules/admin/menu/products/repository';
 import { categoryRepo } from 'modules/admin/menu/categories/repository';
-import { productRepo } from 'modules/admin/menu/products/repository/repo';
 import { ingredientRepo } from 'modules/admin/menu/ingredients/repository';
 
 export const menuService = {
