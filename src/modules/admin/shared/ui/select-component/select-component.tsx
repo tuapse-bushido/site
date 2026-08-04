@@ -1,10 +1,11 @@
 import { JSX, useState } from 'react';
 import { SelectChangeEvent } from '@mui/material/Select';
+import FormHelperText from '@mui/material/FormHelperText';
 import { SelectComponentProps } from './select-component.props';
 import { MuiBox, MuiFormControl, MuiInputLabel, MuiMenuItem, MuiSelect } from 'modules/admin/shared/ui/mui';
 
 export const SelectComponent = (props: SelectComponentProps): JSX.Element => {
-  const { label, name, options } = props;
+  const { label, name, options, error, helperText } = props;
 
   const [select, setSelect] = useState(props.multiple ? props.defaultSelect : props.defaultSelect);
 
@@ -20,7 +21,7 @@ export const SelectComponent = (props: SelectComponentProps): JSX.Element => {
 
   return (
     <MuiBox>
-      <MuiFormControl fullWidth>
+      <MuiFormControl fullWidth error={error}>
         <MuiInputLabel id={`label-${name}`}>{label}</MuiInputLabel>
         <MuiSelect
           labelId={`label-${name}`}
@@ -39,6 +40,7 @@ export const SelectComponent = (props: SelectComponentProps): JSX.Element => {
             ),
           )}
         </MuiSelect>
+        {helperText && <FormHelperText>{helperText}</FormHelperText>}
       </MuiFormControl>
     </MuiBox>
   );
