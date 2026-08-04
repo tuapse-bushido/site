@@ -1,5 +1,5 @@
-import { getAllProducts } from 'modules/admin/menu/products/repository';
-import { getAllCategories } from 'modules/admin/menu/categories';
+import { productRepo } from 'modules/admin/menu/products/repository';
+import { categoryRepo } from 'modules/admin/menu/categories/repository';
 import { actionError, actionSuccess, unwrap } from 'modules/admin/shared/utils/action.utils';
 import { addonRuleRepo } from 'modules/admin/rules/repository/addon-rule.repository';
 import { ErrorCode } from 'shared/types/error-codes.types';
@@ -11,7 +11,10 @@ import { addonRulesService } from 'modules/admin/rules/services/addon-rules.serv
 
 export const getAddonRuleEditData = async (id?: number): Promise<ActionResult<AddonRuleEditData>> => {
   try {
-    const [categories, products] = await Promise.all([getAllCategories().then(unwrap), getAllProducts().then(unwrap)]);
+    const [categories, products] = await Promise.all([
+      categoryRepo.getAllCategories().then(unwrap),
+      productRepo.getAllProducts().then(unwrap),
+    ]);
 
     let addonRule: AddonRuleDetail | undefined;
 
@@ -45,11 +48,22 @@ export const upsertAddonRuleCase = async (
 
     const ruleId = ruleResponse.data.id;
 
-    await Promise.all([
-      addonRulesService.syncAddons(ruleId, addons, mode, client),
-      addonRulesService.syncCategories(ruleId, categories, mode, client),
-      addonRulesService.syncProducts(ruleId, products, mode, client),
-    ]);
+    const relationOperations = [
+      (): ReturnType<typeof addonRulesService.syncAddons> => addonRulesService.syncAddons(ruleId, addons, mode, client),
+      (): ReturnType<typeof addonRulesService.syncCategories> =>
+        addonRulesService.syncCategories(ruleId, categories, mode, client),
+      (): ReturnType<typeof addonRulesService.syncProducts> =>
+        addonRulesService.syncProducts(ruleId, products, mode, client),
+    ];
+
+    for (const syncRelation of relationOperations) {
+      const relationResponse = await syncRelation();
+
+      if (!relationResponse.ok) {
+        await client.query('ROLLBACK');
+        return relationResponse;
+      }
+    }
 
     await client.query('COMMIT');
     return ruleResponse;
