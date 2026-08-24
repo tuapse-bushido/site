@@ -89,6 +89,19 @@ export const formErrorNew = <T>({
 
   let finalMessage = message ?? (code ? errorMessages[code] : undefined);
 
+  if (typeof options?.details === 'object' && options.details !== null) {
+    const details = options.details as Record<string, unknown>;
+
+    if (typeof details.field === 'string') {
+      const field = details.field as keyof T;
+
+      if (!finalFieldErrors[field]) {
+        finalFieldErrors[field] = [finalMessage || 'Не удалось сохранить значение'];
+      }
+      finalMessage = undefined;
+    }
+  }
+
   if (code === ErrorCode.DUPLICATE && typeof options?.details === 'object' && options.details !== null) {
     const details = options.details as Record<string, unknown>;
 
@@ -105,7 +118,7 @@ export const formErrorNew = <T>({
   return {
     success: false,
     ...(finalMessage ? { message: finalMessage } : {}),
-    fieldErrors: finalFieldErrors,
+    ...(Object.keys(finalFieldErrors).length > 0 ? { fieldErrors: finalFieldErrors } : {}),
     ...(data ? { data } : {}),
   };
 };

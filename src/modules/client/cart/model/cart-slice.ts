@@ -1,7 +1,6 @@
 import { CartItem, CartState } from './cart-state.types';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { pruneAddonsForParent, upsertAddonForProduct } from './cart-mutations';
-import { AddonProduct } from 'modules/client/entities';
 
 const initialState: CartState = {
   items: {},
@@ -32,14 +31,14 @@ export const cartSlice = createSlice({
      */
     addToCart: (state, action: PayloadAction<CartItem>): void => {
       const product = action.payload;
-      const { id, quantity } = product;
+      const { id, quantity_in_cart } = product;
 
       if (state.addons[id]) {
-        state.addons[id].quantity_in_cart = quantity;
+        state.addons[id].quantity_in_cart = quantity_in_cart;
         state.addons[id].is_user_modified = true;
       } else {
         state.items[id] = product;
-        upsertAddonForProduct(state, product);
+        upsertAddonForProduct(state, product, quantity_in_cart);
       }
     },
     /**
@@ -63,7 +62,7 @@ export const cartSlice = createSlice({
       } else {
         const product = state.items[id];
         state.items[id].quantity_in_cart += 1;
-        upsertAddonForProduct(state, product);
+        upsertAddonForProduct(state, product, 1);
       }
     },
     /**
@@ -97,7 +96,7 @@ export const cartSlice = createSlice({
       } else if (state.items[id]) {
         const item = state.items[id];
 
-        pruneAddonsForParent(state, item.id);
+        pruneAddonsForParent(state, item.id, 1);
 
         if (item.quantity_in_cart > 1) {
           item.quantity_in_cart -= 1;

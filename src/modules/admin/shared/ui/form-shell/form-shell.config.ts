@@ -1,10 +1,11 @@
-import { CategoryForm, getCategoryById } from 'modules/admin/menu/categories';
-import { ProductForm } from 'modules/admin/menu/products/features/product-form/';
-import { AddonRuleForm } from 'modules/admin/rules/features/addon-rule-form/ui';
-
-import { getAddonRuleEditData } from 'modules/admin/rules/use-cases';
-import { getProductEditData } from 'modules/admin/menu/products/use-cases';
+import { CategoryForm } from 'modules/admin/menu/categories/widgets';
 import { IngredientForm } from 'modules/admin/menu/ingredients/widgets';
+import { ProductForm } from 'modules/admin/menu/products/widgets/product-form';
+import { AddonRuleForm } from 'modules/admin/rules/widgets/addon-rule-form';
+
+import { addonRuleCases } from 'modules/admin/rules/use-cases';
+import { productCases } from 'modules/admin/menu/products/use-cases';
+import { categoryRepo } from 'modules/admin/menu/categories/repository';
 import { ingredientRepo } from 'modules/admin/menu/ingredients/repository';
 
 export const formShellRegistry = {
@@ -14,18 +15,18 @@ export const formShellRegistry = {
     Component: IngredientForm,
   },
   category: {
-    fetch: getCategoryById,
+    fetch: categoryRepo.getCategoryById,
     propName: 'category' as const,
     Component: CategoryForm,
   },
   product: {
-    fetch: getProductEditData,
+    fetch: productCases.getProductEditData,
     propName: 'productData' as const,
     Component: ProductForm,
   },
   rule: {
-    fetch: getAddonRuleEditData,
-    propName: 'ruleData' as const,
+    fetch: addonRuleCases.getAddonRuleEditData,
+    propName: 'addonRuleData' as const,
     Component: AddonRuleForm,
   },
 } as const;

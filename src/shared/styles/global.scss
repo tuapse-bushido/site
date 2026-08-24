@@ -18,7 +18,7 @@
     height: 100%;
     font-size: 62.5%; // 1rem = 10px
     /* Предотвращает дергание контента при появлении скролла */
-    scrollbar-gutter: stable;
+    //scrollbar-gutter: stable;
     /* Плавный скролл (кроме тех, кто просил его отключить) */
     @media (prefers-reduced-motion: no-preference) {
       scroll-behavior: smooth;
@@ -62,8 +62,11 @@
     font: inherit;
     background: none;
     border: none;
-    padding: 0;
     cursor: pointer;
+  }
+
+  ul {
+    list-style: none;
   }
 }
 

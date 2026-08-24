@@ -1,1 +1,0 @@
-export { optionsMapper } from './model';

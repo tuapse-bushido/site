@@ -20,13 +20,27 @@ export const OrdersDateFilter = (): JSX.Element => {
   } = useOrdersDateFilter();
 
   return (
-    <MuiStack key={searchParamsKey} direction="row" spacing={2} alignItems="center">
-      <MuiStack direction="row" spacing={1}>
-        <MuiButton size="small" variant={isTodayActive ? 'contained' : 'text'} onClick={handleFilterToday}>
+    <MuiStack key={searchParamsKey} direction={{ xs: 'column', sm: 'row' }} spacing={2} alignItems={{ sm: 'center' }}>
+      <MuiStack direction="row" spacing={1} justifyContent={{ xs: 'space-between' }}>
+        <MuiButton
+          sx={{
+            width: { xs: '100%' },
+          }}
+          size="medium"
+          variant={isTodayActive ? 'contained' : 'text'}
+          onClick={handleFilterToday}
+        >
           Сегодня
         </MuiButton>
 
-        <MuiButton size="small" variant={isYesterdayActive ? 'contained' : 'text'} onClick={handleFilterYesterday}>
+        <MuiButton
+          sx={{
+            width: { xs: '100%' },
+          }}
+          size="medium"
+          variant={isYesterdayActive ? 'contained' : 'text'}
+          onClick={handleFilterYesterday}
+        >
           Вчера
         </MuiButton>
       </MuiStack>
@@ -47,7 +61,16 @@ export const OrdersDateFilter = (): JSX.Element => {
         slotProps={{ textField: { size: 'small' } }}
       />
 
-      <MuiButton variant="contained" onClick={applyFilter} disabled={!!from && !!to && from.isAfter(to)}>
+      <MuiButton
+        sx={{
+          flexShrink: 0,
+          whiteSpace: 'nowrap',
+        }}
+        size="medium"
+        variant="contained"
+        onClick={applyFilter}
+        disabled={!!from && !!to && from.isAfter(to)}
+      >
         Применить
       </MuiButton>
     </MuiStack>

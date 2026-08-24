@@ -165,34 +165,13 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
--- Name: addon; Type: TABLE; Schema: public; Owner: -
+-- Name: addon_rule_addon_product; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.addon (
-    id integer NOT NULL,
+CREATE TABLE public.addon_rule_addon_product (
     addon_rule_id integer NOT NULL,
     product_id integer NOT NULL
 );
-
-
---
--- Name: addon_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.addon_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: addon_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.addon_id_seq OWNED BY public.addon.id;
 
 
 --
@@ -230,20 +209,20 @@ ALTER SEQUENCE public.addon_rule_id_seq OWNED BY public.addon_rule.id;
 
 
 --
--- Name: addon_rule_to_category; Type: TABLE; Schema: public; Owner: -
+-- Name: addon_rule_target_category; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.addon_rule_to_category (
+CREATE TABLE public.addon_rule_target_category (
     addon_rule_id integer NOT NULL,
     category_id integer NOT NULL
 );
 
 
 --
--- Name: addon_rule_to_product; Type: TABLE; Schema: public; Owner: -
+-- Name: addon_rule_target_product; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.addon_rule_to_product (
+CREATE TABLE public.addon_rule_target_product (
     addon_rule_id integer NOT NULL,
     product_id integer NOT NULL
 );
@@ -337,8 +316,8 @@ CREATE VIEW public.addon_rule_with_addons_view AS
     adr.show_count_percent,
     COALESCE(jsonb_agg(jsonb_build_object('id', p.id, 'title', p.title, 'image_link', p.image_link, 'slug', p.slug, 'price', (p.price)::double precision, 'quantity', p.quantity, 'count_portion', p.count_portion, 'weight', p.weight, 'discount_percent', COALESCE((pd.discount_percent)::integer, 0)) ORDER BY p.id) FILTER (WHERE (p.id IS NOT NULL)), '[]'::jsonb) AS addon_products
    FROM (((public.addon_rule adr
-     JOIN public.addon a ON ((a.addon_rule_id = adr.id)))
-     JOIN public.product p ON ((p.id = a.product_id)))
+     JOIN public.addon_rule_addon_product arap ON ((arap.addon_rule_id = adr.id)))
+     JOIN public.product p ON ((p.id = arap.product_id)))
      LEFT JOIN public.product_discount_percent_view pd ON ((pd.product_id = p.id)))
   WHERE ((adr.is_active = true) AND (p.is_active = true) AND (p.is_visible = true))
   GROUP BY adr.id, adr.base_count, adr.divisor, adr.show_count_percent;
@@ -349,10 +328,10 @@ CREATE VIEW public.addon_rule_with_addons_view AS
 --
 
 CREATE VIEW public.addon_rules_to_categories_view AS
- SELECT arc.category_id,
-    arc.addon_rule_id
-   FROM (public.addon_rule_to_category arc
-     JOIN public.addon_rule adr ON ((adr.id = arc.addon_rule_id)))
+ SELECT artc.category_id,
+    artc.addon_rule_id
+   FROM (public.addon_rule_target_category artc
+     JOIN public.addon_rule adr ON ((adr.id = artc.addon_rule_id)))
   WHERE (adr.is_active = true);
 
 
@@ -361,10 +340,10 @@ CREATE VIEW public.addon_rules_to_categories_view AS
 --
 
 CREATE VIEW public.addon_rules_to_products_view AS
- SELECT arp.product_id,
-    arp.addon_rule_id
-   FROM (public.addon_rule_to_product arp
-     JOIN public.addon_rule adr ON ((adr.id = arp.addon_rule_id)))
+ SELECT artp.product_id,
+    artp.addon_rule_id
+   FROM (public.addon_rule_target_product artp
+     JOIN public.addon_rule adr ON ((adr.id = artp.addon_rule_id)))
   WHERE (adr.is_active = true);
 
 
@@ -796,13 +775,6 @@ ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
 
 
 --
--- Name: addon id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.addon ALTER COLUMN id SET DEFAULT nextval('public.addon_id_seq'::regclass);
-
-
---
 -- Name: addon_rule id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -880,11 +852,11 @@ ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_
 
 
 --
--- Name: addon addon_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: addon_rule_addon_product addon_rule_addon_product_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.addon
-    ADD CONSTRAINT addon_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.addon_rule_addon_product
+    ADD CONSTRAINT addon_rule_addon_product_pkey PRIMARY KEY (addon_rule_id, product_id);
 
 
 --
@@ -896,19 +868,19 @@ ALTER TABLE ONLY public.addon_rule
 
 
 --
--- Name: addon_rule_to_category addon_to_category_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: addon_rule_target_category addon_rule_target_category_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.addon_rule_to_category
-    ADD CONSTRAINT addon_to_category_pkey PRIMARY KEY (addon_rule_id, category_id);
+ALTER TABLE ONLY public.addon_rule_target_category
+    ADD CONSTRAINT addon_rule_target_category_pkey PRIMARY KEY (addon_rule_id, category_id);
 
 
 --
--- Name: addon_rule_to_product addon_to_product_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: addon_rule_target_product addon_rule_target_product_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.addon_rule_to_product
-    ADD CONSTRAINT addon_to_product_pkey PRIMARY KEY (addon_rule_id, product_id);
+ALTER TABLE ONLY public.addon_rule_target_product
+    ADD CONSTRAINT addon_rule_target_product_pkey PRIMARY KEY (addon_rule_id, product_id);
 
 
 --
@@ -1104,17 +1076,10 @@ ALTER TABLE ONLY public.users
 
 
 --
--- Name: idx_addon_addon_rule_id; Type: INDEX; Schema: public; Owner: -
+-- Name: idx_addon_rule_addon_product_product_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX idx_addon_addon_rule_id ON public.addon USING btree (addon_rule_id);
-
-
---
--- Name: idx_addon_product_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_addon_product_id ON public.addon USING btree (product_id);
+CREATE INDEX idx_addon_rule_addon_product_product_id ON public.addon_rule_addon_product USING btree (product_id);
 
 
 --
@@ -1125,31 +1090,17 @@ CREATE INDEX idx_addon_rule_is_active ON public.addon_rule USING btree (is_activ
 
 
 --
--- Name: idx_addon_rule_to_category_category_id; Type: INDEX; Schema: public; Owner: -
+-- Name: idx_addon_rule_target_category_category_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX idx_addon_rule_to_category_category_id ON public.addon_rule_to_category USING btree (category_id);
-
-
---
--- Name: idx_addon_rule_to_category_rule_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_addon_rule_to_category_rule_id ON public.addon_rule_to_category USING btree (addon_rule_id);
+CREATE INDEX idx_addon_rule_target_category_category_id ON public.addon_rule_target_category USING btree (category_id);
 
 
 --
--- Name: idx_addon_rule_to_product_product_id; Type: INDEX; Schema: public; Owner: -
+-- Name: idx_addon_rule_target_product_product_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX idx_addon_rule_to_product_product_id ON public.addon_rule_to_product USING btree (product_id);
-
-
---
--- Name: idx_addon_rule_to_product_rule_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_addon_rule_to_product_rule_id ON public.addon_rule_to_product USING btree (addon_rule_id);
+CREATE INDEX idx_addon_rule_target_product_product_id ON public.addon_rule_target_product USING btree (product_id);
 
 
 --
@@ -1250,51 +1201,51 @@ CREATE TRIGGER trg_update_set_properties AFTER INSERT OR DELETE OR UPDATE ON pub
 
 
 --
--- Name: addon addon_addon_rule_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: addon_rule_addon_product addon_rule_addon_product_rule_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.addon
-    ADD CONSTRAINT addon_addon_rule_id_fkey FOREIGN KEY (addon_rule_id) REFERENCES public.addon_rule(id) ON DELETE CASCADE;
-
-
---
--- Name: addon addon_product_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.addon
-    ADD CONSTRAINT addon_product_id_fkey FOREIGN KEY (product_id) REFERENCES public.product(id) ON DELETE CASCADE;
+ALTER TABLE ONLY public.addon_rule_addon_product
+    ADD CONSTRAINT addon_rule_addon_product_rule_id_fkey FOREIGN KEY (addon_rule_id) REFERENCES public.addon_rule(id) ON DELETE CASCADE;
 
 
 --
--- Name: addon_rule_to_category addon_rule_to_category_rule_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: addon_rule_addon_product addon_rule_addon_product_product_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.addon_rule_to_category
-    ADD CONSTRAINT addon_rule_to_category_rule_id_fkey FOREIGN KEY (addon_rule_id) REFERENCES public.addon_rule(id) ON DELETE CASCADE;
-
-
---
--- Name: addon_rule_to_product addon_rule_to_product_rule_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.addon_rule_to_product
-    ADD CONSTRAINT addon_rule_to_product_rule_id_fkey FOREIGN KEY (addon_rule_id) REFERENCES public.addon_rule(id) ON DELETE CASCADE;
+ALTER TABLE ONLY public.addon_rule_addon_product
+    ADD CONSTRAINT addon_rule_addon_product_product_id_fkey FOREIGN KEY (product_id) REFERENCES public.product(id) ON DELETE CASCADE;
 
 
 --
--- Name: addon_rule_to_category addon_to_category_category_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: addon_rule_target_category addon_rule_target_category_rule_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.addon_rule_to_category
-    ADD CONSTRAINT addon_to_category_category_id_fkey FOREIGN KEY (category_id) REFERENCES public.category(id) ON DELETE CASCADE;
+ALTER TABLE ONLY public.addon_rule_target_category
+    ADD CONSTRAINT addon_rule_target_category_rule_id_fkey FOREIGN KEY (addon_rule_id) REFERENCES public.addon_rule(id) ON DELETE CASCADE;
 
 
 --
--- Name: addon_rule_to_product addon_to_product_product_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: addon_rule_target_product addon_rule_target_product_rule_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.addon_rule_to_product
-    ADD CONSTRAINT addon_to_product_product_id_fkey FOREIGN KEY (product_id) REFERENCES public.product(id) ON DELETE CASCADE;
+ALTER TABLE ONLY public.addon_rule_target_product
+    ADD CONSTRAINT addon_rule_target_product_rule_id_fkey FOREIGN KEY (addon_rule_id) REFERENCES public.addon_rule(id) ON DELETE CASCADE;
+
+
+--
+-- Name: addon_rule_target_category addon_rule_target_category_category_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.addon_rule_target_category
+    ADD CONSTRAINT addon_rule_target_category_category_id_fkey FOREIGN KEY (category_id) REFERENCES public.category(id) ON DELETE CASCADE;
+
+
+--
+-- Name: addon_rule_target_product addon_rule_target_product_product_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.addon_rule_target_product
+    ADD CONSTRAINT addon_rule_target_product_product_id_fkey FOREIGN KEY (product_id) REFERENCES public.product(id) ON DELETE CASCADE;
 
 
 --
@@ -1414,4 +1365,3 @@ ALTER TABLE ONLY public.set_item
 --
 
 \unrestrict gZsoXxHa1AU5OCW1ratrGv0QMc8uhy6vKrq4uMOJGg69WBgaR8Zz3UczbE1lv2B
-

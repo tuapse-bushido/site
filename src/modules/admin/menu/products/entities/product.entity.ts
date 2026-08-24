@@ -1,49 +1,33 @@
 import { z } from 'zod';
+import { Ingredient } from 'modules/admin/menu/ingredients/entities';
+import { Category } from 'shared/entites/category';
+import {
+  booleanSchemaFromLabels,
+  imageFileSchema,
+  nonNegativeNumberSchema,
+  stringToArrayNumberSchema,
+} from 'modules/admin/shared/utils/validators.schema';
 
-/**
- * Zod schema for a product.
- *
- * Fields:
- * - id (number): Unique identifier of the product.
- * - title (string): Product name.
- * - is_active (boolean): Whether the product is active.
- * - is_visible (boolean): Whether the product is visible to users.
- * - is_set (boolean): Whether the product is a set of items.
- * - slug (string): URL-friendly unique identifier.
- * - image_link (string): URL of the product image.
- * - price (number): Product price (non-negative).
- * - weight (number): Product weight in grams (non-negative).
- * - count_portion (number): Number of portions (non-negative).
- * - quantity (number): Total quantity of this product (non-negative).
- *
- * ---
- * Схема Zod для товара.
- *
- * Поля:
- * - id (number): Уникальный идентификатор товара.
- * - title (string): Название товара.
- * - is_active (boolean): Признак того, что товар активен.
- * - is_visible (boolean): Признак того, что товар видим пользователям.
- * - is_set (boolean): Является ли товар набором (сетом).
- * - slug (string): Уникальный идентификатор для URL.
- * - image_link (string): Ссылка на изображение товара.
- * - price (number): Цена товара (неотрицательное число).
- * - weight (number): Вес товара в граммах (неотрицательное число).
- * - count_portion (number): Количество порций (неотрицательное число).
- * - quantity (number): Количество единиц товара (неотрицательное число).
- */
-export const productSchema = z.object({
-  id: z.number(),
-  title: z.string(),
+const baseProductSchema = z.object({
+  id: z.coerce.number().int().positive('Некорректный ID'),
+
+  title: z
+    .string()
+    .trim()
+    .toLowerCase()
+    .transform((val): string => val.replace(/\s+/g, ' '))
+    .pipe(z.string().min(1, 'Укажите название продукта').max(50, 'Название слишком длинное (макс. 50 символов)')),
+
   is_active: z.boolean(),
   is_visible: z.boolean(),
   is_set: z.boolean(),
+
   slug: z.string(),
-  image_link: z.string(),
+  image_link: z.string().trim().default('no-image.png'),
   price: z.coerce.number(),
-  weight: z.number(),
-  count_portion: z.number(),
-  quantity: z.number(),
+  weight: z.coerce.number(),
+  count_portion: z.coerce.number(),
+  quantity: z.coerce.number(),
 });
 
 const idTitleSchema = z.object({
@@ -51,20 +35,97 @@ const idTitleSchema = z.object({
   title: z.string(),
 });
 
-export const productWithDetailSchema = productSchema.extend({
+const productWithDetailSchema = baseProductSchema.extend({
   ingredients: z.array(idTitleSchema),
   categories: z.array(idTitleSchema),
   set_items: z.array(idTitleSchema),
 });
 
-export const productArraySchema = z.array(productSchema);
-export const productWithDetailArraySchema = z.array(productWithDetailSchema);
+const productFormSchema = productWithDetailSchema.omit({ image_link: true }).extend({
+  image_file: imageFileSchema,
+  current_image: z.string().trim(),
 
-/**
- * Inferred TypeScript type for a product.
- *
- * ---
- * Тип товара, выведенный из схемы.
- */
-export type Product = z.infer<typeof productSchema>;
-export type ProductWithDetails = z.infer<typeof productWithDetailSchema>;
+  is_active: booleanSchemaFromLabels({
+    true: 'Активно',
+    false: 'Неактивно',
+  }),
+  is_visible: booleanSchemaFromLabels({
+    true: 'Видим',
+    false: 'Скрыт',
+  }),
+  is_set: booleanSchemaFromLabels({
+    true: 'Сет',
+    false: 'Блюдо',
+  }),
+
+  slug: z.string().trim(),
+
+  price: nonNegativeNumberSchema,
+  weight: nonNegativeNumberSchema,
+  count_portion: nonNegativeNumberSchema,
+  quantity: nonNegativeNumberSchema,
+
+  ingredients: stringToArrayNumberSchema,
+  categories: stringToArrayNumberSchema,
+  set_items: stringToArrayNumberSchema,
+});
+
+// RELATIONS
+const productIngredientSchema = z.object({
+  product_id: z.number(),
+  ingredient_id: z.number(),
+});
+
+const productCategorySchema = z.object({
+  product_id: z.number(),
+  category_id: z.number(),
+});
+
+const productSetItemSchema = z.object({
+  set_product_id: z.number(),
+  product_id: z.number(),
+});
+
+export const productSchemas = {
+  base: baseProductSchema,
+  array: z.array(baseProductSchema),
+  details: productWithDetailSchema,
+  insert: baseProductSchema.omit({ id: true }),
+  upsert: baseProductSchema.partial({ id: true }),
+  form: {
+    create: productFormSchema.omit({ id: true }),
+    update: productFormSchema.partial({ id: true }),
+  },
+  relations: {
+    ingredients: {
+      base: productIngredientSchema,
+      array: z.array(productIngredientSchema),
+    },
+    categories: {
+      base: productCategorySchema,
+      array: z.array(productCategorySchema),
+    },
+    set_items: {
+      base: productSetItemSchema,
+      array: z.array(productSetItemSchema),
+    },
+  },
+};
+
+export type Product = z.infer<typeof productSchemas.base>;
+export type ProductWithDetails = z.infer<typeof productSchemas.details>;
+export type ProductEditData = {
+  product?: ProductWithDetails;
+  ingredients: Ingredient[];
+  categories: Category[];
+  products: Product[];
+};
+
+export type InsertProduct = z.infer<typeof productSchemas.insert>;
+export type UpsertProduct = z.infer<typeof productSchemas.upsert>;
+
+export type UpsertProductForm = z.infer<typeof productSchemas.form.update>;
+
+export type ProductIngredientRelation = z.infer<typeof productSchemas.relations.ingredients.base>;
+export type ProductCategoryRelation = z.infer<typeof productSchemas.relations.categories.base>;
+export type ProductSetItemRelation = z.infer<typeof productSchemas.relations.set_items.base>;

@@ -1,7 +1,7 @@
 import { JSX } from 'react';
 import { cacheLife, cacheTag } from 'next/cache';
-import { ingredientRepo } from 'modules/admin/menu/ingredients/repository';
 import { IngredientsScreen } from 'modules/admin/menu/ingredients';
+import { ingredientRepo } from 'modules/admin/menu/ingredients/repository';
 
 export default async function IngredientsPage(): Promise<JSX.Element | null> {
   'use cache';

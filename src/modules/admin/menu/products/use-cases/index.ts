@@ -1,1 +1,1 @@
-export * from './product.cases';
+export { productCases } from './product.cases';

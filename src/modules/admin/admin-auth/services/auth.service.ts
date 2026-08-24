@@ -48,10 +48,12 @@ export const startSession = async (user: Admin): Promise<void> => {
   // Извлекаем ID из результата
   const refreshTokenId = refreshSessionResult.data.id;
 
+  const isProd = process.env.NODE_ENV === 'production';
+
   const cookieOptions = {
     httpOnly: true,
-    secure: true,
-    sameSite: 'strict' as const,
+    secure: isProd,
+    sameSite: isProd ? ('strict' as const) : ('lax' as const),
     path: '/',
   };
 

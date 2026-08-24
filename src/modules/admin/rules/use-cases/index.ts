@@ -1,1 +1,1 @@
-export { getAddonRuleEditData, upsertAddonRuleCase } from './addon-rule.case';
+export { addonRuleCases } from './addon-rule.case';

@@ -1,6 +1,6 @@
 import { JSX } from 'react';
 import { cacheLife, cacheTag } from 'next/cache';
-import { RulesScreen } from 'modules/admin/rules';
+import { AddonRulesScreen } from 'modules/admin/rules';
 import { addonRuleRepo } from 'modules/admin/rules/repository';
 
 export default async function RulesPage(): Promise<JSX.Element | null> {
@@ -8,9 +8,9 @@ export default async function RulesPage(): Promise<JSX.Element | null> {
   cacheLife('admin');
   cacheTag('admin-pages', 'rules-page');
 
-  const rules = await addonRuleRepo.rule.getAddonRules();
+  const rules = await addonRuleRepo.getAddonRules();
 
   if (!rules.ok) return null;
 
-  return <RulesScreen rules={rules.data} />;
+  return <AddonRulesScreen rules={rules.data} />;
 }

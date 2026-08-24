@@ -1,5 +1,4 @@
-import { JSX, Suspense } from 'react';
-import { FormShell } from 'modules/admin/shared/ui/form-shell/form-shell';
+import { JSX } from 'react';
 import { UpdateIngredientScreen } from 'modules/admin/menu/ingredients/screens';
 
 export default async function UpdateIngredientPage({
@@ -7,16 +6,5 @@ export default async function UpdateIngredientPage({
 }: {
   params: Promise<{ id: string }>;
 }): Promise<JSX.Element | null> {
-  return (
-    <UpdateIngredientScreen>
-      <Suspense fallback="loading your inbox...">
-        <FormShell
-          params={params}
-          token="ingredient"
-          cacheProfile={'admin'}
-          tagConfig={{ base: 'admin-pages', prefix: 'ingredient-page-' }}
-        />
-      </Suspense>
-    </UpdateIngredientScreen>
-  );
+  return <UpdateIngredientScreen params={params} />;
 }

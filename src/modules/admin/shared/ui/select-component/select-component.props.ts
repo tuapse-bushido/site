@@ -7,6 +7,8 @@ type BaseProps = {
   label: string;
   name: string;
   options: readonly Option[];
+  error?: boolean;
+  helperText?: string | undefined;
 };
 
 type SingleProps = BaseProps & {

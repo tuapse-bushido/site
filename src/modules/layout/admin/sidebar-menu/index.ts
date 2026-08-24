@@ -1,1 +1,1 @@
-export { AdminSidebarMenu } from './ui/sidebar-menu/sidebar-menu';
+export { AdminSidebar } from './ui';

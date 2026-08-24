@@ -1,117 +1,230 @@
-import { dbQuery } from 'shared/utils/db.utils';
-import { cacheLife, cacheTag } from 'next/cache';
-import { ProductEditData } from './product.cases.types';
+import { logger } from 'shared/utils/logger';
+
 import { ActionResult } from 'shared/types/action.types';
 import { ErrorCode } from 'shared/types/error-codes.types';
-import { getAllCategories } from 'modules/admin/menu/categories';
-import { getAllProducts } from 'modules/admin/menu/products/repository';
+import { actionError, actionSuccess } from 'modules/admin/shared/utils/action.utils';
+
+import { productRepo } from 'modules/admin/menu/products/repository';
+import { categoryRepo } from 'modules/admin/menu/categories/repository';
 import { ingredientRepo } from 'modules/admin/menu/ingredients/repository';
-import { actionError, actionSuccess, unwrap } from 'modules/admin/shared/utils/action.utils';
-import { ProductWithDetails, productWithDetailSchema } from 'modules/admin/menu/products/entities';
 
-/**
- * Fetches a product along with its ingredients, categories, and set items.
- *
- * ---
- * Получает товар по ID, включая ингредиенты, категории и состав сета.
- *
- * @param {number} id - ID товара
- * @returns {Promise<ActionResult<ProductWithDetails>>} Подробная информация о товаре или ошибка.
- *
- * @example
- * const result = await getProductWithDetails(42);
- */
-export const getProductWithDetails = async (id: number): Promise<ActionResult<ProductWithDetails>> => {
-  'use cache';
-  cacheLife('admin');
-  cacheTag(`product-details-${id}`);
+import {
+  Product,
+  ProductCategoryRelation,
+  ProductEditData,
+  ProductIngredientRelation,
+  ProductSetItemRelation,
+  UpsertProduct,
+} from 'modules/admin/menu/products/entities';
+import { pool } from 'shared/configs/db';
+import { productService } from 'modules/admin/menu/products/services/product.service';
+import { productRelationsService } from 'modules/admin/menu/products/services';
 
-  const query = `
-    WITH set_items_cte AS (SELECT si.set_product_id AS product_id,
-                                  jsonb_agg(jsonb_build_object
-                                            ('id', sp.id,
-                                             'title', sp.title)
-                                  )                 AS set_items
-                           FROM set_item si
-                                  JOIN product sp ON sp.id = si.product_id
-                           GROUP BY si.set_product_id),
+export const productCases = {
+  async getProductEditData(id?: number): Promise<ActionResult<ProductEditData>> {
+    try {
+      const [ingredientsResult, categoriesResult, productsResult, productResult] = await Promise.all([
+        ingredientRepo.getAllIngredients(),
+        categoryRepo.getAllCategories(),
+        productRepo.getAllProducts(),
+        id === undefined ? Promise.resolve(null) : productRepo.getProductWithDetails(id),
+      ]);
 
-         ingredients_cte AS (SELECT pi.product_id,
-                                    jsonb_agg(
-                                      jsonb_build_object(
-                                        'id', i.id,
-                                        'title', i.title
-                                      )
-                                    ) AS ingredients
-                             FROM product_ingredient pi
-                                    JOIN ingredient i ON i.id = pi.ingredient_id
-                             GROUP BY pi.product_id),
+      // Основной запрошенный ресурс
+      if (productResult && !productResult.ok) {
+        logger.warn({
+          msg: 'PRODUCT_EDIT_PRODUCT_LOAD_FAILED',
+          productId: id,
+          code: productResult.code,
+          details: productResult.options.details,
+        });
 
-         categories_cte AS (SELECT pc.product_id,
-                                   jsonb_agg(
-                                     jsonb_build_object(
-                                       'id', c.id,
-                                       'title', c.title
-                                     )
-                                   ) AS categories
-                            FROM product_category pc
-                                   JOIN category c ON c.id = pc.category_id
-                            GROUP BY pc.product_id)
+        return actionError(productResult.code === ErrorCode.NOT_FOUND ? ErrorCode.NOT_FOUND : ErrorCode.DB_ERROR);
+      }
 
-    SELECT p.id,
-           p.title,
-           p.is_active,
-           p.is_visible,
-           p.slug,
-           p.image_link,
-           p.price,
-           p.weight,
-           p.count_portion,
-           p.quantity,
-           p.is_set,
+      // Вспомогательные данные формы рассматриваем как единый набор
+      if (!ingredientsResult.ok || !categoriesResult.ok || !productsResult.ok) {
+        logger.error({
+          msg: 'PRODUCT_EDIT_OPTIONS_LOAD_FAILED',
+          productId: id,
+          errors: {
+            ingredients: ingredientsResult.ok ? null : ingredientsResult.code,
+            categories: categoriesResult.ok ? null : categoriesResult.code,
+            products: productsResult.ok ? null : productsResult.code,
+          },
+        });
 
-           COALESCE(si.set_items, '[]'::jsonb)  AS set_items,
-           COALESCE(i.ingredients, '[]'::jsonb) AS ingredients,
-           COALESCE(c.categories, '[]'::jsonb)  AS categories
+        return actionError(ErrorCode.DB_ERROR);
+      }
 
-    FROM product p
-           LEFT JOIN set_items_cte si ON si.product_id = p.id
-           LEFT JOIN ingredients_cte i ON i.product_id = p.id
-           LEFT JOIN categories_cte c ON c.product_id = p.id
+      const baseData = {
+        ingredients: ingredientsResult.data,
+        categories: categoriesResult.data,
+        products: productsResult.data,
+      };
 
-    WHERE p.id = $1;
-  `;
+      // Создание продукта
+      if (!productResult) {
+        return actionSuccess(baseData);
+      }
 
-  return dbQuery(query, [id], productWithDetailSchema);
-};
+      // Редактирование продукта
+      const product = productResult.data;
 
-export const getProductEditData = async (id?: number): Promise<ActionResult<ProductEditData>> => {
-  try {
-    const [ingredients, categories, products] = await Promise.all([
-      ingredientRepo.getAllIngredients().then(unwrap),
-      getAllCategories().then(unwrap),
-      getAllProducts().then(unwrap),
-    ]);
-
-    if (!id) {
       return actionSuccess({
-        ingredients,
-        categories,
-        products,
+        ...baseData,
+        product,
+        products: baseData.products.filter(({ id }): boolean => id !== product.id),
       });
+    } catch (error) {
+      logger.error({
+        msg: 'PRODUCT_EDIT_DATA_UNEXPECTED_FAILURE',
+        productId: id,
+        error: error instanceof Error ? error.message : error,
+      });
+
+      return actionError(ErrorCode.UNKNOWN);
     }
+  },
 
-    const product = await getProductWithDetails(id).then(unwrap);
+  async upsertProductCase(
+    product: UpsertProduct,
+    ingredients: number[] | null,
+    categories: number[] | null,
+    setItems: number[] | null,
+    mode: 'insert' | 'update',
+  ): Promise<ActionResult<Product>> {
+    const client = await pool.connect();
 
-    const filteredProducts = products.filter((p): boolean => p.id !== product.id);
+    try {
+      await client.query('BEGIN');
 
-    return actionSuccess({
-      product,
-      ingredients,
-      categories,
-      products: filteredProducts,
-    });
-  } catch {
-    return actionError(ErrorCode.DB_ERROR);
-  }
+      const productResult = await productService.syncProduct(product, mode, client);
+
+      if (!productResult.ok) {
+        await client.query('ROLLBACK');
+        return productResult;
+      }
+
+      const productId = productResult.data.id;
+
+      const relationOperations = [
+        {
+          field: 'ingredients',
+          ids: ingredients,
+          sync: (ids: number[]): Promise<ActionResult<ProductIngredientRelation[]>> =>
+            productRelationsService.ingredients.syncIngredientsRelation(productId, ids, mode, client),
+        },
+        {
+          field: 'categories',
+          ids: categories,
+          sync: (ids: number[]): Promise<ActionResult<ProductCategoryRelation[]>> =>
+            productRelationsService.categories.syncCategoriesRelation(productId, ids, mode, client),
+        },
+        {
+          field: 'set_items',
+          ids: setItems,
+          sync: (ids: number[]): Promise<ActionResult<ProductSetItemRelation[]>> =>
+            productRelationsService.setItems.syncSetItemsRelation(productId, ids, mode, client),
+        },
+      ] as const;
+
+      for (const operation of relationOperations) {
+        if (mode === 'insert' && operation.ids === null) {
+          continue;
+        }
+
+        const result = await operation.sync(operation.ids ?? []);
+
+        if (!result.ok) {
+          await client.query('ROLLBACK');
+
+          return actionError(result.code, {
+            details: {
+              field: operation.field,
+              cause: result.options.details,
+            },
+          });
+        }
+      }
+
+      await client.query('COMMIT');
+
+      return productResult;
+    } catch (error) {
+      await client.query('ROLLBACK');
+
+      logger.error({
+        msg: 'UPSERT_PRODUCT_TRANSACTION_FAILED',
+        data: { product, ingredients, categories, setItems },
+        mode,
+        error: error instanceof Error ? error.message : error,
+      });
+
+      return actionError(ErrorCode.UNKNOWN);
+    } finally {
+      client.release();
+    }
+  },
+
+  async deleteProductCase(productId: number): Promise<ActionResult<null>> {
+    const client = await pool.connect();
+
+    try {
+      await client.query('BEGIN');
+
+      const deleteOperations = [
+        {
+          field: 'ingredients',
+          execute: (): Promise<ActionResult<null>> =>
+            productRelationsService.ingredients.syncDeleteIngredientsRelation(productId, client),
+        },
+        {
+          field: 'categories',
+          execute: (): Promise<ActionResult<null>> =>
+            productRelationsService.categories.syncDeleteCategoriesRelation(productId, client),
+        },
+        {
+          field: 'set_items',
+          execute: (): Promise<ActionResult<null>> =>
+            productRelationsService.setItems.syncDeleteSetItemsRelation(productId, client),
+        },
+        {
+          field: 'product',
+          execute: (): Promise<ActionResult<null>> => productService.syncDeleteProduct(productId, client),
+        },
+      ] as const;
+
+      for (const operation of deleteOperations) {
+        const result = await operation.execute();
+
+        if (!result.ok) {
+          await client.query('ROLLBACK');
+
+          return actionError(result.code, {
+            details: {
+              field: operation.field,
+              cause: result.options.details,
+            },
+          });
+        }
+      }
+
+      await client.query('COMMIT');
+
+      return actionSuccess(null);
+    } catch (error) {
+      await client.query('ROLLBACK');
+
+      logger.error({
+        msg: 'DELETE_PRODUCT_TRANSACTION_FAILED',
+        productId,
+        error: error instanceof Error ? error.message : error,
+      });
+
+      return actionError(ErrorCode.UNKNOWN);
+    } finally {
+      client.release();
+    }
+  },
 };

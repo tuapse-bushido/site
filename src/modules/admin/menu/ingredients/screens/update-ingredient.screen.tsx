@@ -1,18 +1,22 @@
-import { JSX, ReactNode } from 'react';
-import { MuiDivider, MuiStack, MuiTypography } from 'modules/admin/shared/ui/mui';
+import { JSX, Suspense } from 'react';
+import { PageContainer } from 'modules/admin/shared/ui/page-container';
+import { FormShell } from 'modules/admin/shared/ui/form-shell/form-shell';
 
 type Props = {
-  children: ReactNode;
+  params: Promise<{ id: string }>;
 };
 
-export const UpdateIngredientScreen = ({ children }: Props): JSX.Element => {
+export const UpdateIngredientScreen = ({ params }: Props): JSX.Element => {
   return (
-    <MuiStack direction={'column'} gap={4} height={'100%'}>
-      <MuiTypography variant={'h1'}>Редактирование ингредиента</MuiTypography>
-
-      <MuiDivider />
-
-      {children}
-    </MuiStack>
+    <PageContainer title={'Редактирование ингредиента'}>
+      <Suspense fallback="loading your inbox...">
+        <FormShell
+          params={params}
+          token="ingredient"
+          cacheProfile={'admin'}
+          tagConfig={{ base: 'admin-pages', prefix: 'ingredient-page-' }}
+        />
+      </Suspense>
+    </PageContainer>
   );
 };

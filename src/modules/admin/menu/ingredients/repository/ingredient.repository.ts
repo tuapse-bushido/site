@@ -17,9 +17,8 @@ export const ingredientRepo = {
     FROM ingredient
     WHERE id = $1;
   `;
-    const params = [id];
 
-    return dbQuery(query, params, schemas.base);
+    return dbQuery(query, [id], schemas.base);
   },
 
   async getAllIngredients(): Promise<ActionResult<Ingredient[]>> {

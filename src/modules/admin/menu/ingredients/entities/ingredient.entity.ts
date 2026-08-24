@@ -16,7 +16,6 @@ export const ingredientSchemas = {
   array: z.array(baseIngredientSchema),
   create: baseIngredientSchema.omit({ id: true }),
   update: baseIngredientSchema,
-  delete: baseIngredientSchema.omit({ title: true }),
   upsert: baseIngredientSchema.partial({ id: true }),
 };
 
