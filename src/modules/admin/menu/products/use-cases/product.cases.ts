@@ -166,4 +166,65 @@ export const productCases = {
       client.release();
     }
   },
+
+  async deleteProductCase(productId: number): Promise<ActionResult<null>> {
+    const client = await pool.connect();
+
+    try {
+      await client.query('BEGIN');
+
+      const deleteOperations = [
+        {
+          field: 'ingredients',
+          execute: (): Promise<ActionResult<null>> =>
+            productRelationsService.ingredients.syncDeleteIngredientsRelation(productId, client),
+        },
+        {
+          field: 'categories',
+          execute: (): Promise<ActionResult<null>> =>
+            productRelationsService.categories.syncDeleteCategoriesRelation(productId, client),
+        },
+        {
+          field: 'set_items',
+          execute: (): Promise<ActionResult<null>> =>
+            productRelationsService.setItems.syncDeleteSetItemsRelation(productId, client),
+        },
+        {
+          field: 'product',
+          execute: (): Promise<ActionResult<null>> => productService.syncDeleteProduct(productId, client),
+        },
+      ] as const;
+
+      for (const operation of deleteOperations) {
+        const result = await operation.execute();
+
+        if (!result.ok) {
+          await client.query('ROLLBACK');
+
+          return actionError(result.code, {
+            details: {
+              field: operation.field,
+              cause: result.options.details,
+            },
+          });
+        }
+      }
+
+      await client.query('COMMIT');
+
+      return actionSuccess(null);
+    } catch (error) {
+      await client.query('ROLLBACK');
+
+      logger.error({
+        msg: 'DELETE_PRODUCT_TRANSACTION_FAILED',
+        productId,
+        error: error instanceof Error ? error.message : error,
+      });
+
+      return actionError(ErrorCode.UNKNOWN);
+    } finally {
+      client.release();
+    }
+  },
 };
