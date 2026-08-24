@@ -3,7 +3,7 @@
 import { deleteProductAction, upsertProductAction } from '../api';
 import { JSX, useActionState, useState } from 'react';
 import { Checkbox, FormControlLabel } from '@mui/material';
-import { optionsMapper } from 'modules/admin/menu/products';
+import { optionsMapper } from 'modules/admin/shared/config/options-mapper';
 import { PickedImage } from 'modules/admin/shared/ui/picked-image';
 import { ProductEditData, UpsertProductForm } from 'modules/admin/menu/products/entities';
 import { EntityFormActions } from 'modules/admin/shared/features/entity-form-actions';
