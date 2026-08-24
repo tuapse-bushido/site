@@ -23,7 +23,7 @@ export const EntityPage = <T,>({ type, data }: Props<T>): JSX.Element => {
         <EntityToolbar
           search={search}
           onSearchChange={setSearch}
-          addHref={config.href.create}
+          {...(config.href.create !== undefined ? { addHref: config.href.create } : {})}
           addTitle={config.label.singular}
         />
       }
