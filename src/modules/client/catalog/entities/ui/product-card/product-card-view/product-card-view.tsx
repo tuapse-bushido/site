@@ -40,7 +40,7 @@ export const ProductCardView = ({ product }: ProductCardViewProps): JSX.Element 
             <span>{product.price} ₽</span>
           </div>
 
-          {/*<ButtonCardMain product={product} />*/}
+          <ButtonCardMain product={product} />
         </div>
       </div>
     </div>
