@@ -17,11 +17,6 @@ export const CategoryFormContent = ({ category }: Props): JSX.Element => {
   const boundAction = upsertCategoryAction.bind(null, category?.id ?? null);
   const [state, formAction] = useActionState(boundAction, null);
 
-  const handleReset = (): void => {
-    const form = document.getElementById('category-form') as HTMLFormElement | null;
-    form?.reset();
-  };
-
   const getFieldError = (field: keyof UpsertFormCategory): string | undefined => {
     if (!state?.fieldErrors) return undefined;
 
@@ -86,12 +81,7 @@ export const CategoryFormContent = ({ category }: Props): JSX.Element => {
         </MuiAlert>
       )}
 
-      <EntityFormActions
-        id={category?.id}
-        cancelPath="/admin/menu/categories"
-        onDeleteAction={deleteCategoryAction}
-        setFormKeyAction={handleReset}
-      />
+      <EntityFormActions id={category?.id} cancelPath="/admin/menu/categories" onDeleteAction={deleteCategoryAction} />
     </MuiStack>
   );
 };
