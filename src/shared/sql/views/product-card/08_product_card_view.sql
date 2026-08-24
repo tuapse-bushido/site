@@ -1,4 +1,66 @@
-CREATE VIEW product_card_view AS
+CREATE OR REPLACE VIEW product_card_view AS
+WITH addon_rule_assignments AS (
+    SELECT atp.product_id,
+           ara.addon_rule_id,
+           ara.base_count,
+           ara.divisor,
+           ara.show_count_percent,
+           ara.addon_products
+    FROM addon_rules_to_products_view atp
+             JOIN addon_rule_with_addons_view ara
+                  ON ara.addon_rule_id = atp.addon_rule_id
+
+    UNION
+
+    SELECT pcp.product_id,
+           ara.addon_rule_id,
+           ara.base_count,
+           ara.divisor,
+           ara.show_count_percent,
+           ara.addon_products
+    FROM product_category pcp
+             JOIN addon_rules_to_categories_view atc
+                  ON atc.category_id = pcp.category_id
+             JOIN addon_rule_with_addons_view ara
+                  ON ara.addon_rule_id = atc.addon_rule_id
+),
+product_addons AS (
+    SELECT product_id,
+           JSONB_AGG(
+                   JSONB_BUILD_OBJECT(
+                           'addon_rule_id', addon_rule_id,
+                           'base_count', base_count,
+                           'divisor', divisor,
+                           'show_count_percent', show_count_percent,
+                           'addon_products', addon_products
+                   )
+                   ORDER BY addon_rule_id
+           ) AS addons
+    FROM addon_rule_assignments
+    GROUP BY product_id
+),
+product_set_items AS (
+    SELECT set_id,
+           JSONB_AGG(
+                   JSONB_BUILD_OBJECT(
+                           'id', id,
+                           'title', title,
+                           'is_active', is_active,
+                           'is_visible', is_visible,
+                           'is_set', is_set,
+                           'slug', slug,
+                           'image_link', image_link,
+                           'price', price,
+                           'weight', weight,
+                           'count_portion', count_portion,
+                           'quantity', quantity,
+                           'ingredients', ingredients
+                   )
+                   ORDER BY id
+           ) AS set_items
+    FROM set_items_with_ingredients_view
+    GROUP BY set_id
+)
 SELECT p.id,
        p.title,
        p.slug,
@@ -21,39 +83,10 @@ SELECT p.id,
        COALESCE(pd.discount_percent, 0)           AS discount_percent,
 
        -- Добавки
-       COALESCE(
-                       JSONB_AGG(
-                       JSONB_BUILD_OBJECT(
-                               'addon_rule_id', adr.addon_rule_id,
-                               'base_count', adr.base_count,
-                               'divisor', adr.divisor,
-                               'show_count_percent', adr.show_count_percent,
-                               'addon_products', adr.addon_products
-                       )
-                                ) FILTER (WHERE adr.addon_rule_id IS NOT NULL),
-                       '[]'::jsonb
-       )                                          AS addons,
+       COALESCE(pa.addons, '[]'::jsonb)           AS addons,
 
        -- Состав сета
-       COALESCE(
-                       JSONB_AGG(
-                       JSONB_BUILD_OBJECT(
-                               'id', si.id,
-                               'title', si.title,
-                               'is_active', si.is_active,
-                               'is_visible', si.is_visible,
-                               'is_set', si.is_set,
-                               'slug', si.slug,
-                               'image_link', si.image_link,
-                               'price', si.price,
-                               'weight', si.weight,
-                               'count_portion', si.count_portion,
-                               'quantity', si.quantity,
-                               'ingredients', si.ingredients
-                       )
-                                ) FILTER (WHERE si.id IS NOT NULL),
-                       '[]'::jsonb
-       )                                          AS set_items
+       COALESCE(psi.set_items, '[]'::jsonb)       AS set_items
 
 FROM product p
 -- Ингредиенты
@@ -66,47 +99,12 @@ FROM product p
          LEFT JOIN product_discount_percent_view pd
                    ON pd.product_id = p.id
 -- Добавки (из продуктов и категорий)
-         LEFT JOIN (SELECT atp.product_id,
-                           ara.addon_rule_id,
-                           ara.base_count,
-                           ara.divisor,
-                           ara.show_count_percent,
-                           ara.addon_products
-                    FROM addon_rules_to_products_view atp
-                             JOIN addon_rule_with_addons_view ara
-                                  ON ara.addon_rule_id = atp.addon_rule_id
-
-                    UNION ALL
-
-                    SELECT pcp.product_id,
-                           ara.addon_rule_id,
-                           ara.base_count,
-                           ara.divisor,
-                           ara.show_count_percent,
-                           ara.addon_products
-                    FROM product_category pcp
-                             JOIN addon_rules_to_categories_view atc
-                                  ON atc.category_id = pcp.category_id
-                             JOIN addon_rule_with_addons_view ara
-                                  ON ara.addon_rule_id = atc.addon_rule_id) adr
-                   ON adr.product_id = p.id
+         LEFT JOIN product_addons pa
+                   ON pa.product_id = p.id
 
 -- Состав сета
-         LEFT JOIN set_items_with_ingredients_view si
-                   ON si.set_id = p.id
+         LEFT JOIN product_set_items psi
+                   ON psi.set_id = p.id
 
 WHERE p.is_active = true
-  AND p.is_visible = true
-
-GROUP BY p.id,
-         p.title,
-         p.slug,
-         p.image_link,
-         p.price,
-         p.weight,
-         p.count_portion,
-         p.quantity,
-         p.is_set,
-         pi.ingredients,
-         pc.category_ids,
-         pd.discount_percent;
+  AND p.is_visible = true;
