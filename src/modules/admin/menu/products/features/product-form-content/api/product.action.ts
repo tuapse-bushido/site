@@ -4,7 +4,6 @@ import { updateTag } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { FormState } from 'shared/types/form.types';
 import { uploadImage } from 'modules/admin/shared/api/upload-image';
-import { productService } from 'modules/admin/menu/products/services';
 import { productCases } from 'modules/admin/menu/products/use-cases';
 import { transliterate } from 'modules/admin/shared/utils/transliterate.utils';
 import { formErrorNew, parsedFormDataNew } from 'modules/admin/shared/utils/form.utils';
@@ -62,7 +61,7 @@ export const upsertProductAction = async (
 };
 
 export const deleteProductAction = async (productId: number): Promise<FormState<null>> => {
-  const response = await productService.syncDeleteProduct(productId);
+  const response = await productCases.deleteProductCase(productId);
 
   if (!response.ok) {
     return formErrorNew({
