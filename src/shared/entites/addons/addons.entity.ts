@@ -40,23 +40,22 @@ export const addonRuleSchema = z.object({
  */
 // export type AddonRule = z.infer<typeof addonRuleSchema>;
 
-export const addonSchema = z.object({
-  id: z.number(),
+export const addonRuleAddonProductSchema = z.object({
   addon_rule_id: z.number(),
   product_id: z.number(),
 });
-export const addonArraySchema = z.array(addonSchema);
+export const addonRuleAddonProductArraySchema = z.array(addonRuleAddonProductSchema);
 
-export const addonRuleToProductSchema = z.object({
+export const addonRuleTargetProductSchema = z.object({
   addon_rule_id: z.number(),
   product_id: z.number(),
 });
-export const addonRuleToProductArraySchema = z.array(addonRuleToProductSchema);
-export const addonRuleToCategorySchema = z.object({
+export const addonRuleTargetProductArraySchema = z.array(addonRuleTargetProductSchema);
+export const addonRuleTargetCategorySchema = z.object({
   addon_rule_id: z.number(),
   category_id: z.number(),
 });
-export const addonRuleToCategoryArraySchema = z.array(addonRuleToCategorySchema);
+export const addonRuleTargetCategoryArraySchema = z.array(addonRuleTargetCategorySchema);
 
 const addonProductSchema = z.object({
   addon_product_id: z.number(),
