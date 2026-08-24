@@ -2,7 +2,7 @@
  * View providing addon rules with pre-resolved addon product data.
  *
  * Technical specifications:
- * - Base: addon_rule joined with addon → product
+ * - Base: addon_rule joined with addon_rule_addon_product → product
  * - Additional joins:
  *     - product_ingredients_view (ingredients)
  *     - product_categories_view (category_ids)
@@ -23,7 +23,7 @@
  * соответствующими этим правилам.
  *
  * Технические характеристики:
- * - Основные связи: addon_rule → addon → product
+ * - Основные связи: addon_rule → addon_rule_addon_product → product
  * - Дополнительные данные:
  *     - ингредиенты (product_ingredients_view)
  *     - категории (product_categories_view)
@@ -75,10 +75,10 @@ SELECT
     ) AS addon_products
 
 FROM addon_rule adr
-         JOIN addon a
-              ON a.addon_rule_id = adr.id
+         JOIN addon_rule_addon_product arap
+              ON arap.addon_rule_id = adr.id
          JOIN product p
-              ON p.id = a.product_id
+              ON p.id = arap.product_id
          LEFT JOIN product_discount_percent_view pd
                    ON pd.product_id = p.id
 
