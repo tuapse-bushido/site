@@ -1,1 +1,0 @@
-export { AddonRuleForm } from './ui';
