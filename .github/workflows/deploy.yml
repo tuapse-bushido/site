@@ -105,6 +105,11 @@ jobs:
               rsync -av /opt/bushido/app/src/shared/sql/migrations/ /opt/bushido/sql/migrations/
             fi
 
+            # Fresh PostgreSQL volumes initialize from the current schema only.
+            if [ -f /opt/bushido/app/src/shared/sql/migrations/init-schema.sql ]; then
+              cp -f /opt/bushido/app/src/shared/sql/migrations/init-schema.sql /opt/bushido/sql/init-schema.sql
+            fi
+
       - name: Restart Docker services
         uses: appleboy/ssh-action@v0.1.10
         with:
