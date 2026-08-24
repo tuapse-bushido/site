@@ -2,10 +2,10 @@
 -- PostgreSQL database dump
 --
 
-\restrict gZsoXxHa1AU5OCW1ratrGv0QMc8uhy6vKrq4uMOJGg69WBgaR8Zz3UczbE1lv2B
+\restrict SA4TG77SpYqrCb2H5AnbYoeLAWANMKTM3AiUmZra0YnVFbg0e6nCSMBXsvfMdAQ
 
--- Dumped from database version 18.3 (Ubuntu 18.3-1.pgdg24.04+1)
--- Dumped by pg_dump version 18.3 (Ubuntu 18.3-1.pgdg24.04+1)
+-- Dumped from database version 18.6 (Ubuntu 18.6-1.pgdg26.04+2)
+-- Dumped by pg_dump version 18.6 (Ubuntu 18.6-1.pgdg26.04+2)
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -94,6 +94,20 @@ CREATE TYPE public.payment_type AS ENUM (
 
 
 --
+-- Name: clean_ingredient_title(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.clean_ingredient_title() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+    NEW.title := LOWER(TRIM(NEW.title));
+    RETURN NEW;
+END;
+$$;
+
+
+--
 -- Name: update_set_properties(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -165,16 +179,6 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
--- Name: addon_rule_addon_product; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.addon_rule_addon_product (
-    addon_rule_id integer NOT NULL,
-    product_id integer NOT NULL
-);
-
-
---
 -- Name: addon_rule; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -185,6 +189,16 @@ CREATE TABLE public.addon_rule (
     divisor smallint DEFAULT 1 NOT NULL,
     show_count_percent smallint DEFAULT 50 NOT NULL,
     is_active boolean DEFAULT false
+);
+
+
+--
+-- Name: addon_rule_addon_product; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.addon_rule_addon_product (
+    addon_rule_id integer NOT NULL,
+    product_id integer NOT NULL
 );
 
 
@@ -316,8 +330,8 @@ CREATE VIEW public.addon_rule_with_addons_view AS
     adr.show_count_percent,
     COALESCE(jsonb_agg(jsonb_build_object('id', p.id, 'title', p.title, 'image_link', p.image_link, 'slug', p.slug, 'price', (p.price)::double precision, 'quantity', p.quantity, 'count_portion', p.count_portion, 'weight', p.weight, 'discount_percent', COALESCE((pd.discount_percent)::integer, 0)) ORDER BY p.id) FILTER (WHERE (p.id IS NOT NULL)), '[]'::jsonb) AS addon_products
    FROM (((public.addon_rule adr
-     JOIN public.addon_rule_addon_product arap ON ((arap.addon_rule_id = adr.id)))
-     JOIN public.product p ON ((p.id = arap.product_id)))
+     JOIN public.addon_rule_addon_product a ON ((a.addon_rule_id = adr.id)))
+     JOIN public.product p ON ((p.id = a.product_id)))
      LEFT JOIN public.product_discount_percent_view pd ON ((pd.product_id = p.id)))
   WHERE ((adr.is_active = true) AND (p.is_active = true) AND (p.is_visible = true))
   GROUP BY adr.id, adr.base_count, adr.divisor, adr.show_count_percent;
@@ -328,10 +342,10 @@ CREATE VIEW public.addon_rule_with_addons_view AS
 --
 
 CREATE VIEW public.addon_rules_to_categories_view AS
- SELECT artc.category_id,
-    artc.addon_rule_id
-   FROM (public.addon_rule_target_category artc
-     JOIN public.addon_rule adr ON ((adr.id = artc.addon_rule_id)))
+ SELECT arc.category_id,
+    arc.addon_rule_id
+   FROM (public.addon_rule_target_category arc
+     JOIN public.addon_rule adr ON ((adr.id = arc.addon_rule_id)))
   WHERE (adr.is_active = true);
 
 
@@ -340,10 +354,10 @@ CREATE VIEW public.addon_rules_to_categories_view AS
 --
 
 CREATE VIEW public.addon_rules_to_products_view AS
- SELECT artp.product_id,
-    artp.addon_rule_id
-   FROM (public.addon_rule_target_product artp
-     JOIN public.addon_rule adr ON ((adr.id = artp.addon_rule_id)))
+ SELECT arp.product_id,
+    arp.addon_rule_id
+   FROM (public.addon_rule_target_product arp
+     JOIN public.addon_rule adr ON ((adr.id = arp.addon_rule_id)))
   WHERE (adr.is_active = true);
 
 
@@ -403,7 +417,7 @@ CREATE TABLE public.category (
     title character varying(50) NOT NULL,
     is_active boolean DEFAULT true NOT NULL,
     slug character varying(50) NOT NULL,
-    image_link text,
+    image_link text DEFAULT 'no-image.png'::text,
     sort_number smallint DEFAULT 0
 );
 
@@ -572,30 +586,6 @@ ALTER SEQUENCE public.orders_id_seq OWNED BY public.orders.id;
 
 
 --
--- Name: product_card_view; Type: VIEW; Schema: public; Owner: -
---
-
-CREATE VIEW public.product_card_view AS
-SELECT
-    NULL::integer AS id,
-    NULL::character varying(50) AS title,
-    NULL::character varying(50) AS slug,
-    NULL::text AS image_link,
-    NULL::double precision AS price,
-    NULL::smallint AS weight,
-    NULL::smallint AS count_portion,
-    NULL::smallint AS quantity,
-    NULL::boolean AS is_set,
-    NULL::boolean AS is_visible,
-    NULL::boolean AS is_active,
-    NULL::character varying[] AS ingredients,
-    NULL::integer[] AS category_ids,
-    NULL::integer AS discount_percent,
-    NULL::jsonb AS addons,
-    NULL::jsonb AS set_items;
-
-
---
 -- Name: product_categories_view; Type: VIEW; Schema: public; Owner: -
 --
 
@@ -607,26 +597,6 @@ CREATE VIEW public.product_categories_view AS
      JOIN public.category c ON ((c.id = pc.category_id)))
   WHERE ((p.is_active = true) AND (p.is_visible = true) AND (c.is_active = true))
   GROUP BY pc.product_id;
-
-
---
--- Name: product_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.product_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: product_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.product_id_seq OWNED BY public.product.id;
 
 
 --
@@ -667,26 +637,6 @@ CREATE TABLE public.set_item (
 
 
 --
--- Name: set_item_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.set_item_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: set_item_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.set_item_id_seq OWNED BY public.set_item.id;
-
-
---
 -- Name: set_items_with_ingredients_view; Type: VIEW; Schema: public; Owner: -
 --
 
@@ -710,6 +660,106 @@ CREATE VIEW public.set_items_with_ingredients_view AS
      LEFT JOIN public.ingredient i ON ((i.id = pi.ingredient_id)))
   WHERE (p.is_active = true)
   GROUP BY si.set_product_id, p.id, p.title, p.is_active, p.is_visible, p.is_set, p.slug, p.image_link, p.price, p.weight, p.count_portion, p.quantity;
+
+
+--
+-- Name: product_card_view; Type: VIEW; Schema: public; Owner: -
+--
+
+CREATE VIEW public.product_card_view AS
+ WITH addon_rule_assignments AS (
+         SELECT atp.product_id,
+            ara.addon_rule_id,
+            ara.base_count,
+            ara.divisor,
+            ara.show_count_percent,
+            ara.addon_products
+           FROM (public.addon_rules_to_products_view atp
+             JOIN public.addon_rule_with_addons_view ara ON ((ara.addon_rule_id = atp.addon_rule_id)))
+        UNION
+         SELECT pcp.product_id,
+            ara.addon_rule_id,
+            ara.base_count,
+            ara.divisor,
+            ara.show_count_percent,
+            ara.addon_products
+           FROM ((public.product_category pcp
+             JOIN public.addon_rules_to_categories_view atc ON ((atc.category_id = pcp.category_id)))
+             JOIN public.addon_rule_with_addons_view ara ON ((ara.addon_rule_id = atc.addon_rule_id)))
+        ), product_addons AS (
+         SELECT addon_rule_assignments.product_id,
+            jsonb_agg(jsonb_build_object('addon_rule_id', addon_rule_assignments.addon_rule_id, 'base_count', addon_rule_assignments.base_count, 'divisor', addon_rule_assignments.divisor, 'show_count_percent', addon_rule_assignments.show_count_percent, 'addon_products', addon_rule_assignments.addon_products) ORDER BY addon_rule_assignments.addon_rule_id) AS addons
+           FROM addon_rule_assignments
+          GROUP BY addon_rule_assignments.product_id
+        ), product_set_items AS (
+         SELECT set_items_with_ingredients_view.set_id,
+            jsonb_agg(jsonb_build_object('id', set_items_with_ingredients_view.id, 'title', set_items_with_ingredients_view.title, 'is_active', set_items_with_ingredients_view.is_active, 'is_visible', set_items_with_ingredients_view.is_visible, 'is_set', set_items_with_ingredients_view.is_set, 'slug', set_items_with_ingredients_view.slug, 'image_link', set_items_with_ingredients_view.image_link, 'price', set_items_with_ingredients_view.price, 'weight', set_items_with_ingredients_view.weight, 'count_portion', set_items_with_ingredients_view.count_portion, 'quantity', set_items_with_ingredients_view.quantity, 'ingredients', set_items_with_ingredients_view.ingredients) ORDER BY set_items_with_ingredients_view.id) AS set_items
+           FROM public.set_items_with_ingredients_view
+          GROUP BY set_items_with_ingredients_view.set_id
+        )
+ SELECT p.id,
+    p.title,
+    p.slug,
+    p.image_link,
+    (p.price)::double precision AS price,
+    p.weight,
+    p.count_portion,
+    p.quantity,
+    p.is_set,
+    p.is_visible,
+    p.is_active,
+    COALESCE(pi.ingredients, (ARRAY[]::text[])::character varying[]) AS ingredients,
+    COALESCE(pc.category_ids, ARRAY[]::integer[]) AS category_ids,
+    COALESCE((pd.discount_percent)::integer, 0) AS discount_percent,
+    COALESCE(pa.addons, '[]'::jsonb) AS addons,
+    COALESCE(psi.set_items, '[]'::jsonb) AS set_items
+   FROM (((((public.product p
+     LEFT JOIN public.product_ingredients_view pi ON ((pi.product_id = p.id)))
+     LEFT JOIN public.product_categories_view pc ON ((pc.product_id = p.id)))
+     LEFT JOIN public.product_discount_percent_view pd ON ((pd.product_id = p.id)))
+     LEFT JOIN product_addons pa ON ((pa.product_id = p.id)))
+     LEFT JOIN product_set_items psi ON ((psi.set_id = p.id)))
+  WHERE ((p.is_active = true) AND (p.is_visible = true));
+
+
+--
+-- Name: product_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.product_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: product_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.product_id_seq OWNED BY public.product.id;
+
+
+--
+-- Name: set_item_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.set_item_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: set_item_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.set_item_id_seq OWNED BY public.set_item.id;
 
 
 --
@@ -1104,6 +1154,13 @@ CREATE INDEX idx_addon_rule_target_product_product_id ON public.addon_rule_targe
 
 
 --
+-- Name: idx_ingredient_title_unique; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_ingredient_title_unique ON public.ingredient USING btree (lower(TRIM(BOTH FROM title)));
+
+
+--
 -- Name: idx_product_category_category_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1146,51 +1203,10 @@ CREATE INDEX idx_set_item_set_product_id ON public.set_item USING btree (set_pro
 
 
 --
--- Name: product_card_view _RETURN; Type: RULE; Schema: public; Owner: -
+-- Name: ingredient trg_clean_title; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE OR REPLACE VIEW public.product_card_view AS
- SELECT p.id,
-    p.title,
-    p.slug,
-    p.image_link,
-    (p.price)::double precision AS price,
-    p.weight,
-    p.count_portion,
-    p.quantity,
-    p.is_set,
-    p.is_visible,
-    p.is_active,
-    COALESCE(pi.ingredients, (ARRAY[]::text[])::character varying[]) AS ingredients,
-    COALESCE(pc.category_ids, ARRAY[]::integer[]) AS category_ids,
-    COALESCE((pd.discount_percent)::integer, 0) AS discount_percent,
-    COALESCE(jsonb_agg(jsonb_build_object('addon_rule_id', adr.addon_rule_id, 'base_count', adr.base_count, 'divisor', adr.divisor, 'show_count_percent', adr.show_count_percent, 'addon_products', adr.addon_products)) FILTER (WHERE (adr.addon_rule_id IS NOT NULL)), '[]'::jsonb) AS addons,
-    COALESCE(jsonb_agg(jsonb_build_object('id', si.id, 'title', si.title, 'is_active', si.is_active, 'is_visible', si.is_visible, 'is_set', si.is_set, 'slug', si.slug, 'image_link', si.image_link, 'price', si.price, 'weight', si.weight, 'count_portion', si.count_portion, 'quantity', si.quantity, 'ingredients', si.ingredients)) FILTER (WHERE (si.id IS NOT NULL)), '[]'::jsonb) AS set_items
-   FROM (((((public.product p
-     LEFT JOIN public.product_ingredients_view pi ON ((pi.product_id = p.id)))
-     LEFT JOIN public.product_categories_view pc ON ((pc.product_id = p.id)))
-     LEFT JOIN public.product_discount_percent_view pd ON ((pd.product_id = p.id)))
-     LEFT JOIN ( SELECT atp.product_id,
-            ara.addon_rule_id,
-            ara.base_count,
-            ara.divisor,
-            ara.show_count_percent,
-            ara.addon_products
-           FROM (public.addon_rules_to_products_view atp
-             JOIN public.addon_rule_with_addons_view ara ON ((ara.addon_rule_id = atp.addon_rule_id)))
-        UNION ALL
-         SELECT pcp.product_id,
-            ara.addon_rule_id,
-            ara.base_count,
-            ara.divisor,
-            ara.show_count_percent,
-            ara.addon_products
-           FROM ((public.product_category pcp
-             JOIN public.addon_rules_to_categories_view atc ON ((atc.category_id = pcp.category_id)))
-             JOIN public.addon_rule_with_addons_view ara ON ((ara.addon_rule_id = atc.addon_rule_id)))) adr ON ((adr.product_id = p.id)))
-     LEFT JOIN public.set_items_with_ingredients_view si ON ((si.set_id = p.id)))
-  WHERE ((p.is_active = true) AND (p.is_visible = true))
-  GROUP BY p.id, p.title, p.slug, p.image_link, p.price, p.weight, p.count_portion, p.quantity, p.is_set, pi.ingredients, pc.category_ids, pd.discount_percent;
+CREATE TRIGGER trg_clean_title BEFORE INSERT OR UPDATE ON public.ingredient FOR EACH ROW EXECUTE FUNCTION public.clean_ingredient_title();
 
 
 --
@@ -1198,14 +1214,6 @@ CREATE OR REPLACE VIEW public.product_card_view AS
 --
 
 CREATE TRIGGER trg_update_set_properties AFTER INSERT OR DELETE OR UPDATE ON public.set_item FOR EACH ROW EXECUTE FUNCTION public.update_set_properties();
-
-
---
--- Name: addon_rule_addon_product addon_rule_addon_product_rule_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.addon_rule_addon_product
-    ADD CONSTRAINT addon_rule_addon_product_rule_id_fkey FOREIGN KEY (addon_rule_id) REFERENCES public.addon_rule(id) ON DELETE CASCADE;
 
 
 --
@@ -1217,19 +1225,11 @@ ALTER TABLE ONLY public.addon_rule_addon_product
 
 
 --
--- Name: addon_rule_target_category addon_rule_target_category_rule_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: addon_rule_addon_product addon_rule_addon_product_rule_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.addon_rule_target_category
-    ADD CONSTRAINT addon_rule_target_category_rule_id_fkey FOREIGN KEY (addon_rule_id) REFERENCES public.addon_rule(id) ON DELETE CASCADE;
-
-
---
--- Name: addon_rule_target_product addon_rule_target_product_rule_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.addon_rule_target_product
-    ADD CONSTRAINT addon_rule_target_product_rule_id_fkey FOREIGN KEY (addon_rule_id) REFERENCES public.addon_rule(id) ON DELETE CASCADE;
+ALTER TABLE ONLY public.addon_rule_addon_product
+    ADD CONSTRAINT addon_rule_addon_product_rule_id_fkey FOREIGN KEY (addon_rule_id) REFERENCES public.addon_rule(id) ON DELETE CASCADE;
 
 
 --
@@ -1241,11 +1241,27 @@ ALTER TABLE ONLY public.addon_rule_target_category
 
 
 --
+-- Name: addon_rule_target_category addon_rule_target_category_rule_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.addon_rule_target_category
+    ADD CONSTRAINT addon_rule_target_category_rule_id_fkey FOREIGN KEY (addon_rule_id) REFERENCES public.addon_rule(id) ON DELETE CASCADE;
+
+
+--
 -- Name: addon_rule_target_product addon_rule_target_product_product_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.addon_rule_target_product
     ADD CONSTRAINT addon_rule_target_product_product_id_fkey FOREIGN KEY (product_id) REFERENCES public.product(id) ON DELETE CASCADE;
+
+
+--
+-- Name: addon_rule_target_product addon_rule_target_product_rule_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.addon_rule_target_product
+    ADD CONSTRAINT addon_rule_target_product_rule_id_fkey FOREIGN KEY (addon_rule_id) REFERENCES public.addon_rule(id) ON DELETE CASCADE;
 
 
 --
@@ -1364,4 +1380,4 @@ ALTER TABLE ONLY public.set_item
 -- PostgreSQL database dump complete
 --
 
-\unrestrict gZsoXxHa1AU5OCW1ratrGv0QMc8uhy6vKrq4uMOJGg69WBgaR8Zz3UczbE1lv2B
+\unrestrict SA4TG77SpYqrCb2H5AnbYoeLAWANMKTM3AiUmZra0YnVFbg0e6nCSMBXsvfMdAQ
