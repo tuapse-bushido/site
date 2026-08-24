@@ -18,16 +18,24 @@ import { recalculateQuantityAddon, updateRuleAndAddon } from './cart-rules';
  *
  * @param state Состояние корзины (Immer draft)
  * @param product Товар, к которому применяются правила добавок
+ * @param quantity_parent_delta Изменение количества родительского товара в корзине
  *
  * @returns void
  *
  * @example
- * upsertAddonForProduct(state, state.items[101]);
+ * upsertAddonForProduct(state, state.items[101], 1);
  */
-export const upsertAddonForProduct = (state: Draft<CartState>, product: CartItem): void => {
-  const { addons = [], quantity: quantity_parent } = product;
+export const upsertAddonForProduct = (
+  state: Draft<CartState>,
+  product: CartItem,
+  quantity_parent_delta: number,
+): void => {
+  const { addons = [] } = product;
+  const unique_rules = new Map(
+    addons.map((rule): [number, (typeof addons)[number]] => [rule.addon_rule_id, rule]),
+  ).values();
 
-  for (const rule of addons) {
+  for (const rule of unique_rules) {
     const { addon_rule_id } = rule;
 
     for (const addon_product of rule.addon_products) {
@@ -35,7 +43,7 @@ export const upsertAddonForProduct = (state: Draft<CartState>, product: CartItem
       const existingAddon = state.addons[addon_product_id];
 
       if (!existingAddon) {
-        addAddonInState(state, addon_product, rule, quantity_parent);
+        addAddonInState(state, addon_product, rule, quantity_parent_delta);
 
         if (state.items[addon_product_id]) {
           state.addons[addon_product_id].quantity_in_cart = state.items[addon_product_id].quantity_in_cart;
@@ -46,9 +54,9 @@ export const upsertAddonForProduct = (state: Draft<CartState>, product: CartItem
       }
 
       if (existingAddon.addon_rules[addon_rule_id]) {
-        updateAddonInState(state, addon_product_id, addon_rule_id, quantity_parent);
+        updateAddonInState(state, addon_product_id, addon_rule_id, quantity_parent_delta);
       } else {
-        addRuleInAddon(state, addon_product_id, rule, quantity_parent);
+        addRuleInAddon(state, addon_product_id, rule, quantity_parent_delta);
       }
     }
   }
@@ -68,20 +76,27 @@ export const upsertAddonForProduct = (state: Draft<CartState>, product: CartItem
  *
  * @param state Состояние корзины (Immer draft)
  * @param product_id ID родительского товара, добавки которого нужно очистить
+ * @param quantity_parent_delta Изменение количества родительского товара в корзине
  *
  * @returns void
  *
  * @example
- * pruneAddonsForParent(state, 101);
+ * pruneAddonsForParent(state, 101, 1);
  */
-export const pruneAddonsForParent = (state: Draft<CartState>, product_id: number): void => {
+export const pruneAddonsForParent = (
+  state: Draft<CartState>,
+  product_id: number,
+  quantity_parent_delta: number,
+): void => {
   const product = state.items[product_id];
   if (!product) return;
 
-  const quantity_parent = product.quantity;
   const addons = product.addons ?? [];
+  const unique_rules = new Map(
+    addons.map((rule): [number, (typeof addons)[number]] => [rule.addon_rule_id, rule]),
+  ).values();
 
-  for (const rule of addons) {
+  for (const rule of unique_rules) {
     const { addon_rule_id } = rule;
 
     for (const addon of rule.addon_products) {
@@ -92,8 +107,8 @@ export const pruneAddonsForParent = (state: Draft<CartState>, product_id: number
       const rule_entry = addon_entry.addon_rules[addon_rule_id];
       if (!rule_entry) continue;
 
-      if (rule_entry.quantity_parent > quantity_parent) {
-        rule_entry.quantity_parent -= quantity_parent;
+      if (rule_entry.quantity_parent > quantity_parent_delta) {
+        rule_entry.quantity_parent -= quantity_parent_delta;
         updateRuleAndAddon(rule_entry, addon_entry);
         continue;
       }
