@@ -24,8 +24,8 @@ export const OrderDetailScreen = async ({
   const orderDetail = formatOrderData(order.data);
 
   return (
-    <MuiStack direction={'column'} gap={4}>
-      <MuiStack direction={'row'} justifyContent={'space-between'}>
+    <MuiStack direction={'column'} gap={4} pl={{ xs: 2, sm: 0 }} pr={2} pb={2}>
+      <MuiStack direction={{ xs: 'column', lg: 'row' }} justifyContent={'space-between'}>
         <OrderHeader
           orderNumber={orderDetail.order_number}
           date={orderDetail.formattedDate}
@@ -37,10 +37,10 @@ export const OrderDetailScreen = async ({
       <MuiDivider />
 
       <MuiGrid container spacing={4}>
-        <MuiGrid size={{ md: 4 }}>
+        <MuiGrid size={{ xs: 12, sm: 6, md: 4 }}>
           <OrderStructure products={orderDetail.products} totalPrice={orderDetail.total_price} />
         </MuiGrid>
-        <MuiGrid size={{ md: 4 }}>
+        <MuiGrid size={{ xs: 12, sm: 6, md: 4 }}>
           <MuiStack gap={4}>
             <OrderClient customerName={orderDetail.customer_name} customerPhone={orderDetail.customer_phone} />
             <DeliveryDetails fullAddress={orderDetail.fullAddress} paymentType={orderDetail.paymentMethod} />
