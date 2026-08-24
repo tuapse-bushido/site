@@ -1,5 +1,5 @@
 import { JSX, Suspense } from 'react';
-import { OrderDetailScreen } from 'modules/admin/orders/screens/order-detail/order-detail-screen';
+import { OrderDetailScreen } from 'modules/admin/orders/screens';
 
 type Props = {
   params: Promise<{
