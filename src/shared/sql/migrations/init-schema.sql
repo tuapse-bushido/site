@@ -1233,7 +1233,6 @@ CREATE INDEX idx_admin_session_expires_at ON public.admin_session USING btree (e
 --
 -- Name: idx_ingredient_title_unique; Type: INDEX; Schema: public; Owner: -
 --
-
 CREATE UNIQUE INDEX idx_ingredient_title_unique ON public.ingredient USING btree (lower(TRIM(BOTH FROM title)));
 
 
