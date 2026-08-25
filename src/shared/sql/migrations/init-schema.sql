@@ -370,8 +370,8 @@ CREATE TABLE public.admin (
     login text NOT NULL,
     password_hash text NOT NULL,
     role public.admin_role DEFAULT 'admin'::public.admin_role NOT NULL,
-    is_active boolean DEFAULT true,
-    created_at timestamp without time zone DEFAULT now()
+    is_active boolean DEFAULT true NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
 
@@ -396,15 +396,41 @@ ALTER SEQUENCE public.admin_id_seq OWNED BY public.admin.id;
 
 
 --
--- Name: admin_refresh_tokens; Type: TABLE; Schema: public; Owner: -
+-- Name: admin_session; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.admin_refresh_tokens (
+CREATE TABLE public.admin_session (
     id uuid DEFAULT gen_random_uuid() NOT NULL,
     admin_id integer NOT NULL,
-    created_at timestamp without time zone DEFAULT now(),
-    expires_at timestamp without time zone NOT NULL,
-    is_revoked boolean DEFAULT false
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    expires_at timestamp with time zone NOT NULL,
+    refresh_token_hash text NOT NULL,
+    last_used_at timestamp with time zone,
+    revoked_at timestamp with time zone,
+    revoke_reason text,
+    ip_address inet,
+    user_agent text,
+    is_revoked boolean GENERATED ALWAYS AS ((revoked_at IS NOT NULL)) STORED,
+    CONSTRAINT admin_session_refresh_token_hash_format_check CHECK ((refresh_token_hash ~ '^[0-9a-f]{64}$'::text))
+);
+
+
+--
+-- Name: admin_auth_event; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.admin_auth_event (
+    id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+    admin_id integer,
+    session_id uuid,
+    event_type text NOT NULL,
+    attempted_login text,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    ip_address inet,
+    user_agent text,
+    request_id text,
+    metadata jsonb DEFAULT '{}'::jsonb NOT NULL,
+    CONSTRAINT admin_auth_event_type_check CHECK ((event_type = ANY (ARRAY['login_success'::text, 'login_failed'::text, 'logout'::text, 'logout_all'::text, 'session_refreshed'::text, 'session_expired'::text, 'session_revoked'::text, 'refresh_failed'::text, 'refresh_reuse_detected'::text, 'access_denied'::text, 'account_disabled'::text, 'password_changed'::text])))
 );
 
 
@@ -950,11 +976,27 @@ ALTER TABLE ONLY public.admin
 
 
 --
--- Name: admin_refresh_tokens admin_refresh_tokens_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: admin_auth_event admin_auth_event_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.admin_refresh_tokens
-    ADD CONSTRAINT admin_refresh_tokens_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.admin_auth_event
+    ADD CONSTRAINT admin_auth_event_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: admin_session admin_session_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.admin_session
+    ADD CONSTRAINT admin_session_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: admin_session admin_session_refresh_token_hash_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.admin_session
+    ADD CONSTRAINT admin_session_refresh_token_hash_key UNIQUE (refresh_token_hash);
 
 
 --
@@ -1154,6 +1196,41 @@ CREATE INDEX idx_addon_rule_target_product_product_id ON public.addon_rule_targe
 
 
 --
+-- Name: idx_admin_auth_event_admin_created_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_admin_auth_event_admin_created_at ON public.admin_auth_event USING btree (admin_id, created_at);
+
+
+--
+-- Name: idx_admin_auth_event_created_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_admin_auth_event_created_at ON public.admin_auth_event USING btree (created_at);
+
+
+--
+-- Name: idx_admin_auth_event_session_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_admin_auth_event_session_id ON public.admin_auth_event USING btree (session_id);
+
+
+--
+-- Name: idx_admin_session_admin_active; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_admin_session_admin_active ON public.admin_session USING btree (admin_id) WHERE (revoked_at IS NULL);
+
+
+--
+-- Name: idx_admin_session_expires_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_admin_session_expires_at ON public.admin_session USING btree (expires_at);
+
+
+--
 -- Name: idx_ingredient_title_unique; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1265,11 +1342,27 @@ ALTER TABLE ONLY public.addon_rule_target_product
 
 
 --
--- Name: admin_refresh_tokens admin_refresh_tokens_admin_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: admin_auth_event admin_auth_event_admin_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.admin_refresh_tokens
-    ADD CONSTRAINT admin_refresh_tokens_admin_id_fkey FOREIGN KEY (admin_id) REFERENCES public.admin(id);
+ALTER TABLE ONLY public.admin_auth_event
+    ADD CONSTRAINT admin_auth_event_admin_id_fkey FOREIGN KEY (admin_id) REFERENCES public.admin(id) ON DELETE SET NULL;
+
+
+--
+-- Name: admin_auth_event admin_auth_event_session_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.admin_auth_event
+    ADD CONSTRAINT admin_auth_event_session_id_fkey FOREIGN KEY (session_id) REFERENCES public.admin_session(id) ON DELETE SET NULL;
+
+
+--
+-- Name: admin_session admin_session_admin_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.admin_session
+    ADD CONSTRAINT admin_session_admin_id_fkey FOREIGN KEY (admin_id) REFERENCES public.admin(id);
 
 
 --
