@@ -77,29 +77,6 @@ export const dbQuery = async <T extends ZodType>(
   }
 };
 
-export const dbExecute = async <T>(
-  query: string,
-  params: unknown[] = [],
-  executor: PoolClient | typeof pool = pool,
-): Promise<ActionResult<T>> => {
-  try {
-    const { rows } = await executor.query(query, params);
-
-    return actionSuccess(rows[0]);
-  } catch (err) {
-    if (err instanceof DatabaseError) {
-      switch (err.code) {
-        case '23505':
-          return actionError(ErrorCode.DUPLICATE, { details: err });
-        default:
-          return actionError(ErrorCode.DB_ERROR, { details: err });
-      }
-    }
-
-    return actionError(ErrorCode.UNKNOWN, { details: err });
-  }
-};
-
 export const dbDelete = async (
   query: string,
   params: unknown[] = [],
@@ -116,5 +93,25 @@ export const dbDelete = async (
     return actionSuccess(null);
   } catch (err) {
     return handleDbError(err, query, params);
+  }
+};
+
+export const dbCommand = async (
+  query: string,
+  params: unknown[] = [],
+  executor: PoolClient | typeof pool = pool,
+  options: { strict?: boolean } = { strict: true },
+): Promise<ActionResult<null>> => {
+  try {
+    const { rowCount } = await executor.query(query, params);
+
+    if (options.strict && rowCount === 0) {
+      logger.warn({ msg: 'DB_COMMAND_NOT_APPLIED', query, params });
+      return actionError(ErrorCode.NOT_FOUND);
+    }
+
+    return actionSuccess(null);
+  } catch (error) {
+    return handleDbError(error, query, params);
   }
 };
