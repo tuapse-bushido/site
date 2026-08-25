@@ -1,14 +1,14 @@
 import clsx from 'clsx';
 import { JSX } from 'react';
 import Image from 'next/image';
-
 import styles from './product-card-view.module.scss';
-
-import { ProductCardViewProps } from 'modules/client/catalog/entities/ui/product-card/product-card-view/product-card-view.props';
-import { ButtonCardMain } from 'modules/client/catalog/entities/ui/product-card/button-card/button-card-main';
+import { ButtonCardMain } from '../button-card/button-card-main';
+import { ProductCardViewProps } from './product-card-view.props';
 
 export const ProductCardView = ({ product }: ProductCardViewProps): JSX.Element => {
   const cx = (base: string): string => clsx(styles[base]);
+
+  const ingredients = product.ingredients.join(' ');
 
   return (
     <div className={cx('productCard')}>
@@ -30,9 +30,9 @@ export const ProductCardView = ({ product }: ProductCardViewProps): JSX.Element 
             {product.count_portion && `${product.count_portion} шт / `}
             {product.weight} г
           </span>
-          {/*<div>*/}
-          {/*  <p>{ingredients}</p>*/}
-          {/*</div>*/}
+          <div>
+            <span className={styles.productHeaderIngredients}>{ingredients}</span>
+          </div>
         </div>
 
         <div className={clsx(styles.productContentFooter)}>
