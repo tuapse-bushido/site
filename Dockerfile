@@ -5,7 +5,7 @@ WORKDIR /app
 ENV HUSKY=0
 ENV NEXT_TELEMETRY_DISABLED=1
 
-RUN corepack enable && corepack prepare pnpm@10.33 --activate
+RUN corepack enable && corepack prepare pnpm@11.24.0 --activate
 
 COPY package.json pnpm-lock.yaml ./
 RUN pnpm install --frozen-lockfile
@@ -22,7 +22,7 @@ ENV NODE_ENV=production
 ENV PORT=3000
 ENV HOSTNAME=0.0.0.0
 
-RUN corepack enable && corepack prepare pnpm@10.33 --activate
+RUN corepack enable && corepack prepare pnpm@11.24.0 --activate
 
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
