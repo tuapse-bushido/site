@@ -1,49 +1,86 @@
-'use server';
+import 'server-only';
 
-import { dbDelete, dbQuery } from 'shared/utils/db.utils';
+import { PoolClient } from 'pg';
+import { pool } from 'shared/configs/db';
 import { ActionResult } from 'shared/types/action.types';
-import { Session, SessionRow, sessionRowSchema, sessionSchema } from 'modules/admin/admin-auth';
+import { dbCommand, dbQuery } from 'shared/utils/db.utils';
+import { Session, SessionRevokeReason, SessionRow, sessionSchemas as schemas } from 'modules/admin/admin-auth/entities';
 
-export const createRefreshSession = async (adminId: number, expiresAt: Date): Promise<ActionResult<SessionRow>> => {
-  const query = `
-    INSERT INTO admin_refresh_tokens (admin_id, expires_at)
-    VALUES ($1, $2)
+export const sessionRepo = {
+  async insertSession(
+    adminId: number,
+    expiresAt: Date,
+    executor: PoolClient | typeof pool = pool,
+  ): Promise<ActionResult<SessionRow>> {
+    const query = `
+    WITH new_session AS (
+      SELECT gen_random_uuid() AS id
+    )
+    INSERT INTO admin_session (id, admin_id, expires_at, refresh_token_hash)
+    SELECT id, $1, $2, encode(digest(id::text, 'sha256'), 'hex')
+    FROM new_session
     RETURNING id;
   `;
-  const params = [adminId, expiresAt];
+    const params = [adminId, expiresAt];
 
-  return dbQuery(query, params, sessionRowSchema, 'single');
-};
+    return dbQuery(query, params, schemas.session.row, 'single', executor);
+  },
 
-export const getRefreshSession = async (refersId: string): Promise<ActionResult<Session>> => {
-  const query = `
-    SELECT id, admin_id, created_at, expires_at, is_revoked
-    from admin_refresh_tokens
-    WHERE id = $1;
-  `;
-  const params = [refersId];
+  async getSessionByRefreshToken(refreshToken: string): Promise<ActionResult<Session>> {
+    const query = `
+        SELECT
+            id,
+            admin_id,
+            created_at,
+            expires_at,
+            refresh_token_hash,
+            last_used_at,
+            revoked_at,
+            revoke_reason,
+            ip_address,
+            user_agent,
+            is_revoked
+        FROM admin_session
+        WHERE refresh_token_hash =
+              encode(digest($1::text, 'sha256'), 'hex');
+    `;
 
-  return dbQuery(query, params, sessionSchema, 'single');
-};
+    return dbQuery(query, [refreshToken], schemas.session.base, 'single');
+  },
 
-export const deleteRefreshSession = async (refreshId: string): Promise<ActionResult<null>> => {
-  return dbDelete(
-    `
-      DELETE
-      FROM admin_refresh_tokens
-      WHERE id = $1;
-    `,
-    [refreshId],
-  );
-};
+  async revokeSession(
+    sessionId: string,
+    reason: SessionRevokeReason,
+    executor: PoolClient | typeof pool = pool,
+  ): Promise<ActionResult<null>> {
+    return dbCommand(
+      `
+          UPDATE admin_session
+          SET revoked_at = now(),
+              revoke_reason = $2
+          WHERE id = $1
+            AND revoked_at IS NULL;
+      `,
+      [sessionId, reason],
+      executor,
+    );
+  },
 
-export const deleteSessionByAdminId = async (adminId: number): Promise<ActionResult<null>> => {
-  return dbDelete(
-    `
-      DELETE
-      FROM admin_refresh_tokens
-      WHERE admin_id = $1;
-    `,
-    [adminId],
-  );
+  async revokeSessionsByAdminId(
+    adminId: number,
+    reason: SessionRevokeReason,
+    executor: PoolClient | typeof pool = pool,
+  ): Promise<ActionResult<null>> {
+    return dbCommand(
+      `
+          UPDATE admin_session
+          SET revoked_at = now(),
+              revoke_reason = $2
+          WHERE admin_id = $1
+            AND revoked_at IS NULL;
+      `,
+      [adminId, reason],
+      executor,
+    );
+  },
 };

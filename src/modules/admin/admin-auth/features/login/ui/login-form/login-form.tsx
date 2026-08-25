@@ -6,11 +6,17 @@ import { JSX, useActionState } from 'react';
 import styles from './login-form.module.scss';
 import { InputGroup } from 'modules/client/shared/ui';
 
-export const LoginForm = (): JSX.Element => {
-  const [state, formAction] = useActionState(loginAction, null);
+type Props = {
+  returnTo: string | undefined;
+};
+
+export const LoginForm = ({ returnTo }: Props): JSX.Element => {
+  const [, formAction] = useActionState(loginAction, null);
 
   return (
     <Form action={formAction} className={styles.form}>
+      <input type="hidden" name="returnTo" value={returnTo ?? '/admin/orders'} />
+
       <InputGroup labelTitle={'Логин'} type={'text'} id={'login'} name={'login'} autoComplete={'username'} required />
 
       <InputGroup

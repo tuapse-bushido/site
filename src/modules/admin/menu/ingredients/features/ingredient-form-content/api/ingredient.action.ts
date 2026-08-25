@@ -1,12 +1,12 @@
 'use server';
 
 import { redirect } from 'next/navigation';
-import { updateTag } from 'next/cache';
 import { FormState } from 'shared/types/form.types';
 import { ingredientCases } from 'modules/admin/menu/ingredients/use-cases';
 import { formErrorNew, parsedFormDataNew } from 'modules/admin/shared/utils/form.utils';
 import { ingredientSchemas as schemas, UpsertIngredient } from 'modules/admin/menu/ingredients/entities';
 import { ingredientService } from 'modules/admin/menu/ingredients/services';
+import { invalidateIngredientCache } from 'modules/admin/shared/utils/cache-invalidation.utils';
 
 export const upsertIngredientAction = async (
   ingredientId: number | null,
@@ -31,15 +31,7 @@ export const upsertIngredientAction = async (
     });
   }
 
-  if (!ingredientId) {
-    updateTag('ingredients-count');
-  } else {
-    updateTag(`ingredient-${ingredientId}`);
-    updateTag(`ingredient-page-${ingredientId}`);
-  }
-
-  updateTag('ingredients-all');
-  updateTag('ingredients-page');
+  invalidateIngredientCache();
 
   redirect('/admin/menu/ingredients');
 };
@@ -54,12 +46,7 @@ export const deleteIngredientAction = async (ingredientId: number): Promise<Form
     });
   }
 
-  updateTag('ingredients-all');
-  updateTag('ingredients-count');
-  updateTag(`ingredient-${ingredientId}`);
-
-  updateTag('ingredients-page');
-  updateTag(`ingredient-page-${ingredientId}`);
+  invalidateIngredientCache();
 
   redirect('/admin/menu/ingredients');
 };

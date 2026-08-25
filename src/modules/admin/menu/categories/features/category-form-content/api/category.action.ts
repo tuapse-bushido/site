@@ -1,6 +1,5 @@
 'use server';
 
-import { updateTag } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { FormState } from 'shared/types/form.types';
 import { uploadImage } from 'modules/admin/shared/api/upload-image';
@@ -8,6 +7,7 @@ import { categoryCases } from 'modules/admin/menu/categories/use-cases';
 import { categoryService } from 'modules/admin/menu/categories/services';
 import { transliterate } from 'modules/admin/shared/utils/transliterate.utils';
 import { formErrorNew, parsedFormDataNew } from 'modules/admin/shared/utils/form.utils';
+import { invalidateCategoryCache } from 'modules/admin/shared/utils/cache-invalidation.utils';
 import { categorySchemas as schemas, UpsertFormCategory } from 'modules/admin/menu/categories/entities';
 
 export const upsertCategoryAction = async (
@@ -41,15 +41,7 @@ export const upsertCategoryAction = async (
     });
   }
 
-  if (!categoryId) {
-    updateTag('categories-count');
-  } else {
-    updateTag(`category-${categoryId}`);
-    updateTag(`category-page-${categoryId}`);
-  }
-
-  updateTag('categories-all');
-  updateTag('categories-page');
+  invalidateCategoryCache();
 
   redirect('/admin/menu/categories');
 };
@@ -64,12 +56,7 @@ export const deleteCategoryAction = async (categoryId: number): Promise<FormStat
     });
   }
 
-  updateTag('categories-all');
-  updateTag('categories-count');
-  updateTag(`category-${categoryId}`);
-
-  updateTag('categories-page');
-  updateTag(`category-page-${categoryId}`);
+  invalidateCategoryCache();
 
   redirect('/admin/menu/categories');
 };

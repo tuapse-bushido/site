@@ -1,11 +1,18 @@
 import { JSX } from 'react';
 import styles from './styles.module.scss';
-import { LoginForm } from 'modules/admin/admin-auth';
+import { LoginForm } from 'modules/admin/admin-auth/features';
 
-export default function AdminLoginPage(): JSX.Element {
+type Props = {
+  searchParams: Promise<{
+    returnTo?: string;
+  }>;
+};
+
+export default async function AdminLoginPage({ searchParams }: Props): Promise<JSX.Element> {
+  const { returnTo } = await searchParams;
   return (
     <div className={styles.page}>
-      <LoginForm />
+      <LoginForm returnTo={returnTo} />
     </div>
   );
 }

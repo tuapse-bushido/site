@@ -55,7 +55,14 @@
 
 .productHeaderDescription {
   color: var(--text-secondary);
-  font-size: 1rem;
+  font-size: 1.2rem;
+  line-height: 100%;
+  letter-spacing: -0.04rem;
+}
+
+.productHeaderIngredients {
+  color: var(--text-secondary);
+  font-size: 1.4rem;
   line-height: 100%;
   letter-spacing: -0.04rem;
 }

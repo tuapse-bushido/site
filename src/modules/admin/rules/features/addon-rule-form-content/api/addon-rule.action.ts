@@ -1,10 +1,10 @@
 'use server';
 
-import { updateTag } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { FormState } from 'shared/types/form.types';
 import { addonRuleCases } from 'modules/admin/rules/use-cases';
 import { formError, parsedFormDataNew } from 'modules/admin/shared/utils/form.utils';
+import { invalidateAddonRuleCache } from 'modules/admin/shared/utils/cache-invalidation.utils';
 import { addonRuleSchemas as schemas, UpsertFormAddonRule } from 'modules/admin/rules/entities';
 
 export const addonRuleAction = async (
@@ -24,15 +24,7 @@ export const addonRuleAction = async (
 
   if (!response.ok) return formError({ code: response.code });
 
-  const id = response.data.id;
-
-  if (ruleId) {
-    updateTag(`addon-rule-${id}`);
-    updateTag(`addon-rule-page-${id}`);
-  }
-
-  updateTag('addon-rules-all');
-  updateTag('rules-page');
+  invalidateAddonRuleCache();
 
   redirect(`/admin/rules`);
 };
@@ -42,11 +34,7 @@ export const deleteAddonRuleAction = async (ruleId: number): Promise<FormState<n
 
   if (!response.ok) return formError({ code: response.code });
 
-  updateTag(`addon-rule-${ruleId}`);
-  updateTag(`addon-rule-page-${ruleId}`);
-
-  updateTag('addon-rules-all');
-  updateTag('rules-page');
+  invalidateAddonRuleCache();
 
   redirect(`/admin/rules`);
 };
