@@ -2,20 +2,21 @@
 
 import bcrypt from 'bcryptjs';
 import { redirect } from 'next/navigation';
-import { formError, parsedFormData } from 'modules/admin/shared/utils/form.utils';
 import { FormState } from 'shared/types/form.types';
-import { loginFormSchema, startSession } from 'modules/admin/admin-auth';
 import { ErrorCode } from 'shared/types/error-codes.types';
-import { getAdminByLogin } from 'modules/admin/shared';
+import { adminRepo } from 'modules/admin/shared/repository';
+import { loginFormSchema } from 'modules/admin/admin-auth/features';
+import { sessionService } from 'modules/admin/admin-auth/services';
+import { formError, parsedFormDataNew } from 'modules/admin/shared/utils/form.utils';
 
 export const loginAction = async (_prevState: FormState | null, formData: FormData): Promise<FormState> => {
-  const parsed = parsedFormData(formData, loginFormSchema);
+  const parsed = parsedFormDataNew(formData, loginFormSchema);
 
   if (!parsed.success) return formError({ ...{ code: ErrorCode.INVALID_INPUT } });
 
-  const { login, password } = parsed.data;
+  const { login, password, returnTo } = parsed.data;
 
-  const response = await getAdminByLogin(login.toString());
+  const response = await adminRepo.getAdminByLogin(login.toString());
 
   if (!response.ok) return formError({ message: response.message });
 
@@ -25,6 +26,11 @@ export const loginAction = async (_prevState: FormState | null, formData: FormDa
     return formError({ code: ErrorCode.INVALID_CREDENTIALS });
   }
 
-  await startSession(admin);
-  redirect('/admin/dashboard');
+  const sessionResult = await sessionService.startSession(admin);
+
+  if (!sessionResult.ok) {
+    return formError({ message: sessionResult.message });
+  }
+
+  redirect(returnTo ?? '/admin/orders');
 };
