@@ -42,17 +42,7 @@ jobs:
       - name: Run tests (CI mode)
         run: pnpm test:ci
 
-      - name: Build Next.js project
-        env:
-          NEXT_TELEMETRY_DISABLED: 1
-          JWT_SECRET: "ci-placeholder"
-          DATABASE_URL: "postgresql://postgres:postgres@localhost:5432/bushido"
-        run: pnpm build
-
-      # Вместо сборки всего compose, проверяем только Dockerfile
-      # Это проверит корректность шагов сборки без привязки к путям на сервере
-      - name: Validate Dockerfile
-        run: |
-          docker build -t bushido-test . \
-            --build-arg JWT_SECRET="ci-placeholder-secret-123" \
-            --build-arg DATABASE_URL="postgresql://postgres:postgres@localhost:5432/bushido".
+      # Dockerfile runs `pnpm compile`, matching the server build stage.
+      # Static generation runs in the container only after PostgreSQL is healthy.
+      - name: Build production image
+        run: docker build -t bushido-test .
