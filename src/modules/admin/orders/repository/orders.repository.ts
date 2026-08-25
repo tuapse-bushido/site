@@ -1,6 +1,6 @@
-import { dbExecute, dbQuery } from 'shared/utils/db.utils';
+import { dbQuery } from 'shared/utils/db.utils';
 import { ActionResult } from 'shared/types/action.types';
-import { arrayFullOrderSchema, FullOrder, fullOrderSchema, Order, OrderStatus } from '../entities';
+import { arrayFullOrderSchema, FullOrder, fullOrderSchema, Order, orderSchema, OrderStatus } from '../entities';
 
 export const ordersRepo = {
   async getFullOrdersByRange(from: string | Date, to: string | Date): Promise<ActionResult<FullOrder[]>> {
@@ -66,6 +66,6 @@ export const ordersRepo = {
         WHERE id = $2
         RETURNING *;
     `;
-    return await dbExecute(query, [status, id]);
+    return dbQuery(query, [status, id], orderSchema, 'single');
   },
 };
