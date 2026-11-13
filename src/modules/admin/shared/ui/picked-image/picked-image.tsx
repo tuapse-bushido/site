@@ -4,11 +4,10 @@ import Image from 'next/image';
 import { PickedImageProps } from './picked-image.props';
 import { ChangeEvent, JSX, useRef, useState } from 'react';
 import { MuiBox, MuiButton, MuiStack } from 'modules/admin/shared/ui/mui';
+import { getImageUrl } from 'shared/utils/image-url.utils';
 
 export const PickedImage = ({ imageLink, altImage }: PickedImageProps): JSX.Element => {
-  const link = imageLink
-    ? process.env.NEXT_PUBLIC_IMAGES_DOMAIN + imageLink
-    : process.env.NEXT_PUBLIC_IMAGES_DOMAIN + 'no-image.png';
+  const link = getImageUrl(imageLink);
 
   const inputRef = useRef<HTMLInputElement>(null);
 

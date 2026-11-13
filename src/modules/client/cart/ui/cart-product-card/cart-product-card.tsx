@@ -1,4 +1,5 @@
 import { JSX } from 'react';
+import { getImageUrl } from 'shared/utils/image-url.utils';
 import { AppImage } from 'shared/ui/app-image';
 import styles from './cart-product-card.module.scss';
 import { AddonEntry, CartCardViewModel, CartItem } from 'modules/client/cart/model/cart-state.types';
@@ -19,7 +20,7 @@ export const CartProductCard = ({
     <div className={styles.card}>
       <AppImage
         classNames={{ root: styles.root, image: styles.image }}
-        src={process.env.NEXT_PUBLIC_IMAGES_DOMAIN + '/' + imageLink}
+        src={getImageUrl(imageLink)}
         alt={title}
         imageProps={{ width: 100, height: 75, loading: 'eager' }}
       />

@@ -1,4 +1,5 @@
 import { JSX } from 'react';
+import { getImageUrl } from 'shared/utils/image-url.utils';
 import {
   MuiAvatar,
   MuiList,
@@ -29,7 +30,11 @@ export const StructureList = ({ products }: Props): JSX.Element => {
             }
           >
             <MuiListItemAvatar>
-              <MuiAvatar src={p.image_link} variant="rounded" sx={{ width: 48, height: 48, bgcolor: 'grey.100' }}>
+              <MuiAvatar
+                src={getImageUrl(p.image_link)}
+                variant="rounded"
+                sx={{ width: 48, height: 48, bgcolor: 'grey.100' }}
+              >
                 {p.title[0]}
               </MuiAvatar>
             </MuiListItemAvatar>

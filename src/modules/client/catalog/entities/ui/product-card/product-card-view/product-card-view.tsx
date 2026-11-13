@@ -4,6 +4,7 @@ import Image from 'next/image';
 import styles from './product-card-view.module.scss';
 import { ButtonCardMain } from '../button-card/button-card-main';
 import { ProductCardViewProps } from './product-card-view.props';
+import { getImageUrl } from 'shared/utils/image-url.utils';
 
 export const ProductCardView = ({ product }: ProductCardViewProps): JSX.Element => {
   const cx = (base: string): string => clsx(styles[base]);
@@ -15,7 +16,7 @@ export const ProductCardView = ({ product }: ProductCardViewProps): JSX.Element 
       <div className={cx('productImageWrapper')}>
         <Image
           className={clsx(styles.productImage)}
-          src={process.env.NEXT_PUBLIC_IMAGES_PRODUCTS + product.image_link}
+          src={getImageUrl(product.image_link)}
           alt={product.title}
           width={500}
           height={375}

@@ -4,6 +4,7 @@ import { JSX } from 'react';
 import Image from 'next/image';
 import { GridColDef } from '@mui/x-data-grid';
 import { MuiBox } from 'modules/admin/shared/ui/mui';
+import { getImageUrl } from 'shared/utils/image-url.utils';
 
 export const categoryColumns: GridColDef[] = [
   { field: 'id', headerName: 'ID', width: 100 },
@@ -13,10 +14,7 @@ export const categoryColumns: GridColDef[] = [
     width: 100,
     sortable: false,
     renderCell: (params): JSX.Element => {
-      const link =
-        params.value === ''
-          ? process.env.NEXT_PUBLIC_IMAGES_DOMAIN + 'categories/no-image.png'
-          : process.env.NEXT_PUBLIC_IMAGES_DOMAIN + params.value;
+      const link = getImageUrl(params.value || 'categories/no-image.png');
 
       return (
         <MuiBox
