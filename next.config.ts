@@ -6,6 +6,12 @@ const nextConfig: NextConfig = {
 
   allowedDevOrigins: ['192.168.1.100', 'localhost'],
 
+  experimental: {
+    serverActions: {
+      bodySizeLimit: '10mb',
+    },
+  },
+
   cacheComponents: true,
   cacheLife: {
     admin: {
