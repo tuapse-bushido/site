@@ -3,6 +3,12 @@ services:
     build:
       context: ./app
       dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_IMAGES_DOMAIN: ${NEXT_PUBLIC_IMAGES_DOMAIN:-https://s3.regru.cloud/bushido/}
+        NEXT_PUBLIC_IMAGES_PRODUCTS: ${NEXT_PUBLIC_IMAGES_PRODUCTS:-https://s3.regru.cloud/bushido/}
+        NEXT_PUBLIC_IMAGES_CATEGORIES: ${NEXT_PUBLIC_IMAGES_CATEGORIES:-https://s3.regru.cloud/bushido/}
+        NEXT_PUBLIC_SOCKET_URL: ${NEXT_PUBLIC_SOCKET_URL:-}
+        NEXT_PUBLIC_SOCKET_PORT: ${NEXT_PUBLIC_SOCKET_PORT:-}
     image: bushido-app:latest
     container_name: bushido-app
     restart: unless-stopped

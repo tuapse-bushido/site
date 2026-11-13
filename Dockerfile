@@ -12,6 +12,13 @@ RUN pnpm install --frozen-lockfile
 
 COPY . .
 
+# NEXT_PUBLIC_* values are embedded in browser bundles during compilation.
+ARG NEXT_PUBLIC_IMAGES_DOMAIN=https://s3.regru.cloud/bushido/
+ARG NEXT_PUBLIC_IMAGES_PRODUCTS=https://s3.regru.cloud/bushido/
+ARG NEXT_PUBLIC_IMAGES_CATEGORIES=https://s3.regru.cloud/bushido/
+ARG NEXT_PUBLIC_SOCKET_URL
+ARG NEXT_PUBLIC_SOCKET_PORT
+
 RUN pnpm compile
 
 # ---------- Stage 2: production ----------
